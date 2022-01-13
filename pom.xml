@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>co.verisoft</groupId>
+    <artifactId>selenium</artifactId>
+    <packaging>jar</packaging>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>${project.groupId}:${project.artifactId}</name>
+    <description>VeriSoft framewordk for testing web and mobile applications. Selenium Module</description>
+    <developers>
+        <developer>
+            <id>nirg</id>
+            <name>Nir Gallner</name>
+            <email>nir@verisoft.co</email>
+            <organization>VeriSoft</organization>
+            <organizationUrl>http://www.verisoft.co</organizationUrl>
+        </developer>
+    </developers>
+    <licenses>
+        <license>
+            <name>Apache 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+        </license>
+    </licenses>
+
+    <properties>
+
+        <!-- Logs -->
+        <log4j2.version>2.17.1</log4j2.version>
+        <slf4j.version>2.0.0-alpha5</slf4j.version>
+
+
+        <!-- Java -->
+        <java.version>11</java.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+
+        <!-- Encoding -->
+        <java.encoding>UTF-8</java.encoding>
+        <project.build.sourceEncoding>${java.encoding}</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>${java.encoding}</project.reporting.outputEncoding>
+
+        <!-- Selenium -->
+        <io.appium.version>8.0.0-beta2</io.appium.version>
+        <webdrivermanager.version>5.0.3</webdrivermanager.version>
+        <org.selenium.version>4.1.1</org.selenium.version>
+
+        <org.junit.jupiter.version>5.8.2</org.junit.jupiter.version>
+    </properties>
+
+   <dependencies>
+
+       <!-- https://mvnrepository.com/artifact/io.appium/java-client -->
+       <dependency>
+           <groupId>io.appium</groupId>
+           <artifactId>java-client</artifactId>
+           <version>${io.appium.version}</version>
+           <scope>compile</scope>
+       </dependency>
+
+       <dependency>
+           <groupId>org.junit.jupiter</groupId>
+           <artifactId>junit-jupiter</artifactId>
+           <version>${org.junit.jupiter.version}</version>
+           <scope>test</scope>
+       </dependency>
+
+       <!-- https://mvnrepository.com/artifact/io.github.bonigarcia/webdrivermanager -->
+       <dependency>
+           <groupId>io.github.bonigarcia</groupId>
+           <artifactId>webdrivermanager</artifactId>
+           <version>${webdrivermanager.version}</version>
+           <scope>compile</scope>
+       </dependency>
+
+       <!-- https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java -->
+       <dependency>
+           <groupId>org.seleniumhq.selenium</groupId>
+           <artifactId>selenium-java</artifactId>
+           <version>${org.selenium.version}</version>
+           <scope>compile</scope>
+       </dependency>
+
+       <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
+       <dependency>
+           <groupId>org.slf4j</groupId>
+           <artifactId>slf4j-api</artifactId>
+           <version>${slf4j.version}</version>
+       </dependency>
+
+
+
+
+   </dependencies>
+</project>
