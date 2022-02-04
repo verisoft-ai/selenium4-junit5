@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+    <Appenders>
+        <Console name="STDOUT" target="SYSTEM_OUT">
+            <PatternLayout
+                    pattern="%highlight{%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n}{FATAL=red blink, ERROR=red, WARN=yellow bold, INFO=blue bold, DEBUG=black bold, TRACE=black}"/>
+            <ThresholdFilter level="warn"/>
+        </Console>
+
+        <RollingFile name="RollingFileAppender" fileName="target/logs/app.log"
+                     filePattern="target/logs/$${date:yyyy-MM}/app-%d{MM-dd-yyyy}-%i.log.gz">
+            <PatternLayout>
+                <Pattern>%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n
+                </Pattern>
+            </PatternLayout>
+            <Policies>
+                <OnStartupTriggeringPolicy/>
+                <TimeBasedTriggeringPolicy/>
+                <SizeBasedTriggeringPolicy size="50 MB"/>
+            </Policies>
+            <ThresholdFilter level="info"/>
+            <DefaultRolloverStrategy max="20"/>
+        </RollingFile>
+        <RollingFile name="RollingFileTraceAppender" fileName="target/logs/app-trace.log"
+                     filePattern="target/logs/$${date:yyyy-MM}/app-trace-%d{MM-dd-yyyy}-%i.log.gz">
+            <PatternLayout>
+                <Pattern>%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n
+                </Pattern>
+            </PatternLayout>
+            <Policies>
+                <OnStartupTriggeringPolicy/>
+                <TimeBasedTriggeringPolicy/>
+                <SizeBasedTriggeringPolicy size="50 MB"/>
+            </Policies>
+            <ThresholdFilter level="trace"/>
+            <DefaultRolloverStrategy max="20"/>
+        </RollingFile>
+    </Appenders>
+
+    <Loggers>
+        <Logger name="org.springframework" level="info">
+            <AppenderRef ref="RollingFileTraceAppender"/>
+        </Logger>
+        <Logger name="co.verisoft" level="info">
+            <AppenderRef ref="STDOUT"/>
+        </Logger>
+        <Logger name="co.verisoft" level="debug">
+            <AppenderRef ref="RollingFileAppender"/>
+            <AppenderRef ref="RollingFileTraceAppender"/>
+        </Logger>
+        <Logger name="io.github.bonigarcia" level="info">
+            <AppenderRef ref="RollingFileTraceAppender"/>
+        </Logger>
+        <Logger name="io.netty" level="info">
+            <AppenderRef ref="RollingFileTraceAppender"/>
+        </Logger>
+        <Logger name="org.asynchttpclient" level="info">
+            <AppenderRef ref="RollingFileTraceAppender"/>
+        </Logger>
+
+        <Root level="info">
+            <AppenderRef ref="STDOUT"/>
+        </Root>
+
+    </Loggers>
+</Configuration>

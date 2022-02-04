@@ -1,0 +1,72 @@
+<html xmlns="http://www.w3.org/1999/html">
+
+<body>
+	<form id="test1">
+		<fieldset id="options">
+			<legend>options</legend>
+			<label for="option1">option 1</label> <select id="option1" name="options" extra="yes">
+				<option value="option1">option1</option>
+				<option value="option2">option2</option>
+                <option value="option3" disabled="disabled">Disabled option</option>
+                <!-- An invisible option is handled different by different browser, so no relevant for test -->
+                <option value="option4" style="visibility: hidden;">Option hidden</option>
+                <!-- An none-displayed option is handled different by different browser, so no relevant for test -->
+                <option value="option5" style="display: none;">Option display none</option>
+			</select>
+            <br><br>
+            <label for="option2">option 2</label> <select id="option2" name="options" extra="yes">
+				<option value="option21">option21</option>
+				<option value="option22">option22</option>
+                <option value="option23" disabled="disabled">Disabled option</option>
+                <!-- An invisible option is handled different by different browser, so no relevant for test -->
+                <option value="option24" style="visibility: hidden;">Option hidden</option>
+                <!-- An none-displayed option is handled different by different browser, so no relevant for test -->
+                <option value="option25" style="display: none;">Option display none</option>
+			</select>
+		</fieldset>
+		<fieldset>
+			<label for="checkbox">checkbox</label><input type="checkbox"
+				id="checkbox" class="wd-gui"/>
+		</fieldset>
+		<fieldset>
+			<label for="texta">a</label> <input id="texta" />
+		</fieldset>
+		<fieldset>
+			<label for="textb">b</label> <input id="textb" />
+		</fieldset>
+		<fieldset>
+        
+			<label for="table">table</label>
+			<table id="table">
+				<thead>
+					<tr>
+						<th>Month</th>
+						<th>Savings</th>
+					</tr>
+				</thead>
+				<tfoot>
+					<tr>
+						<td>Sum</td>
+						<td>$180</td>
+					</tr>
+				</tfoot>
+				<tbody>
+					<tr>
+						<td>January</td>
+						<td>$100</td>
+					</tr>
+					<tr>
+						<td>February</td>
+						<td>$80</td>
+					</tr>
+				</tbody>
+			</table>
+		</fieldset>
+        <fieldset>
+        <label name="inputLabel">label for input
+        <input id="texta" />
+        </label>
+        </fieldset>
+	</form>
+</body>
+</html>

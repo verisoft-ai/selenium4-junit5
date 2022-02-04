@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title> DelegateDriverTestForm </title>
+
+	<script>
+		function setCookie(cname, cvalue, exdays) {
+			var d = new Date();
+			d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+			var expires = "expires=" + d.toGMTString();
+			document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+		}
+
+		function getCookie(cname) {
+			var name = cname + "=";
+			var decodedCookie = decodeURIComponent(document.cookie);
+			var ca = decodedCookie.split(';');
+			for (var i = 0; i < ca.length; i++) {
+				var c = ca[i];
+				while (c.charAt(0) == ' ') {
+					c = c.substring(1);
+				}
+				if (c.indexOf(name) == 0) {
+					return c.substring(name.length, c.length);
+				}
+			}
+			return "";
+		}
+
+		function checkCookie() {
+			var user = getCookie("username");
+			if (user != "") {
+				alert("Welcome again " + user);
+			} else {
+				user = prompt("Please enter your name:", "");
+				if (user != "" && user != null) {
+					setCookie("username", user, 30);
+				}
+			}
+		}
+
+		function setUploadPathInsideSpan() {
+			var x = document.getElementById("upload").value;
+			document.getElementById("uploadFilePath").innerHTML = x;
+		}
+
+	</script>
+
+
+</head>
+
+<body>
+	<!-- onload="checkCookie();" -->
+	<form id="test1">
+		<fieldset id="options">
+			<legend>options</legend>
+			<label for="option1">option 1</label> <select id="option1">
+				<option value="option1">option1</option>
+				<option value="option2">option2</option>
+				<option value="option3" disabled="disabled">Disabled option</option>
+				<!-- An invisible option is handled different by different browser, so no relevant for test -->
+				<option value="option4" style="visibility: hidden;">Option hidden</option>
+				<!-- An none-displayed option is handled different by different browser, so no relevant for test -->
+				<option value="option5" style="display: none;">Option display none</option>
+			</select>
+		</fieldset>
+		<fieldset>
+			<label for="checkbox">checkbox</label><input type="checkbox" name="checkboxInput" id="checkbox" />
+		</fieldset>
+		<fieldset>
+			<label for="texta">a</label> <input class="fielda" id="texta" />
+		</fieldset>
+
+		<fieldset>
+			<label for="textb">b</label> <input class="fieldb" id="textb" />
+		</fieldset>
+		<fieldset>
+			<label for="table">table</label>
+			<table id="table">
+				<thead>
+					<tr>
+						<th>Month</th>
+						<th>Savings</th>
+					</tr>
+				</thead>
+				<tfoot>
+					<tr>
+						<td>Sum</td>
+						<td>$180</td>
+					</tr>
+				</tfoot>
+				<tbody>
+					<tr>
+						<td>January</td>
+						<td>$100</td>
+					</tr>
+					<tr>
+						<td>February</td>
+						<td>$80</td>
+					</tr>
+				</tbody>
+			</table>
+		</fieldset>
+		<fieldset>
+			<a id="tab" class="btn" href="newtab.html" target="_blank">new tab</a>
+		</fieldset>
+		<fieldset>
+			<a id="window" class="btn" href="newindow.html"
+				onclick="window.open('newindow.html','newwindow','width=300,height=250');return false;">new window</a>
+		</fieldset>
+	</form>
+	<input id="upload" type="file">
+	
+	<div>
+		<input id="setPath" type="button" value="click on me" onclick="setUploadPathInsideSpan()">
+		<span id="uploadFilePath"></span>
+	</div>
+</body>
+
+
+</html>

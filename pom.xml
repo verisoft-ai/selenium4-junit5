@@ -37,10 +37,11 @@
 
         <!-- Dependencies -->
         <log4j2.version>2.17.1</log4j2.version>
-        <slf4j.version>2.0.0-alpha5</slf4j.version>
+        <slf4j.version>2.0.0-alpha6</slf4j.version>
         <aspectj.version>1.9.7</aspectj.version>
         <maven.compiler.version>3.9.0</maven.compiler.version>
         <lombok.version>1.18.22</lombok.version>
+        <verisoft.test.api.version>0.0.3-SNAPSHOT</verisoft.test.api.version>
 
 
         <!-- Maven plugins versions-->
@@ -54,7 +55,7 @@
 
 
         <!-- Test dependencies -->
-        <junit.platform.version>1.8.1</junit.platform.version>
+        <junit.platform.version>1.8.2</junit.platform.version>
         <junit.jupiter.version>5.8.2</junit.jupiter.version>
 
         <!-- Java -->
@@ -70,7 +71,7 @@
         <!-- Selenium -->
         <io.appium.version>8.0.0-beta2</io.appium.version>
         <webdrivermanager.version>5.0.3</webdrivermanager.version>
-        <org.selenium.version>4.1.1</org.selenium.version>
+        <org.selenium.version>4.1.2</org.selenium.version>
 
         <org.junit.jupiter.version>5.8.2</org.junit.jupiter.version>
     </properties>
@@ -84,6 +85,7 @@
             <version>${io.appium.version}</version>
             <scope>compile</scope>
         </dependency>
+
 
         <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
         <dependency>
@@ -117,6 +119,7 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -130,6 +133,12 @@
             <groupId>io.github.bonigarcia</groupId>
             <artifactId>webdrivermanager</artifactId>
             <version>${webdrivermanager.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.google.guava</groupId>
+                    <artifactId>guava</artifactId>
+                </exclusion>
+            </exclusions>
             <scope>compile</scope>
         </dependency>
 
@@ -171,9 +180,22 @@
 
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-slf4j-impl</artifactId>
+            <artifactId>log4j-slf4j18-impl</artifactId>
             <version>${log4j2.version}</version>
         </dependency>
+        <dependency>
+            <groupId>co.verisoft</groupId>
+            <artifactId>test-api</artifactId>
+            <version>${verisoft.test.api.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-compiler-plugin -->
+        <dependency>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>${maven.compiler.version}</version>
+        </dependency>
+
 
     </dependencies>
     <distributionManagement>
@@ -246,10 +268,6 @@
 
                     <!--suppress UnresolvedMavenProperty, MavenModelInspection -->
                     <skipTests>${skip.surefire.tests}</skipTests>
-                    <systemPropertyVariables>
-                        <webdriver.chrome.logfile>./target/SeleniumLogs/seleniumServerLog.log</webdriver.chrome.logfile>
-                        <webdriver.chrome.verboseLogging>true</webdriver.chrome.verboseLogging>
-                    </systemPropertyVariables>
                 </configuration>
 
             </plugin>
@@ -273,6 +291,10 @@
                         <goals>
                             <goal>report</goal>
                         </goals>
+                        <configuration>
+                            <dataFile>target/jacoco.exec</dataFile>
+                            <outputDirectory>target/jacoco-out</outputDirectory>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
