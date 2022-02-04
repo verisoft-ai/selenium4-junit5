@@ -114,7 +114,7 @@ import java.util.concurrent.TimeUnit;
  *
  *     driver.close();
  *     }
- * </pre><br></p>
+ * </pre><br>
  *
  * @author <a href="mailto:nir@verisoft.co">Nir Gallner</a> @ <a href="http://www.verisoft.co">www.VeriSoft.co</a>
  * @see org.openqa.selenium.remote.RemoteWebDriver
