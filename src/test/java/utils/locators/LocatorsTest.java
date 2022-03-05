@@ -1,6 +1,6 @@
-package utils.locators;
-
 /*
+ * (C) Copyright 2022 VeriSoft (http://www.verisoft.co)
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * See the NOTICE file distributed with this work for additional
@@ -15,20 +15,20 @@ package utils.locators;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+package utils.locators;
 
 import co.verisoft.fw.selenium.drivers.VerisoftDriver;
-import co.verisoft.fw.selenium.drivers.VerisoftDriverManager;
+import co.verisoft.fw.selenium.drivers.factory.DriverCapabilities;
+import co.verisoft.fw.selenium.junit.extensions.DriverInjectionExtension;
 import co.verisoft.fw.selenium.junit.extensions.SeleniumLogExtesion;
-import co.verisoft.fw.selenium.junit.extensions.VerisoftDriverFactoryExtension;
 import co.verisoft.fw.utils.locators.*;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.DesiredCapabilities;
 
 import java.io.File;
 import java.util.List;
@@ -36,18 +36,22 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @Execution(ExecutionMode.CONCURRENT)
-@ExtendWith({SeleniumLogExtesion.class, VerisoftDriverFactoryExtension.class})
+@ExtendWith({SeleniumLogExtesion.class, DriverInjectionExtension.class})
 public class LocatorsTest {
 
-    private static String pageTestUrl = "file://" +
+    private static final String pageTestUrl = "file://" +
             new File(System.getProperty("user.dir") +
                     "/src/test/resources/framework.html").getAbsolutePath();
 
 
-    @AfterEach
-    private void tear(){
-        VerisoftDriverManager.getDriver().quit();
+    @DriverCapabilities
+    private final DesiredCapabilities capabilities = new DesiredCapabilities();
+
+    {
+        capabilities.setCapability("browserName", "chrome");
+        capabilities.setCapability("headless", true);
     }
+
 
     @Test
     public void shouldFindLocatorFromSeveralLocators(VerisoftDriver driver) {
@@ -87,13 +91,13 @@ public class LocatorsTest {
         List<WebElement> elements = driver.findElements(NotBy.not(By.id("option1")));
 
         boolean foundObject = false;
-        for(WebElement e : elements)
-            if (e.getAttribute("id").equals("option1")){
+        for (WebElement e : elements)
+            if (e.getAttribute("id").equals("option1")) {
                 foundObject = true;
                 break;
             }
 
-        assertEquals(false, foundObject, "Should not find WebElement");
+        assertFalse(foundObject, "Should not find WebElement");
     }
 
     @Test
@@ -102,13 +106,13 @@ public class LocatorsTest {
         List<WebElement> elements = driver.findElements(NotBy.not(By.id("option1")));
 
         boolean foundObject = false;
-        for(WebElement e : elements)
-            if (e.getAttribute("id").equals("option2")){
+        for (WebElement e : elements)
+            if (e.getAttribute("id").equals("option2")) {
                 foundObject = true;
                 break;
             }
 
-        assertEquals(true, foundObject, "Should find WebElement");
+        assertTrue(foundObject, "Should find WebElement");
     }
 
     @Test
@@ -136,7 +140,7 @@ public class LocatorsTest {
     @Test
     public void allByNumerousLocatorsOneFound(VerisoftDriver driver) {
         driver.get(pageTestUrl);
-        List<WebElement> elements = driver.findElements(AllBy.all(By.name("options"),By.id("option1")));
+        List<WebElement> elements = driver.findElements(AllBy.all(By.name("options"), By.id("option1")));
         assertEquals(1, elements.size(), "Expected one element to be found");
         assertEquals("option1", elements.get(0).getAttribute("id"));
     }
@@ -144,14 +148,14 @@ public class LocatorsTest {
     @Test
     public void allByNumerousLocatorsNoneFound(VerisoftDriver driver) {
         driver.get(pageTestUrl);
-        List<WebElement> elements = driver.findElements(AllBy.all(By.name("option"),By.id("option1")));
+        List<WebElement> elements = driver.findElements(AllBy.all(By.name("option"), By.id("option1")));
         assertEquals(0, elements.size(), "Expected no element to be found");
     }
 
     @Test
     public void allByNumerousLocatorsNumerousFound(VerisoftDriver driver) {
         driver.get(pageTestUrl);
-        List<WebElement> elements = driver.findElements(AllBy.all(By.name("options"),By.xpath("//*[@extra='yes']")));
+        List<WebElement> elements = driver.findElements(AllBy.all(By.name("options"), By.xpath("//*[@extra='yes']")));
         assertTrue(1 < elements.size(), "Expected more than one element to be found");
     }
 
@@ -180,7 +184,7 @@ public class LocatorsTest {
     @Test
     public void anyByNumerousLocatorsOneFound(VerisoftDriver driver) {
         driver.get(pageTestUrl);
-        List<WebElement> elements = driver.findElements(AnyBy.any(By.name("option"),By.id("option1")));
+        List<WebElement> elements = driver.findElements(AnyBy.any(By.name("option"), By.id("option1")));
         assertEquals(1, elements.size(), "Expected one element to be found");
         assertEquals("option1", elements.get(0).getAttribute("id"));
     }
@@ -188,41 +192,44 @@ public class LocatorsTest {
     @Test
     public void anyByNumerousLocatorsNoneFound(VerisoftDriver driver) {
         driver.get(pageTestUrl);
-        List<WebElement> elements = driver.findElements(AnyBy.any(By.name("option"),By.id("option3")));
+        List<WebElement> elements = driver.findElements(AnyBy.any(By.name("option"), By.id("option3")));
         assertEquals(0, elements.size(), "Expected no element to be found");
     }
 
     @Test
     public void anyByNumerousLocatorsNumerousFound(VerisoftDriver driver) {
         driver.get(pageTestUrl);
-        List<WebElement> elements = driver.findElements(AnyBy.any(By.name("options"),By.id("option3")));
+        List<WebElement> elements = driver.findElements(AnyBy.any(By.name("options"), By.id("option3")));
         assertTrue(1 < elements.size(), "Expected more than one element to be found");
     }
 
     @Test
     public void anyByNumerousLocatorsCollection(VerisoftDriver driver) {
         driver.get(pageTestUrl);
-        List<WebElement> elements = driver.findElements(AnyBy.any(By.name("options"),By.id("test1")));
+        List<WebElement> elements = driver.findElements(AnyBy.any(By.name("options"), By.id("test1")));
         assertTrue(2 < elements.size(), "Expected more than one element to be found");
     }
 
-    @Test void elementByFoundResults(VerisoftDriver driver) {
+    @Test
+    void elementByFoundResults(VerisoftDriver driver) {
         driver.get(pageTestUrl);
         List<WebElement> elements = driver.findElements(ElementBy.partialText("checkbox"));
         assertTrue(1 <= elements.size(), "Expected more than one element to be found");
     }
 
-    @Test void elementByNoResults(VerisoftDriver driver) {
+    @Test
+    void elementByNoResults(VerisoftDriver driver) {
         //although "yes" exists in the document, it is not a value do will not be found
         List<WebElement> elements = driver.findElements(ElementBy.partialText("yes"));
-        assertTrue(0 == elements.size(), "Expected to found 0 elements");
+        assertEquals(0, elements.size(), "Expected to found 0 elements");
     }
 
-    @Test void inputByOneResult(VerisoftDriver driver) {
+    @Test
+    void inputByOneResult(VerisoftDriver driver) {
         driver.get(pageTestUrl);
         List<WebElement> elements = driver.findElements(InputBy.label("label"));
-        assertTrue(1 == elements.size(), "Expected to found 1 element");
-        assertTrue("texta".equals(elements.get(0).getAttribute("id")), "Expected to find 'texta' ");
+        assertEquals(1, elements.size(), "Expected to found 1 element");
+        assertEquals("texta", elements.get(0).getAttribute("id"), "Expected to find 'texta' ");
     }
 
     @Test
@@ -249,7 +256,7 @@ public class LocatorsTest {
         assertTrue(1 < elements.size(), "Expected to found more than 1 element");
         for (WebElement e : elements) {
             if (e.getAttribute("id").equals("options"))
-                found=true;
+                found = true;
         }
 
         assertTrue(found, "should have found the value 'options' in the DOM");
@@ -260,7 +267,7 @@ public class LocatorsTest {
     void tdBySpecificValueCellCol(VerisoftDriver driver) {
         driver.get(pageTestUrl);
         WebElement element = driver.findElement(TdBy.cellLocation(1, 0));
-        assertEquals("January",element.getText(), "Expected to found and element with value 'January'");
+        assertEquals("January", element.getText(), "Expected to found and element with value 'January'");
 
     }
 
@@ -268,7 +275,7 @@ public class LocatorsTest {
     void tdBySpecificHeaderByCol(VerisoftDriver driver) {
         driver.get(pageTestUrl);
         WebElement element = driver.findElement(TdBy.tableHeader(0));
-        assertEquals("Month",element.getText(), "Expected to found and element with value 'January'");
+        assertEquals("Month", element.getText(), "Expected to found and element with value 'January'");
 
     }
 }
