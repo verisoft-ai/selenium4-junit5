@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit;
 
 
 /**
- * Retry class, inspired by Yujun Liang & Alex Collins book "Selenium WebDriver - From Foundations To Framework"
+ * Retry class, inspired by Yujun Liang and Alex Collins book "Selenium WebDriver - From Foundations To Framework"
  * <br> Link to the book on amazon can be found
  * <a href="https://www.amazon.com/Selenium-WebDriver-Foundations-Yujun-Liang-ebook/dp/B01N9D0HMG">here</a>.
  *

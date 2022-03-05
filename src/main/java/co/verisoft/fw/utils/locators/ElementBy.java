@@ -21,7 +21,7 @@ import org.openqa.selenium.By;
 /**
  * <p>
  * A set of static methods to extend the search mechanism.<br>
- * It is used to simplify commonly used {@link org.openqa.selenium.FindBy FindBy}. 
+ * It is used to simplify commonly used {@link org.openqa.selenium FindBy}.
  * For example: <br><br>
  * {@code WebElement myElement = driver.findElement(ElementBy.partialText("searchText"));}<br><br>
  * </p>
@@ -43,7 +43,7 @@ public final class ElementBy {
 	}
 	
 	/**
-	 * Finds an element by using any part of it's <b>tag value<b>. 
+	 * Finds an element by using any part of it's <b>tag value</b>.
 	 * For example - {@code <tagName>value</tagName>} can be discovered by "value" or "val" using the following code:<br>
 	 * {@code List<WebElement> myList = driver.findElements(ElementBy.partialText("val"));}<br><br>
 	 * @param text the string to be searched

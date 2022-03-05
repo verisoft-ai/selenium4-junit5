@@ -41,14 +41,14 @@ public final class VerisoftDriverManager{
 	
 	/**
 	 * Register driver with current thread id to hashMap
-	 * @param driver
+	 * @param driver WebDriver object to be added to map
 	 */
 	public static  void addDriverToMap(WebDriver driver) {
 		Integer threadID = (int) Thread.currentThread().getId();
 		log.debug("Register driver " + driver.toString() + " by Thread ID " + threadID);
 		driverMap.put(threadID, driver);
 	}
-	
+
 	/**
 	 * Returns driver with the current thread id
 	 * @return T - template of WebDriver. i.e, if you know that the stored WebDriver object is VeriSoftDriver,

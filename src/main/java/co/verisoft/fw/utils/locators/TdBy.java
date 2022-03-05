@@ -46,9 +46,7 @@ public final class TdBy {
 	 * Looks for a cell value with rowNumber and columnNumber. <br>
 	 * For example: <br>
 	 * with the following table:<br>
-	 * 
-	 * <pre>
-	 * <label for="table">table</label>
+	 *
 	 *		<table id="table">
 	 *			<thead>
 	 *				<tr>
@@ -73,8 +71,7 @@ public final class TdBy {
 	 *				</tr>
 	 *			</tbody>
 	 *		</table>
-	 * </pre>
-	 * The code {@code WebElement element = driver.findElement(TdBy.cellLocation(1,0));} <br>
+	 * <br><br>The code {@code WebElement element = driver.findElement(TdBy.cellLocation(1,0));} <br>
 	 * will return the value "January"
 	 * @param rowNumber
 	 *            row number to look for. First row is 0
@@ -93,9 +90,7 @@ public final class TdBy {
 	 * For example: <br>
 	 * with the following table:<br>
 	 * 
-	 * <pre>
-	 * <label for="table">table</label>
-	 *		<table id="table">
+	 *		<table summary="">
 	 *			<thead>
 	 *				<tr>
 	 *					<th>Month</th>
@@ -119,7 +114,6 @@ public final class TdBy {
 	 *				</tr>
 	 *			</tbody>
 	 *		</table>
-	 * </pre>
 	 * The code {@code WebElement element = driver.findElement(TdBy.tableHeader(0));} <br>
 	 * will return the value "Month"
 	 *

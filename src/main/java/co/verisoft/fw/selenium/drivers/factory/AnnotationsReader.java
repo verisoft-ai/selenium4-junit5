@@ -42,10 +42,10 @@ import static java.util.Optional.of;
  * <br><b>Exmample</b><br>
  * <pre>{@code
  * public class DriverTest {
- *     @DriverUrl
+ *     <code>@DriverUrl</code>
  *     private URL url = new URL("http://localhost:4723/");
  *
- *     @DriverCapabilities
+ *     <code>@DriverCapabilities</code>
  *     DesiredCapabilities capabilities = new DesiredCapabilities();
  *     {
  *         capabilities.setCapability("platformName", "android");
@@ -55,6 +55,7 @@ import static java.util.Optional.of;
  *         capabilities.setCapability("platformVersion", "11");
  *         capabilities.setCapability("automationName", "uiAutomator2");
  *     }
+ * }
  * }</pre><br><br>
  */
 @SuppressWarnings("OptionalUsedAsFieldOrParameterType")

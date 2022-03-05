@@ -26,7 +26,7 @@ package co.verisoft.fw.async;
  * STDIO, and then asks to be unregistered from further executions.<br><br>
  * <pre>{@code
  * Observer o = new AsyncTask(driver, new SeleniumTask() {
- *             @Override
+ *             <code>@Override</code>
  *             public boolean doTask() {
  *                 String pageTitle = driver.getCurrentUrl();
  *                 System.out.println("Time is " + LocalTime.now() + ", page url is " + pageTitle);
@@ -44,11 +44,11 @@ package co.verisoft.fw.async;
  *
  * <pre>{@code
  * Observer o = new AsyncTask(driver, new SeleniumTask() {
- *             @Override
+ *             <code>@Override</code>
  *             public boolean doTask() {
  *                 boolean result = false;
  *
- *                 List<WebElement> elements = driver.findElements(By.id("popup-button-dismiss-locator"));
+ *                 <code>List<WebElement></code> elements = driver.findElements(By.id("popup-button-dismiss-locator"));
  *                 if (elements.isEmpty())
  *                     return false;
  *

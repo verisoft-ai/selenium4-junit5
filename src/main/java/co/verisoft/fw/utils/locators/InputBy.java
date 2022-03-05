@@ -47,7 +47,7 @@ public final class InputBy {
 	 * <ul>
 	 * <li><b>a.</b> Of type input</li>
 	 * <li><b>b.</b> Contains the label sent as parameter</li>
-	 * <li><b>c.</b> Has a general structure of {@code <label><input /> </label> }</li> <br>
+	 * <li><b>c.</b> Has a general structure of {@code <label><input /> </label> }</li>
 	 * </ul>
 	 * For example:<br>
 	 * The following html code:
@@ -65,8 +65,7 @@ public final class InputBy {
 	 * {@code driver.findElements(InputBy.label("label"));} <br>
 	 * If the structure of the form does not comply with {@code <label> <input /> </label> } then the 
 	 * search will not find the input
-	 * </p>
-	 * 
+	 *
 	 * @param labelText the name of the label to look for
 	 * @return By object to be searched for in findElements
 	 */

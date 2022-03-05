@@ -53,8 +53,8 @@ import java.util.List;
  * b. interval has elapsed, a method will be called. <br>
  * We use the observer pattern to manage all the async code in one place. If you
  * are not familiar with the observer patter,
- * <a href="https://en.wikipedia.org/wiki/Observer_pattern">visit the wikipedia
- * site</a></a>. Essentially, this class serves as both listener, which
+ * <a href="https://en.wikipedia.org/wiki/Observer_pattern">visit the wikipedia</a>
+ * site. Essentially, this class serves as both listener, which
  * implements the SearchingEventListener interface, and subject (from the
  * observer mechanism), which implements the Subject interface.
  *

@@ -58,9 +58,7 @@ import java.util.Set;
  * 2. Extended logging<br>
  * 3. All available events are registered. See events in the "See Also" section<br>
  * 4. WebDriver is wrapped with EventFiringDecorator. See in the "See Also" section <br>
- * <br>
- * <p>
- * <p>
+ * <br><br>
  * The driver is instanciated by specifying the relevant DesiredCapabilities, and if the driver is a remote driver,
  * specifying remote url. All of VeriSoft's ctors expectes at least
  * a DesiredCapabilities object.
