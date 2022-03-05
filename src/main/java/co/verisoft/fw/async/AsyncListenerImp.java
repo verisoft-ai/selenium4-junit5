@@ -1,4 +1,6 @@
 /*
+ * (C) Copyright 2022 VeriSoft (http://www.verisoft.co)
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * See the NOTICE file distributed with this work for additional
@@ -15,7 +17,6 @@
  */
 package co.verisoft.fw.async;
 
-import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Method;
@@ -60,7 +61,6 @@ import java.util.List;
  * @author <a href="mailto:nir@verisoft.co">Nir Gallner</a> @ <a href="http://www.verisoft.co">www.VeriSoft.co</a>
  * @since 2.0.1
  */
-@ToString
 @Slf4j
 public class AsyncListenerImp implements AsyncExecutor.AsyncListener {
 
@@ -82,16 +82,18 @@ public class AsyncListenerImp implements AsyncExecutor.AsyncListener {
 
     /**
      * Setter for the dispatch interval and the time unit. The defailt valie of the
-     * dispatcher is 1 second and it is the minimum dispatcher possible. If tried to
-     * set less than 1 second, setter will not update the values
+     * dispatcher is 5 second and it is the minimum dispatcher possible. If tried to
+     * set less than 5 second, setter will not update the values
      *
      * @param duration new interval for invocation
      */
     public void setDispatchInterval(Duration duration) {
         LocalDateTime t = LocalDateTime.now();
         LocalDateTime t1 = t.plus(duration);
-        if (t1.minus(Duration.ofSeconds(5)).isAfter(t)) {
+        if (t1.minus(Duration.ofSeconds(5)).isBefore(t)) {
             interval = Duration.ofSeconds(5);
+        } else {
+            interval = duration;
         }
 
     }
