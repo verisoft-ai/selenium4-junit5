@@ -1,5 +1,6 @@
-package co.verisoft.fw.selenium.drivers;
 /*
+ * (C) Copyright 2022 VeriSoft (http://www.verisoft.co)
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * See the NOTICE file distributed with this work for additional
@@ -15,6 +16,9 @@ package co.verisoft.fw.selenium.drivers;
  * limitations under the License.
  */
 
+package co.verisoft.fw.selenium.drivers;
+
+import co.verisoft.fw.async.AsyncListenerImp;
 import co.verisoft.fw.selenium.listeners.*;
 import co.verisoft.fw.utils.Property;
 import io.appium.java_client.AppiumDriver;
@@ -44,6 +48,7 @@ import org.openqa.selenium.support.events.WebDriverListener;
 import org.openqa.selenium.virtualauthenticator.HasVirtualAuthenticator;
 import org.openqa.selenium.virtualauthenticator.VirtualAuthenticator;
 import org.openqa.selenium.virtualauthenticator.VirtualAuthenticatorOptions;
+
 import java.net.URL;
 import java.time.Duration;
 import java.util.*;
@@ -118,9 +123,10 @@ import java.util.concurrent.TimeUnit;
  *
  * @author <a href="mailto:nir@verisoft.co">Nir Gallner</a> @ <a href="http://www.verisoft.co">www.VeriSoft.co</a>
  * @see org.openqa.selenium.remote.RemoteWebDriver
- * // * @see co.verisoft.selenium.framework.async.AsyncTask
+ * @see co.verisoft.fw.async.AsyncTask
  * @since 1.9.6
  */
+@SuppressWarnings("deprecation")
 @ToString
 @Augmentable
 @Slf4j
@@ -136,10 +142,12 @@ public class VerisoftDriver implements
         WrapsDriver {
 
     protected WebDriver driver;
+    private AsyncListenerImp asyncListener;
 
 
     /**
      * C-tor for local drivers only
+     *
      * @param capabilities cpabilities object
      */
     public VerisoftDriver(@Nullable Capabilities capabilities) {
@@ -154,8 +162,9 @@ public class VerisoftDriver implements
 
     /**
      * C-tor for local and remote drivers
+     *
      * @param remoteAddress address of the remote Selenium server
-     * @param capabilities capabilities object
+     * @param capabilities  capabilities object
      */
     public VerisoftDriver(URL remoteAddress, Capabilities capabilities) {
         try {
@@ -303,8 +312,7 @@ public class VerisoftDriver implements
     @Override
     public Capabilities getCapabilities() {
         log.debug("Driver activity log: retrieve capabilities");
-        Capabilities capabilities = ((HasCapabilities) driver).getCapabilities();
-        return capabilities;
+        return ((HasCapabilities) driver).getCapabilities();
     }
 
     @Override
@@ -457,7 +465,7 @@ public class VerisoftDriver implements
 
         public void to(URL url) {
 
-            log.debug("Driver activity log: Navigation -> to -> " + String.valueOf(url));
+            log.debug("Driver activity log: Navigation -> to -> " + url);
             get(String.valueOf(url));
         }
 
@@ -694,6 +702,17 @@ public class VerisoftDriver implements
         }
     }
 
+    /**
+     * Retrieves the Async listener. If it is not initialized yet, initializes the listener
+     *
+     * @return AsyncListener object
+     */
+    public AsyncListenerImp async() {
+        if (asyncListener == null)
+            asyncListener = new AsyncListenerImp();
+        return asyncListener;
+    }
+
 
     /**
      * Private method to create a proper WebDriver object. If the remoteAddress is null, it will create a
@@ -758,10 +777,6 @@ public class VerisoftDriver implements
      */
     private void initDriver(WebDriver driver) {
 
-        // Create asyncListener object to be activated here
-//        if (asyncListener == null)
-//            asyncListener = new AsyncListenerImp();
-
         List<WebDriverListener> listeners = new ArrayList<>();
 
         listeners.add(new AlertListener());
@@ -772,15 +787,29 @@ public class VerisoftDriver implements
         listeners.add(new WebElementListener());
         listeners.add(new WindowListener());
 
+        // Create asyncListener object to be activated here
+        if (asyncListener == null) {
+            asyncListener = new AsyncListenerImp();
+            listeners.add(asyncListener);
+        }
+
+
         WebDriverListener[] listenersArr = new WebDriverListener[listeners.size()];
         listenersArr = listeners.toArray(listenersArr);
 
-        this.driver = new EventFiringDecorator(listenersArr).decorate(driver);
+        // TODO: Seems like there is a bug using appium with decorator
+        if (!(driver instanceof AppiumDriver))
+            this.driver = new EventFiringDecorator(listenersArr).decorate(driver);
+        else
+            this.driver = driver;
+
+        VerisoftDriverManager.addDriverToMap(driver);
     }
 
 
     /**
      * Cretes a local driver instance
+     *
      * @param capabilities capabilities object
      * @return a new WebDriver object
      */
@@ -794,8 +823,8 @@ public class VerisoftDriver implements
 
             case BrowserType.CHROME:
                 try {
-                    //WebDriverManager.chromedriver().setup();
-                    throw new RuntimeException();
+                    WebDriverManager.chromedriver().setup();
+                    //throw new RuntimeException();
                 } catch (Throwable t) {
                     String version = prop.getProperty("wdm.chromeDriverVersion");
                     WebDriverManager.chromedriver().driverVersion(version).setup();
@@ -854,7 +883,7 @@ public class VerisoftDriver implements
 
             case BrowserType.SAFARI:
                 try {
-                    //WebDriverManager.safaridriver().setup();
+                    WebDriverManager.safaridriver().setup();
                 } catch (Throwable t) {
                     String version = prop.getProperty("wdm.safariDriverVersion");
                     WebDriverManager.safaridriver().driverVersion(version).setup();

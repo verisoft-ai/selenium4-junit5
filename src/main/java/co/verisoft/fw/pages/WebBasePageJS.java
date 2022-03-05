@@ -24,6 +24,7 @@ import co.verisoft.fw.utils.Waits;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 
+import java.util.Objects;
 import java.util.Set;
 
 
@@ -35,15 +36,15 @@ import java.util.Set;
  */
 public interface WebBasePageJS {
 
-    final int timeout = new Property().getIntProperty("selenium_wait_timeout");
+    int timeout = new Property().getIntProperty("selenium_wait_timeout");
 
     /**
      * click on element by using Java Script
      *
-     * @param element
+     * @param element Webelement element
      */
     default void clickOnElementByJS(WebElement element) {
-        ((JavascriptExecutor) VerisoftDriverManager.getDriver())
+        ((JavascriptExecutor) Objects.requireNonNull(VerisoftDriverManager.getDriver()))
                 .executeScript("arguments[0].click();", element);
     }
 
@@ -51,7 +52,7 @@ public interface WebBasePageJS {
     /**
      * Perform mouse hover on WebElement by Java Script
      *
-     * @param element
+     * @param element Webelement element
      */
     default void mouseHoverByJS(WebElement element) {
         String mouseOverScript =
@@ -62,18 +63,19 @@ public interface WebBasePageJS {
                         "else if(document.createEventObject) { " +
                         "arguments[0].fireEvent('onmouseover');}";
 
-        ((JavascriptExecutor) VerisoftDriverManager.getDriver()).executeScript(mouseOverScript, element);
+        ((JavascriptExecutor) Objects.requireNonNull(VerisoftDriverManager.getDriver()))
+                .executeScript(mouseOverScript, element);
     }
 
 
     /**
      * Get RGB color of Pseudo Code CSS from WebElemnt
      *
-     * @param element
+     * @param element Webelement element
      * @return RGB(Red, Green, Blue)
      */
     default String getBeforePseudoCode(WebElement element) {
-        return ((JavascriptExecutor) VerisoftDriverManager.getDriver())
+        return ((JavascriptExecutor) Objects.requireNonNull(VerisoftDriverManager.getDriver()))
                 .executeScript("return window.getComputedStyle(arguments[0], ':before')" +
                                 ".getPropertyValue('background-color');"
                         , element).toString();
@@ -85,16 +87,17 @@ public interface WebBasePageJS {
      */
     default void openNewTab() {
 
-        ((JavascriptExecutor) VerisoftDriverManager.getDriver()).executeScript("window.open()");
+        ((JavascriptExecutor) Objects.requireNonNull(VerisoftDriverManager.getDriver()))
+                .executeScript("window.open()");
     }
 
 
     /**
-     * @param rootElement
+     * @param rootElement Root shadow element
      * @return return Shadow root element
      */
     default WebElement getShadowRoot(WebElement rootElement) {
-        return (WebElement) ((JavascriptExecutor) VerisoftDriverManager.getDriver())
+        return (WebElement) ((JavascriptExecutor) Objects.requireNonNull(VerisoftDriverManager.getDriver()))
                 .executeScript("return arguments[0].shadowRoot", rootElement);
     }
 
@@ -102,11 +105,11 @@ public interface WebBasePageJS {
     /**
      * get css of ::before attribute
      *
-     * @param element
+     * @param element Webelement element
      * @return RGB(red, green, blue, blur)
      */
     default String getColorOfBeforeCssAtter(WebElement element) {
-        return ((JavascriptExecutor) VerisoftDriverManager.getDriver())
+        return ((JavascriptExecutor) Objects.requireNonNull(VerisoftDriverManager.getDriver()))
                 .executeScript("return window.getComputedStyle(arguments[0], ':before')" +
                                 ".getPropertyValue('background-color');",
                         element).toString();
