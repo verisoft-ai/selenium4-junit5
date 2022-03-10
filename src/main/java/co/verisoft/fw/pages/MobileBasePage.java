@@ -46,6 +46,7 @@ public abstract class MobileBasePage extends BasePage {
 
     protected MobileBasePage(WebDriver driver) {
         super(driver);
+        this.driver = (VerisoftMobileDriver)driver;
     }
 
     public MobileBasePage(VerisoftMobileDriver driver) {

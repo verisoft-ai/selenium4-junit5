@@ -16,12 +16,16 @@
 package co.verisoft.fw.pages;
 
 
+import co.verisoft.fw.selenium.drivers.VerisoftMobileDriver;
 import co.verisoft.fw.utils.Property;
 import co.verisoft.fw.utils.Waits;
+import io.appium.java_client.AppiumDriver;
+import io.appium.java_client.pagefactory.AppiumFieldDecorator;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.PageFactory;
 
 import java.util.Arrays;
 
@@ -49,9 +53,14 @@ public abstract class BasePage {
      */
     public BasePage(WebDriver driver) {
         Property prop = new Property();
-        timeOut = prop.getIntProperty("selenium_wait_timeout");
-        pollingInterval = prop.getIntProperty("polling_interval");
+        timeOut = prop.getIntProperty("selenium.wait.timeout");
+        pollingInterval = prop.getIntProperty("polling.interval");
         this.driver = driver;
+        if (driver instanceof VerisoftMobileDriver)
+            PageFactory.initElements(new AppiumFieldDecorator(driver), this);
+        else
+            PageFactory.initElements(driver, this);
+
     }
 
 

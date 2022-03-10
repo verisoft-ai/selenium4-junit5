@@ -41,7 +41,7 @@
         <aspectj.version>1.9.7</aspectj.version>
         <maven.compiler.version>3.10.0</maven.compiler.version>
         <lombok.version>1.18.22</lombok.version>
-        <verisoft.test.api.version>0.0.3-SNAPSHOT</verisoft.test.api.version>
+        <verisoft.test.api.version>0.0.4-SNAPSHOT</verisoft.test.api.version>
 
 
         <!-- Maven plugins versions-->
@@ -320,4 +320,16 @@
             </plugin>
         </plugins>
     </build>
+    <repositories>
+        <repository>
+            <id>oss.sonatype.org-snapshot</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
 </project>
