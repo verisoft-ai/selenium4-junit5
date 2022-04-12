@@ -795,12 +795,7 @@ public class VerisoftDriver implements
         WebDriverListener[] listenersArr = new WebDriverListener[listeners.size()];
         listenersArr = listeners.toArray(listenersArr);
 
-        // TODO: Seems like there is a bug using appium with decorator
-        if (!(driver instanceof AppiumDriver))
-            this.driver = new EventFiringDecorator(listenersArr).decorate(driver);
-        else
-            this.driver = driver;
-
+        this.driver = new EventFiringDecorator(listenersArr).decorate(driver);
         VerisoftDriverManager.addDriverToMap(driver);
     }
 
