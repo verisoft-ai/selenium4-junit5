@@ -17,7 +17,7 @@ package co.verisoft.fw.utils.internal;
 
 public final class Sel4Junit5ProjectConstants {
 
-    public static final String ROOT_PROPERTY_PATH = "./src/main/resources/sel4jup5.properties";
+    public static final String ROOT_PROPERTY_PATH = "sel4jup5.properties";
     public static final String SELENIUM_LOGS_VERBOSE = "selenium.logs.verbose";
     public static final String SELENIUM_WAIT_TIMEOUT = "selenium.wait.timeout";
     public static final String POLLING_INTERVAL = "polling.interval";

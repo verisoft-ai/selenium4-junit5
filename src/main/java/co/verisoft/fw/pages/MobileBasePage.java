@@ -124,7 +124,7 @@ public abstract class MobileBasePage extends BasePage {
                         30, 3);
             }
         }
-        throw new ElementNotVisibleException("element : " + by.toString());
+        throw new ElementNotInteractableException("element : " + by.toString());
     }
 
 
@@ -152,7 +152,7 @@ public abstract class MobileBasePage extends BasePage {
                         percentHeightEnd, secDuration);
             }
         }
-        throw new ElementNotVisibleException("Container Element : " + containerElement.toString() + " By : " +
+        throw new ElementNotInteractableException("Container Element : " + containerElement.toString() + " By : " +
                 by.toString());
     }
 }

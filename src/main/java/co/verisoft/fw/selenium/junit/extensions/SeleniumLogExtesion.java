@@ -44,7 +44,7 @@ public class SeleniumLogExtesion implements BeforeAllCallback {
 
         // Declare the file
         System.setProperty("webdriver.chrome.logfile", logFileName);
-        String verbose = new Property("./src/main/resources/sel4jup5.properties").getProperty("selenium.logs.verbose");
+        String verbose = new Property("sel4jup5.properties").getProperty("selenium.logs.verbose");
         System.setProperty("webdriver.chrome.verboseLogging", verbose);
     }
 }

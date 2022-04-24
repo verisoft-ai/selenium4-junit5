@@ -807,7 +807,7 @@ public class VerisoftDriver implements
      * @return a new WebDriver object
      */
     private WebDriver instanciateLocalDriver(Capabilities capabilities) {
-        Property prop = new Property("./src/main/resources/webdrivermanager.properties");
+        Property prop = new Property("webdrivermanager.properties");
 
         boolean isHeadless;
         String browserName = capabilities.getBrowserName();
@@ -817,9 +817,8 @@ public class VerisoftDriver implements
             case BrowserType.CHROME:
                 try {
                     WebDriverManager.chromedriver().setup();
-                    //throw new RuntimeException();
                 } catch (Throwable t) {
-                    String version = prop.getProperty("wdm.chromeDriverVersion");
+                    String version = prop.getProperty("chromeDriverVersion");
                     WebDriverManager.chromedriver().driverVersion(version).setup();
                 }
 
@@ -834,7 +833,7 @@ public class VerisoftDriver implements
                 try {
                     WebDriverManager.firefoxdriver().setup();
                 } catch (Throwable t) {
-                    String version = prop.getProperty("wdm.geckoDriverVersion");
+                    String version = prop.getProperty("geckoDriverVersion");
                     WebDriverManager.firefoxdriver().driverVersion(version).setup();
                 }
 
@@ -848,7 +847,7 @@ public class VerisoftDriver implements
                 try {
                     WebDriverManager.iedriver().setup();
                 } catch (Throwable t) {
-                    String version = prop.getProperty("wdm.internetExplorerVersion");
+                    String version = prop.getProperty("internetExplorerVersion");
                     WebDriverManager.iedriver().driverVersion(version).setup();
                 }
 
@@ -858,7 +857,7 @@ public class VerisoftDriver implements
                 try {
                     WebDriverManager.edgedriver().setup();
                 } catch (Throwable t) {
-                    String version = prop.getProperty("wdm.edgeDriverVersion");
+                    String version = prop.getProperty("edgeDriverVersion");
                     WebDriverManager.edgedriver().driverVersion(version).setup();
                 }
 
@@ -868,7 +867,7 @@ public class VerisoftDriver implements
                 try {
                     WebDriverManager.operadriver().setup();
                 } catch (Throwable t) {
-                    String version = prop.getProperty("wdm.operaDriverVersion");
+                    String version = prop.getProperty("operaDriverVersion");
                     WebDriverManager.operadriver().driverVersion(version).setup();
                 }
 
@@ -878,7 +877,7 @@ public class VerisoftDriver implements
                 try {
                     WebDriverManager.safaridriver().setup();
                 } catch (Throwable t) {
-                    String version = prop.getProperty("wdm.safariDriverVersion");
+                    String version = prop.getProperty("safariDriverVersion");
                     WebDriverManager.safaridriver().driverVersion(version).setup();
                 }
                 return new SafariDriver();
