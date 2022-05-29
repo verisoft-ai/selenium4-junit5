@@ -1,6 +1,7 @@
 package co.verisoft.fw.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -13,9 +14,11 @@ import java.util.HashMap;
  * Read capabilities file from Json.
  * Source can be found here:
  * https://medium.com/geekculture/how-to-set-up-appium-desired-capabilities-from-a-json-file-91b3e0bb16dc
+ *
  * @author Rommel Malqued
  * @since Aug 2021
  */
+@Slf4j
 public class CapabilitiesReader {
 
     private static JSONArray parseJSON(String jsonLocation) throws Exception {
@@ -44,13 +47,21 @@ public class CapabilitiesReader {
     /**
      * Main method of class. This is the entry point to the class logic. Method takes a capability file and capability
      * name, builds a DesiredCapability object and returns it.
-     * @param capabilityName The name of the capability to load
+     *
+     * @param capabilityName          The name of the capability to load
      * @param capsContentRootLocation path to capability
      * @return DesiredCapability file
      * @throws Exception Runtime unexpected exception
      */
-    public static DesiredCapabilities getDesiredCapabilities(String capabilityName, String capsContentRootLocation) throws Exception {
-        HashMap<String, Object>  caps = convertCapsToHashMap(capabilityName, capsContentRootLocation);
-        return new DesiredCapabilities(caps);
+    public static DesiredCapabilities getDesiredCapabilities(String capabilityName, String capsContentRootLocation) {
+        try {
+            HashMap<String, Object> caps = convertCapsToHashMap(capabilityName, capsContentRootLocation);
+            log.debug("Capabilities loaded from json file.");
+            return new DesiredCapabilities(caps);
+        } catch (Exception e) {
+            log.error("Failed to load capabilities.", e);
+            return null;
+        }
+
     }
 }
