@@ -26,6 +26,7 @@ import io.appium.java_client.pagefactory.AppiumFieldDecorator;
 import io.appium.java_client.touch.WaitOptions;
 import io.appium.java_client.touch.offset.PointOption;
 import lombok.ToString;
+import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.PageFactory;
@@ -38,7 +39,7 @@ import java.time.Duration;
  * @author <a href="mailto:nir@verisoft.co">Nir Gallner</a> @ <a href="http://www.verisoft.co">www.VeriSoft.co</a>
  * @since 2.0.1
  */
-@Slf4j
+@Log4j2
 @ToString
 public abstract class MobileBasePage extends BasePage {
 

@@ -19,6 +19,7 @@ package co.verisoft.fw.selenium.listeners;
 import co.verisoft.fw.utils.ActionTime;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
@@ -38,7 +39,7 @@ import java.util.List;
  */
 @ToString
 @NoArgsConstructor
-@Slf4j
+@Log4j2
 /**
  * Listener class for WebElement events
  *

@@ -1,6 +1,7 @@
 package co.verisoft.fw.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -18,7 +19,7 @@ import java.util.HashMap;
  * @author Rommel Malqued
  * @since Aug 2021
  */
-@Slf4j
+@Log4j2
 public class CapabilitiesReader {
 
     private static JSONArray parseJSON(String jsonLocation) throws Exception {

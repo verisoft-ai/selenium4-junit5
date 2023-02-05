@@ -19,6 +19,7 @@ package co.verisoft.fw.selenium.listeners;
 import co.verisoft.fw.utils.ActionTime;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
@@ -36,7 +37,7 @@ import java.util.Arrays;
  */
 @ToString
 @NoArgsConstructor
-@Slf4j
+@Log4j2
 public final class WindowListener implements WebDriverListener {
 
     private ActionTime actionTime;

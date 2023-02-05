@@ -18,6 +18,7 @@ package co.verisoft.fw.selenium.drivers;
 
 
 import lombok.ToString;
+import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.Nullable;
 import org.openqa.selenium.WebDriver;
@@ -32,7 +33,7 @@ import java.util.Map;
  * @since 1.9.6
  */
 @ToString
-@Slf4j
+@Log4j2
 public final class VerisoftDriverManager{
 
 	private static Map<Integer, WebDriver> driverMap = new HashMap<Integer, WebDriver>();

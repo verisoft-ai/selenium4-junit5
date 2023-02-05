@@ -30,6 +30,7 @@ import io.appium.java_client.screenrecording.BaseStartScreenRecordingOptions;
 import io.appium.java_client.screenrecording.BaseStopScreenRecordingOptions;
 import io.appium.java_client.screenrecording.CanRecordScreen;
 import lombok.ToString;
+import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.Nullable;
 import org.openqa.selenium.*;
@@ -69,7 +70,7 @@ import java.util.Set;
  * @since 1.9.6
  */
 @SuppressWarnings({"deprecation", "rawtypes"})
-@Slf4j
+@Log4j2
 @ToString
 public class VerisoftMobileDriver extends VerisoftDriver implements
         SupportsContextSwitching, SupportsRotation, SupportsLocation,

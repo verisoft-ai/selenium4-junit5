@@ -17,6 +17,7 @@ package co.verisoft.fw.selenium.drivers.factory;
 
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.Capabilities;
@@ -61,7 +62,7 @@ import static java.util.Optional.of;
 @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 @ToString
 @NoArgsConstructor
-@Slf4j
+@Log4j2
 public class AnnotationsReader {
 
     public Optional<Capabilities> getCapabilities(Parameter parameter,

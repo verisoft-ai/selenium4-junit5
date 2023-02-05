@@ -25,6 +25,7 @@ import co.verisoft.fw.selenium.drivers.factory.SingleSession;
 import io.appium.java_client.AppiumDriver;
 import lombok.ToString;
 import lombok.extern.log4j.Log4j;
+import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.TestTemplate;
 import org.junit.jupiter.api.extension.*;
 import org.openqa.selenium.Capabilities;
@@ -44,7 +45,7 @@ import java.util.Optional;
  * @since 0.0.. (March 2022)
  */
 @ToString
-@Log4j
+@Log4j2
 public class DriverInjectionExtension implements ParameterResolver, AfterEachCallback, AfterAllCallback {
 
     AnnotationsReader annotationsReader;

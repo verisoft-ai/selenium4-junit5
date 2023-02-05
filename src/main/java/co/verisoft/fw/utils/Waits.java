@@ -19,6 +19,7 @@ package co.verisoft.fw.utils;
 
 
 import lombok.ToString;
+import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.openqa.selenium.*;
@@ -39,7 +40,7 @@ import java.util.regex.Pattern;
  * @author David Yehezkel
  * @since 1.9.6
  */
-@Slf4j
+@Log4j2
 @ToString
 public final class Waits {
     private Waits() {
