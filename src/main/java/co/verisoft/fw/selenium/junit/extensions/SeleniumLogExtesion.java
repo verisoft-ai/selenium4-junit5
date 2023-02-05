@@ -1,13 +1,14 @@
 package co.verisoft.fw.selenium.junit.extensions;
 
 import co.verisoft.fw.utils.Property;
+import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
 import java.io.File;
 
-@Slf4j
+@Log4j2
 /**
  * If activated, it creates a file for WebDriver logs, sets it in the ./target/logs directory, and
  * set the log level (verbose) accourding to property file.

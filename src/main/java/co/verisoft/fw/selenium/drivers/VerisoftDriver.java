@@ -26,6 +26,7 @@ import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.ios.IOSDriver;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import lombok.ToString;
+import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.Nullable;
 import org.openqa.selenium.*;
@@ -37,10 +38,9 @@ import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.interactions.*;
 import org.openqa.selenium.logging.Logs;
-import org.openqa.selenium.opera.OperaDriver;
 import org.openqa.selenium.print.PrintOptions;
 import org.openqa.selenium.remote.Augmentable;
-import org.openqa.selenium.remote.BrowserType;
+import org.openqa.selenium.remote.Browser;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.safari.SafariDriver;
 import org.openqa.selenium.support.events.EventFiringDecorator;
@@ -127,11 +127,10 @@ import java.util.concurrent.TimeUnit;
 @SuppressWarnings("deprecation")
 @ToString
 @Augmentable
-@Slf4j
+@Log4j2
 public class VerisoftDriver implements
         WebDriver,
         JavascriptExecutor,
-        HasInputDevices,
         HasCapabilities,
         HasVirtualAuthenticator,
         Interactive,
@@ -293,19 +292,6 @@ public class VerisoftDriver implements
         return ((JavascriptExecutor) driver).executeScript(key, args);
     }
 
-    @Override
-    public Keyboard getKeyboard() {
-        Keyboard keyboard = ((HasInputDevices) driver).getKeyboard();
-        log.debug("Driver activity log: get keyboard " + keyboard.toString());
-        return keyboard;
-    }
-
-    @Override
-    public Mouse getMouse() {
-        Mouse mouse = ((HasInputDevices) driver).getMouse();
-        log.debug("Driver activity log: get mouse " + mouse.toString());
-        return mouse;
-    }
 
     @Override
     public Capabilities getCapabilities() {
@@ -525,9 +511,6 @@ public class VerisoftDriver implements
             return new VerisoftDriver.VerisoftDriverOptions.VerisoftTimeouts();
         }
 
-        public ImeHandler ime() {
-            return new VerisoftDriver.VerisoftDriverOptions.VerisoftInputMethodManager();
-        }
 
         @Beta
         public Window window() {
@@ -664,40 +647,6 @@ public class VerisoftDriver implements
                 return duration;
             }
         }
-
-        protected class VerisoftInputMethodManager implements ImeHandler {
-            protected VerisoftInputMethodManager() {
-            }
-
-            public List<String> getAvailableEngines() {
-                List<String> getAvailableEngines = driver.manage().ime().getAvailableEngines();
-                log.debug("Driver activity log: manage -> ime -> getAvailableEngines : " +
-                        Arrays.toString(getAvailableEngines.toArray()));
-                return getAvailableEngines;
-            }
-
-            public String getActiveEngine() {
-                String getActiveEngine = driver.manage().ime().getActiveEngine();
-                log.debug("Driver activity log: manage -> ime -> getActiveEngine : " + getActiveEngine);
-                return getActiveEngine;
-            }
-
-            public boolean isActivated() {
-                boolean isActivated = driver.manage().ime().isActivated();
-                log.debug("Driver activity log: manage -> ime -> isActivated : " + isActivated);
-                return isActivated;
-            }
-
-            public void deactivate() {
-                log.debug("Driver activity log: manage -> ime -> deactivate");
-                driver.manage().ime().deactivate();
-            }
-
-            public void activateEngine(String engine) {
-                log.debug("Driver activity log: manage -> ime -> activateEngine : " + engine);
-                driver.manage().ime().activateEngine(engine);
-            }
-        }
     }
 
     /**
@@ -810,11 +759,11 @@ public class VerisoftDriver implements
         Property prop = new Property("webdrivermanager.properties");
 
         boolean isHeadless;
-        String browserName = capabilities.getBrowserName();
+        String browserName = capabilities.getBrowserName().toLowerCase();
 
         switch (browserName) {
 
-            case BrowserType.CHROME:
+            case "chrome":
                 try {
                     WebDriverManager.chromedriver().setup();
                 } catch (Throwable t) {
@@ -828,7 +777,7 @@ public class VerisoftDriver implements
                     chromeOptions.setHeadless(isHeadless);
                 return new ChromeDriver(chromeOptions);
 
-            case BrowserType.FIREFOX:
+            case "firefox":
 
                 try {
                     WebDriverManager.firefoxdriver().setup();
@@ -843,7 +792,7 @@ public class VerisoftDriver implements
                     firefoxOptions.setHeadless(isHeadless);
                 return new FirefoxDriver(firefoxOptions);
 
-            case BrowserType.IE:
+            case "ie":
                 try {
                     WebDriverManager.iedriver().setup();
                 } catch (Throwable t) {
@@ -853,7 +802,7 @@ public class VerisoftDriver implements
 
                 return new InternetExplorerDriver();
 
-            case BrowserType.EDGE:
+            case "edge":
                 try {
                     WebDriverManager.edgedriver().setup();
                 } catch (Throwable t) {
@@ -863,17 +812,7 @@ public class VerisoftDriver implements
 
                 return new EdgeDriver();
 
-            case BrowserType.OPERA:
-                try {
-                    WebDriverManager.operadriver().setup();
-                } catch (Throwable t) {
-                    String version = prop.getProperty("operaDriverVersion");
-                    WebDriverManager.operadriver().driverVersion(version).setup();
-                }
-
-                return new OperaDriver();
-
-            case BrowserType.SAFARI:
+            case "safari":
                 try {
                     WebDriverManager.safaridriver().setup();
                 } catch (Throwable t) {

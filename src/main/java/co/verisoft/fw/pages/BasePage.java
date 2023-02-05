@@ -22,6 +22,7 @@ import co.verisoft.fw.utils.Waits;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.pagefactory.AppiumFieldDecorator;
 import lombok.ToString;
+import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -38,7 +39,7 @@ import java.util.Arrays;
  * 30 Mar 2020
  */
 @ToString
-@Slf4j
+@Log4j2
 public abstract class BasePage {
 
     protected WebDriver driver;
@@ -73,7 +74,7 @@ public abstract class BasePage {
      */
     public boolean isOnPage(WebElement... elements) {
         try {
-            Waits.presenceOfAllElements(driver, timeOut, elements);
+            Waits.visibilityOfAllElements(driver, timeOut, elements);
             log.info("elements " + Arrays.toString(elements) + "was present on page");
             return true;
         } catch (Exception e) {
@@ -98,4 +99,13 @@ public abstract class BasePage {
             return false;
         }
     }
+
+
+    /**
+     * Checks if driver is on page
+     *
+     * @return true- all elements specified were present, false - otherwise
+     */
+     public abstract boolean isOnPage();
+
 }

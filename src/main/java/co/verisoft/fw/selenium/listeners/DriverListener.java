@@ -21,6 +21,7 @@ import co.verisoft.fw.store.StoreType;
 import co.verisoft.fw.utils.ActionTime;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -39,7 +40,7 @@ import java.util.*;
  */
 @ToString
 @NoArgsConstructor
-@Slf4j
+@Log4j2
 /**
  * Listener class for WebDriver events
  *

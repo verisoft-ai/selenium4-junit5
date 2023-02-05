@@ -20,6 +20,7 @@ package co.verisoft.fw.pages;
 
 import co.verisoft.fw.utils.Waits;
 import lombok.ToString;
+import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
@@ -36,7 +37,7 @@ import java.util.List;
  * 29 Mar 2020
  */
 @ToString
-@Slf4j
+@Log4j2
 public abstract class WebBasePage extends BasePage implements WebBasePageJS {
 
 

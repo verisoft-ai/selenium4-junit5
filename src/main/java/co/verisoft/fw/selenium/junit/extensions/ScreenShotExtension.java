@@ -3,6 +3,7 @@ package co.verisoft.fw.selenium.junit.extensions;
 import co.verisoft.fw.selenium.drivers.VerisoftDriverManager;
 import co.verisoft.fw.store.StoreManager;
 import co.verisoft.fw.store.StoreType;
+import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
@@ -20,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-@Slf4j
+@Log4j2
 /**
  * If activated, extension creates a screenshot when a test failed, and pushes it's name into the
  * local thread store
