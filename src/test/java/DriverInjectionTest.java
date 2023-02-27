@@ -21,6 +21,7 @@ import co.verisoft.fw.selenium.drivers.VerisoftMobileDriver;
 import co.verisoft.fw.selenium.drivers.factory.DriverCapabilities;
 import co.verisoft.fw.selenium.drivers.factory.DriverUrl;
 import co.verisoft.fw.selenium.junit.extensions.DriverInjectionExtension;
+import co.verisoft.fw.utils.Asserts;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -33,7 +34,6 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-@Disabled
 @ExtendWith(DriverInjectionExtension.class)
 public class DriverInjectionTest {
 
@@ -49,13 +49,13 @@ public class DriverInjectionTest {
         capabilities.setCapability("deviceName", "emulator-5554");
         capabilities.setCapability("appPackage", "com.android.chrome");
         capabilities.setCapability("appActivity", "com.google.android.apps.chrome.Main");
-        capabilities.setCapability("platformVersion", "11");
         capabilities.setCapability("automationName", "uiAutomator2");
+        //capabilities.setCapability("fullReset", "true");
 
     }
 
     @DriverUrl
-    private final URL url = new URL("http://localhost:4723/");
+    private final URL url = new URL("http://localhost:4723/wd/hub");
 
     public DriverInjectionTest() throws MalformedURLException {
     }
@@ -70,9 +70,11 @@ public class DriverInjectionTest {
 
     @Test
     @Tag("smoke")
-    public void shouldWebCreateMobileDriver(VerisoftMobileDriver driver) {
-        driver.get(pageTestUrl);
-        WebElement element = driver.findElement(By.id("checkbox"));
+    public void shouldWebCreateMobileDriver(VerisoftMobileDriver driver) throws InterruptedException {
+        WebElement e = driver.findElement(By.id("com.android.chrome:id/send_report_checkbox"));
+        Asserts.assertTrue(e.getAttribute("checked").equalsIgnoreCase("true"), "Should be selected");
+        e.click();
+        Asserts.assertTrue(e.getAttribute("checked").equalsIgnoreCase("false"), "Should NOT be selected");
     }
 
 }
