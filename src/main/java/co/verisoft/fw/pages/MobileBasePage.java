@@ -43,18 +43,15 @@ import java.time.Duration;
 @ToString
 public abstract class MobileBasePage extends BasePage {
 
-    protected VerisoftMobileDriver driver;
 
     protected MobileBasePage(WebDriver driver) {
         super(driver);
-        this.driver = (VerisoftMobileDriver)driver;
+        this.driver = driver;
     }
 
     public MobileBasePage(VerisoftMobileDriver driver) {
         super(driver);
         this.driver = driver;
-
-        PageFactory.initElements(new AppiumFieldDecorator(driver), this);
 
         log.debug("Created new page object instance: " + this.getClass());
     }
@@ -78,7 +75,7 @@ public abstract class MobileBasePage extends BasePage {
         int scrollStart = (int) scrollHeightStart;
         double scrollHeightEnd = size.getHeight() * percentHeightEnd; //0.2
         int scrollEnd = (int) scrollHeightEnd;
-        new TouchAction((PerformsTouchActions) driver.getWrappedDriver())
+        new TouchAction((PerformsTouchActions) ((WrapsDriver)driver).getWrappedDriver())
                 .press(PointOption.point(xStart, scrollStart))
                 .waitAction(WaitOptions.waitOptions(Duration.ofSeconds(secDuration)))
                 .moveTo(PointOption.point(xEnd, scrollEnd))
