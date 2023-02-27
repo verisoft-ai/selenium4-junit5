@@ -43,16 +43,15 @@ import java.time.Duration;
 @ToString
 public abstract class MobileBasePage extends BasePage {
 
-    protected VerisoftMobileDriver mobileDriver;
 
     protected MobileBasePage(WebDriver driver) {
         super(driver);
-        this.mobileDriver = (VerisoftMobileDriver)driver;
+        this.driver = driver;
     }
 
     public MobileBasePage(VerisoftMobileDriver driver) {
         super(driver);
-        this.mobileDriver = driver;
+        this.driver = driver;
 
         log.debug("Created new page object instance: " + this.getClass());
     }
@@ -71,12 +70,12 @@ public abstract class MobileBasePage extends BasePage {
     @SuppressWarnings("rawtypes")
     public void swipeScreenByTouchAction(double percentHeightStart, double percentHeightEnd, int xStart,
                                          int xEnd, int secDuration) {
-        Dimension size = mobileDriver.manage().window().getSize();
+        Dimension size = driver.manage().window().getSize();
         double scrollHeightStart = size.getHeight() * percentHeightStart; //0.5
         int scrollStart = (int) scrollHeightStart;
         double scrollHeightEnd = size.getHeight() * percentHeightEnd; //0.2
         int scrollEnd = (int) scrollHeightEnd;
-        new TouchAction((PerformsTouchActions) mobileDriver.getWrappedDriver())
+        new TouchAction((PerformsTouchActions) ((WrapsDriver)driver).getWrappedDriver())
                 .press(PointOption.point(xStart, scrollStart))
                 .waitAction(WaitOptions.waitOptions(Duration.ofSeconds(secDuration)))
                 .moveTo(PointOption.point(xEnd, scrollEnd))
@@ -86,18 +85,18 @@ public abstract class MobileBasePage extends BasePage {
 
     public void swipeByTouchActionInsideContainerElement(By containerBy, double percentHeightStart,
                                                          double percentHeightEnd, int secDuration) {
-        int xStart = Waits.presenceOfElementLocated(mobileDriver, timeOut, containerBy).getLocation().getX();
-        int xEnd = Waits.presenceOfElementLocated(mobileDriver, timeOut, containerBy).getLocation().getX();
+        int xStart = Waits.presenceOfElementLocated(driver, timeOut, containerBy).getLocation().getX();
+        int xEnd = Waits.presenceOfElementLocated(driver, timeOut, containerBy).getLocation().getX();
         swipeScreenByTouchAction(percentHeightStart, percentHeightEnd, xStart, xEnd, secDuration);
     }
 
     public void swipeByTouchActionInsideContainerElement(WebElement containerElement,
                                                          double percentHeightStart,
                                                          double percentHeightEnd, int secDuration) {
-        int xStart = Waits.presenceOfAllElements(mobileDriver, secDuration, containerElement)
+        int xStart = Waits.presenceOfAllElements(driver, secDuration, containerElement)
                 .get(0).getLocation().getX();
 
-        int xEnd = Waits.presenceOfAllElements(mobileDriver, secDuration, containerElement)
+        int xEnd = Waits.presenceOfAllElements(driver, secDuration, containerElement)
                 .get(0).getLocation().getX();
 
         swipeScreenByTouchAction(percentHeightStart, percentHeightEnd, xStart, xEnd, secDuration);
@@ -115,7 +114,7 @@ public abstract class MobileBasePage extends BasePage {
         int rounds = 0;
         while (rounds < scrollingRounds) {
             try {
-                WebElement element = Waits.visibilityOfElementLocated(mobileDriver, timeOut / 6, by);
+                WebElement element = Waits.visibilityOfElementLocated(driver, timeOut / 6, by);
                 return element;
             } catch (Exception e) {
                 rounds++;
@@ -143,7 +142,7 @@ public abstract class MobileBasePage extends BasePage {
         int rounds = 0;
         while (rounds < scrollingRounds) {
             try {
-                WebElement element = Waits.visibilityOfElementLocated(mobileDriver, timeOut / 6, by);
+                WebElement element = Waits.visibilityOfElementLocated(driver, timeOut / 6, by);
                 return element;
             } catch (Exception e) {
                 rounds++;
