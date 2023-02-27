@@ -85,7 +85,7 @@ public class AsyncTestsTest {
         driver.async().register(o);
 
         // First invocation - default dispatch is 5 second
-        Thread.sleep(4500);
+        Thread.sleep(5000);
         driver.findElement(By.id("texta"));
         String text = (String) driver.executeScript("return document.getElementById('texta').value");
         assertEquals("test1", text, "text should have been " + "test1");
@@ -113,7 +113,7 @@ public class AsyncTestsTest {
         driver.async().register(o);
 
         // First invocation - default dispatch is 5 second
-        Thread.sleep(4500);
+        Thread.sleep(5000);
         driver.findElement(By.id("texta"));
         String text = (String) driver.executeScript("return document.getElementById('texta').value");
         assertEquals("test1", text, "text should have been " + "test1");

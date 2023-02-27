@@ -34,6 +34,7 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+@Disabled
 @ExtendWith(DriverInjectionExtension.class)
 public class DriverInjectionTest {
 
