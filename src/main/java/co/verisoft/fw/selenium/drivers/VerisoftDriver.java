@@ -679,28 +679,7 @@ public class VerisoftDriver implements
 
         // Mobile Driver section
         if (this instanceof VerisoftMobileDriver) {
-
-            // Create a new driver object - android
-            if (platformName.equalsIgnoreCase("android")) {
-                tempDriver = remoteAddress == null ?
-                        new AndroidDriver(capabilities) :
-                        new AndroidDriver(remoteAddress, capabilities);
-            }
-
-
-            // Create a new driver object - ios
-            else if (platformName.equalsIgnoreCase("ios")) {
-                tempDriver = remoteAddress == null ?
-                        new IOSDriver(capabilities) :
-                        new IOSDriver(remoteAddress, capabilities);
-            }
-
-            // Appium generic
-            else {
-                tempDriver = remoteAddress == null ?
-                        new AppiumDriver(capabilities) :
-                        new AppiumDriver(remoteAddress, capabilities);
-            }
+            tempDriver = new RemoteWebDriver(remoteAddress, capabilities);
         }
 
         // Web Driver section
