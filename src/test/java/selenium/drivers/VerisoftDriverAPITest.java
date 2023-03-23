@@ -14,16 +14,19 @@ package selenium.drivers;/*
  * limitations under the License.
  */
 
+import co.verisoft.fw.selenium.drivers.decorators.LoggingDecorator;
+import co.verisoft.fw.selenium.drivers.DecoratedDriver;
 import co.verisoft.fw.selenium.drivers.VerisoftDriver;
 import co.verisoft.fw.selenium.junit.extensions.SeleniumLogExtesion;
+import co.verisoft.fw.utils.Slf4jObserver;
 import org.apache.commons.io.FileUtils;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.remote.Augmenter;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import java.io.File;
@@ -45,6 +48,17 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(SeleniumLogExtesion.class)
 public class VerisoftDriverAPITest {
 
+    static boolean is = false;
+//    @RegisterExtension
+//    ExampleExtension extennsion = new ExampleExtension();
+
+
+
+    @BeforeAll
+    public static void beforeAll() {
+        Slf4jObserver slf4jObserver = new Slf4jObserver();
+
+    }
     private static String pageTestUrl = "file://" +
             new File(System.getProperty("user.dir") +
                     "/src/test/resources/DelegateDriverTestForm.html").getAbsolutePath();
@@ -56,6 +70,15 @@ public class VerisoftDriverAPITest {
         capabilities.setCapability("headless", true);
     }
 
+    @Test
+    public void test1(){
+        DecoratedDriver decoratedDriver = new DecoratedDriver(capabilities);
+        decoratedDriver.decorateDriver(LoggingDecorator.class);
+        WebDriver driver = decoratedDriver.getDecoratedDriver();
+        driver.get("http://www.google.com");
+        driver.quit();
+
+    }
 
     @Test
     public void shouldClickOnCheckbox() {

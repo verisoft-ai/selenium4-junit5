@@ -26,6 +26,7 @@ import org.openqa.selenium.support.events.WebDriverListener;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * Listener for alerts activation.
@@ -49,6 +50,8 @@ public final class AlertListener implements WebDriverListener {
 
     @Override
     public void beforeAnyAlertCall(Alert alert, Method method, Object[] args) {
+        if (Objects.isNull(alert))
+            return;
         actionTime = ActionTime.getMeasureTime();
         log.trace("Alert " + alert.getText() +
                 " is fired. Method is: " + method.getName() +
@@ -58,6 +61,8 @@ public final class AlertListener implements WebDriverListener {
 
     @Override
     public void afterAnyAlertCall(Alert alert, Method method, Object[] args, Object result) {
+        if (Objects.isNull(alert))
+            return;
         log.trace("Alert " + alert.getText() +
                 " is done. Method was: " + method.getName() +
                 "Args were: " + Arrays.toString(args) +
@@ -71,6 +76,8 @@ public final class AlertListener implements WebDriverListener {
 
     @Override
     public void afterAccept(Alert alert) {
+        if (Objects.isNull(alert))
+            return;
         actionTime.captureEndTime();
         log.debug("Alert " + alert.getText() + " accepted. Action time: " + actionTime.getDelta());
     }
@@ -82,6 +89,8 @@ public final class AlertListener implements WebDriverListener {
 
     @Override
     public void afterDismiss(Alert alert) {
+        if (Objects.isNull(alert))
+            return;
         actionTime.captureEndTime();
         log.debug("Alert " + alert.getText() + " dismissed. Action time: " + actionTime.getDelta());
     }
@@ -94,6 +103,8 @@ public final class AlertListener implements WebDriverListener {
 
     @Override
     public void afterGetText(Alert alert, String result) {
+        if (Objects.isNull(alert))
+            return;
         actionTime.captureEndTime();
         log.debug("Alert " + alert.getText() + "  - get text is done. Text retrieved is " + result +
                 "Action time: " + actionTime.getDelta());
@@ -107,6 +118,8 @@ public final class AlertListener implements WebDriverListener {
 
     @Override
     public void afterSendKeys(Alert alert, String keys) {
+        if (Objects.isNull(alert))
+            return;
         actionTime.captureEndTime();
         log.debug("Alert " + alert.getText() + " send keys. String was " + keys + ". Action time: " + actionTime.getDelta());
     }

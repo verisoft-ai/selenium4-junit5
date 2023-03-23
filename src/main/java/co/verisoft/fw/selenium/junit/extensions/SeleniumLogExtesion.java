@@ -26,6 +26,7 @@ public class SeleniumLogExtesion implements BeforeAllCallback {
             createWebDriverLogFile();
             executed = true;
         }
+
     }
 
 

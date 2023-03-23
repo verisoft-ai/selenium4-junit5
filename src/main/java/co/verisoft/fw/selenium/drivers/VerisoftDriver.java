@@ -28,6 +28,7 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 import lombok.ToString;
 import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -44,6 +45,7 @@ import org.openqa.selenium.remote.Browser;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.safari.SafariDriver;
 import org.openqa.selenium.support.events.EventFiringDecorator;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
 import org.openqa.selenium.support.events.WebDriverListener;
 import org.openqa.selenium.virtualauthenticator.HasVirtualAuthenticator;
 import org.openqa.selenium.virtualauthenticator.VirtualAuthenticator;
@@ -128,6 +130,7 @@ import java.util.concurrent.TimeUnit;
 @ToString
 @Augmentable
 @Log4j2
+@Deprecated
 public class VerisoftDriver implements
         WebDriver,
         JavascriptExecutor,
@@ -140,6 +143,7 @@ public class VerisoftDriver implements
 
     protected WebDriver driver;
     private AsyncListenerImp asyncListener;
+    private List<WebDriverListener> webDriverlisteners;
 
 
     /**
@@ -148,12 +152,42 @@ public class VerisoftDriver implements
      * @param capabilities cpabilities object
      */
     public VerisoftDriver(@Nullable Capabilities capabilities) {
+        initListeners();
         try {
             createRemoteDriver(null, capabilities);
         } catch (Throwable t) {
             log.error("Error instanciate local VerisoftDriver", t);
             throw new RuntimeException(t);
         }
+    }
+
+    private void initListeners() {
+        if (webDriverlisteners != null)
+            return;
+
+        this.webDriverlisteners = new ArrayList<>();
+
+        webDriverlisteners.add(new AlertListener());
+        webDriverlisteners.add(new NavigationListener());
+        webDriverlisteners.add(new OptionsListener());
+        webDriverlisteners.add(new TimeoutsListener());
+        webDriverlisteners.add(new DriverListener());
+        webDriverlisteners.add(new WebElementListener());
+        webDriverlisteners.add(new WindowListener());
+
+        // Create asyncListener object to be activated here
+        if (asyncListener == null) {
+            asyncListener = new AsyncListenerImp();
+            webDriverlisteners.add(asyncListener);
+        }
+
+    }
+
+    public void addListener(@NotNull WebDriverListener listener){
+        if (webDriverlisteners == null)
+            initListeners();
+
+        webDriverlisteners.add(listener);
     }
 
 
@@ -164,6 +198,7 @@ public class VerisoftDriver implements
      * @param capabilities  capabilities object
      */
     public VerisoftDriver(URL remoteAddress, Capabilities capabilities) {
+        initListeners();
         try {
             createRemoteDriver(remoteAddress, capabilities);
         } catch (Throwable t) {
@@ -684,7 +719,7 @@ public class VerisoftDriver implements
             if (platformName.equalsIgnoreCase("android")) {
                 tempDriver = remoteAddress == null ?
                         new AndroidDriver(capabilities) :
-                        new AndroidDriver(remoteAddress, capabilities);
+                        new RemoteWebDriver(remoteAddress, capabilities);
             }
 
 
@@ -724,27 +759,11 @@ public class VerisoftDriver implements
      */
     private void initDriver(WebDriver driver) {
 
-        List<WebDriverListener> listeners = new ArrayList<>();
-
-        listeners.add(new AlertListener());
-        listeners.add(new NavigationListener());
-        listeners.add(new OptionsListener());
-        listeners.add(new TimeoutsListener());
-        listeners.add(new DriverListener());
-        listeners.add(new WebElementListener());
-        listeners.add(new WindowListener());
-
-        // Create asyncListener object to be activated here
-        if (asyncListener == null) {
-            asyncListener = new AsyncListenerImp();
-            listeners.add(asyncListener);
-        }
-
-
-        WebDriverListener[] listenersArr = new WebDriverListener[listeners.size()];
-        listenersArr = listeners.toArray(listenersArr);
+        WebDriverListener[] listenersArr = new WebDriverListener[webDriverlisteners.size()];
+        listenersArr = webDriverlisteners.toArray(listenersArr);
 
         this.driver = new EventFiringDecorator(listenersArr).decorate(driver);
+
         VerisoftDriverManager.addDriverToMap(driver);
     }
 

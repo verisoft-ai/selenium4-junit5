@@ -1,30 +1,10 @@
-/*
- * (C) Copyright 2022 VeriSoft (http://www.verisoft.co)
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * See the NOTICE file distributed with this work for additional
- * information regarding copyright ownership.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package co.verisoft.fw.selenium.junit.extensions;
 
-import co.verisoft.fw.selenium.drivers.VerisoftDriver;
-import co.verisoft.fw.selenium.drivers.VerisoftDriverManager;
-import co.verisoft.fw.selenium.drivers.VerisoftMobileDriver;
+import co.verisoft.fw.selenium.drivers.*;
+import co.verisoft.fw.selenium.drivers.decorators.LoggingDecorator;
 import co.verisoft.fw.selenium.drivers.factory.AnnotationsReader;
 import co.verisoft.fw.selenium.drivers.factory.SingleSession;
 import io.appium.java_client.AppiumDriver;
-import lombok.ToString;
-import lombok.extern.log4j.Log4j;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.TestTemplate;
 import org.junit.jupiter.api.extension.*;
@@ -36,22 +16,12 @@ import java.lang.reflect.Parameter;
 import java.net.URL;
 import java.util.Optional;
 
-/**
- * Extension to inject VerisoftDriver and VerisoftMobileDriver directly into the test instances<br>
- * This class is inspired by Boni Garcia code Selenium-Jupiter. Boni Garcia's code can be found
- * <a href="https://github.com/bonigarcia/selenium-jupiter/blob/master/src/main/java/io/github/bonigarcia/seljup/SeleniumJupiter.java">here</a>.
- *
- * @author <a href="mailto:nir@verisoft.co">Nir Gallner</a> @ <a href="http://www.verisoft.co">www.VeriSoft.co</a>
- * @since 0.0.. (March 2022)
- */
-@ToString
 @Log4j2
-@Deprecated
-public class DriverInjectionExtension implements ParameterResolver, AfterEachCallback, AfterAllCallback {
+public class DecoratedDriverInjectionExtension implements ParameterResolver, AfterEachCallback, AfterAllCallback {
 
     AnnotationsReader annotationsReader;
 
-    public DriverInjectionExtension() {
+    public DecoratedDriverInjectionExtension() {
         annotationsReader = new AnnotationsReader();
     }
 
@@ -84,7 +54,7 @@ public class DriverInjectionExtension implements ParameterResolver, AfterEachCal
         if (AppiumDriver.class.isAssignableFrom(type) || VerisoftMobileDriver.class.isAssignableFrom(type))
             return resolveMobileDriver(extensionContext, testInstance, parameter);
 
-        // Web Driver
+            // Web Driver
         else if (WebDriver.class.isAssignableFrom(type))
             return resolveWebDriver(extensionContext, parameter, testInstance, type);
         else
@@ -95,36 +65,43 @@ public class DriverInjectionExtension implements ParameterResolver, AfterEachCal
 
     /**
      * Get the capabilities and create new VerisoftDriver insatnce
+     *
      * @param extensionContext Junit 5 context object
-     * @param parameter paameter extracted from the test to be initizlized with WebDriver based object
-     * @param testInstance Junit 5 instance object
-     * @param type Type definition of the object to be initialized
+     * @param parameter        paameter extracted from the test to be initizlized with WebDriver based object
+     * @param testInstance     Junit 5 instance object
+     * @param type             Type definition of the object to be initialized
      * @return a VerisoftDriver object.
      */
     private Object resolveWebDriver(ExtensionContext extensionContext, Parameter parameter, Optional<Object> testInstance, Class<?> type) {
         Optional<Capabilities> capabilities = annotationsReader.getCapabilities(parameter,
                 extensionContext.getTestInstance());
-        return new VerisoftDriver(capabilities.orElse(null));
+        DecoratedDriver driver =  new DecoratedDriver(capabilities.orElse(null));
+        driver.decorateDriver(LoggingDecorator.class);
+        return driver;
     }
 
 
     /**
      * Get the capabilities and create new VerisoftobileDriver insatnce
+     *
      * @param extensionContext Junit 5 context object
-     * @param testInstance Junit 5 instance object
-     * @param parameter paameter extracted from the test to be initizlized with WebDriver based object
+     * @param testInstance     Junit 5 instance object
+     * @param parameter        paameter extracted from the test to be initizlized with WebDriver based object
      * @return a VerisoftMobileDriver object.
      */
     private Object resolveMobileDriver(ExtensionContext extensionContext, Optional<Object> testInstance, Parameter parameter) {
         Optional<Capabilities> capabilities = annotationsReader.getCapabilities(parameter,
                 extensionContext.getTestInstance());
         Optional<URL> url = annotationsReader.getUrl(parameter, testInstance, "");
-        return new VerisoftMobileDriver(url.orElse(null), capabilities.orElse(null));
+        DecoratedMobileDriver driver =  new DecoratedMobileDriver(capabilities.orElse(null));
+        driver.decorateDriver(LoggingDecorator.class);
+        return driver;
     }
 
 
     /**
      * Is the test method marked as Junit 5 TestTemplate?
+     *
      * @param extensionContext Junit 5 context object
      * @return true if TestTemplate, false otherwise
      */
@@ -155,6 +132,7 @@ public class DriverInjectionExtension implements ParameterResolver, AfterEachCal
 
     /**
      * Is test class is marked as @SingleSession, which will has 1 driver for class?
+     *
      * @param extensionContext Junit 5 context object
      * @return True if the class is a single session class, false otherwise
      */
