@@ -33,7 +33,7 @@ import java.util.Map;
  * @since 1.9.6
  */
 @ToString
-@Log4j2
+@Slf4j
 public final class VerisoftDriverManager{
 
 	private static Map<Integer, WebDriver> driverMap = new HashMap<Integer, WebDriver>();

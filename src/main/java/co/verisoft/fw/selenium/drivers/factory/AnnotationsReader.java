@@ -62,7 +62,7 @@ import static java.util.Optional.of;
 @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 @ToString
 @NoArgsConstructor
-@Log4j2
+@Slf4j
 public class AnnotationsReader {
 
     public Optional<Capabilities> getCapabilities(Parameter parameter,

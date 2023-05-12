@@ -39,7 +39,7 @@ import java.util.List;
  */
 @ToString
 @NoArgsConstructor
-@Log4j2
+@Slf4j
 /**
  * Listener class for WebElement events
  *

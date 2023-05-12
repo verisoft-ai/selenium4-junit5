@@ -37,7 +37,7 @@ import java.util.Arrays;
  */
 @ToString
 @NoArgsConstructor
-@Log4j2
+@Slf4j
 public final class WindowListener implements WebDriverListener {
 
     private ActionTime actionTime;

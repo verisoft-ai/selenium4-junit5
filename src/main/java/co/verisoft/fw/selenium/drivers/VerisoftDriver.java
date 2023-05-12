@@ -33,9 +33,11 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.ie.InternetExplorerOptions;
 import org.openqa.selenium.interactions.*;
 import org.openqa.selenium.logging.Logs;
 import org.openqa.selenium.print.PrintOptions;
@@ -43,6 +45,7 @@ import org.openqa.selenium.remote.Augmentable;
 import org.openqa.selenium.remote.Browser;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.safari.SafariDriver;
+import org.openqa.selenium.safari.SafariOptions;
 import org.openqa.selenium.support.events.EventFiringDecorator;
 import org.openqa.selenium.support.events.WebDriverListener;
 import org.openqa.selenium.virtualauthenticator.HasVirtualAuthenticator;
@@ -127,7 +130,7 @@ import java.util.concurrent.TimeUnit;
 @SuppressWarnings("deprecation")
 @ToString
 @Augmentable
-@Log4j2
+@Slf4j
 public class VerisoftDriver implements
         WebDriver,
         JavascriptExecutor,
@@ -735,7 +738,7 @@ public class VerisoftDriver implements
      * @return a new WebDriver object
      */
     private WebDriver instanciateLocalDriver(Capabilities capabilities) {
-        Property prop = new Property("webdrivermanager.properties");
+
 
         boolean isHeadless;
         String browserName = capabilities.getBrowserName().toLowerCase();
@@ -743,62 +746,58 @@ public class VerisoftDriver implements
         switch (browserName) {
 
             case "chrome":
-                try {
+                if (capabilities.getCapability("driverVersion") == null)
                     WebDriverManager.chromedriver().setup();
-                } catch (Throwable t) {
-                    String version = prop.getProperty("chromeDriverVersion");
-                    WebDriverManager.chromedriver().driverVersion(version).setup();
-                }
+                else
+                    WebDriverManager.chromedriver().driverVersion(capabilities.getBrowserVersion()).setup();
 
-                final ChromeOptions chromeOptions = new ChromeOptions();
-                isHeadless = capabilities.is("headless");
-                if (isHeadless)
-                    chromeOptions.setHeadless(isHeadless);
+                ChromeOptions chromeOptions = new ChromeOptions();
+                chromeOptions.merge(capabilities);
                 return new ChromeDriver(chromeOptions);
 
             case "firefox":
 
-                try {
+                if (capabilities.getCapability("browserVersion") == null)
                     WebDriverManager.firefoxdriver().setup();
-                } catch (Throwable t) {
-                    String version = prop.getProperty("geckoDriverVersion");
-                    WebDriverManager.firefoxdriver().driverVersion(version).setup();
-                }
+                else
+                    WebDriverManager.firefoxdriver().driverVersion(capabilities.getBrowserVersion()).setup();
 
-                final FirefoxOptions firefoxOptions = new FirefoxOptions();
-                isHeadless = capabilities.is("headless");
-                if (isHeadless)
-                    firefoxOptions.setHeadless(isHeadless);
+
+                FirefoxOptions firefoxOptions = new FirefoxOptions();
+                capabilities.merge(firefoxOptions);
                 return new FirefoxDriver(firefoxOptions);
 
             case "ie":
-                try {
+                if (capabilities.getCapability("browserVersion") == null)
                     WebDriverManager.iedriver().setup();
-                } catch (Throwable t) {
-                    String version = prop.getProperty("internetExplorerVersion");
-                    WebDriverManager.iedriver().driverVersion(version).setup();
-                }
+                else
+                    WebDriverManager.iedriver().driverVersion(capabilities.getBrowserVersion()).setup();
 
-                return new InternetExplorerDriver();
+                InternetExplorerOptions internetExplorerOptions = new InternetExplorerOptions();
+                internetExplorerOptions.merge(capabilities);
+                return new InternetExplorerDriver(internetExplorerOptions);
 
             case "edge":
-                try {
+                if (capabilities.getCapability("browserVersion") == null)
                     WebDriverManager.edgedriver().setup();
-                } catch (Throwable t) {
-                    String version = prop.getProperty("edgeDriverVersion");
-                    WebDriverManager.edgedriver().driverVersion(version).setup();
-                }
+                else
+                    WebDriverManager.edgedriver().driverVersion(capabilities.getBrowserVersion()).setup();
 
-                return new EdgeDriver();
+
+                EdgeOptions edgeOptions = new EdgeOptions();
+                edgeOptions.merge(capabilities);
+                return new EdgeDriver(edgeOptions);
 
             case "safari":
-                try {
+                if (capabilities.getCapability("browserVersion") == null)
                     WebDriverManager.safaridriver().setup();
-                } catch (Throwable t) {
-                    String version = prop.getProperty("safariDriverVersion");
-                    WebDriverManager.safaridriver().driverVersion(version).setup();
-                }
-                return new SafariDriver();
+                else
+                    WebDriverManager.safaridriver().driverVersion(capabilities.getBrowserVersion()).setup();
+
+
+                SafariOptions safariOptions = new SafariOptions();
+                safariOptions.merge(capabilities);
+                return new SafariDriver(safariOptions);
 
             default:
                 break;

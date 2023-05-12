@@ -40,7 +40,7 @@ import java.util.*;
  */
 @ToString
 @NoArgsConstructor
-@Log4j2
+@Slf4j
 /**
  * Listener class for WebDriver events
  *

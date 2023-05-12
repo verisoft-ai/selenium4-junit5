@@ -45,7 +45,7 @@ import java.util.Arrays;
  * 30 Mar 2020
  */
 @ToString
-@Log4j2
+@Slf4j
 public abstract class BasePage {
 
     protected WebDriver driver;

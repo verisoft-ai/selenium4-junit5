@@ -37,7 +37,7 @@ import java.util.List;
  * 29 Mar 2020
  */
 @ToString
-@Log4j2
+@Slf4j
 public abstract class WebBasePage extends BasePage implements WebBasePageJS {
 
 

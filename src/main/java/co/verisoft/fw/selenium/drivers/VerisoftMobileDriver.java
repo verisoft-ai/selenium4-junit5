@@ -70,7 +70,7 @@ import java.util.Set;
  * @since 1.9.6
  */
 @SuppressWarnings({"deprecation", "rawtypes"})
-@Log4j2
+@Slf4j
 @ToString
 public class VerisoftMobileDriver extends VerisoftDriver implements
         SupportsContextSwitching, SupportsRotation, SupportsLocation,
