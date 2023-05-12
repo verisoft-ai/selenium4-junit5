@@ -24,6 +24,7 @@ import co.verisoft.fw.utils.Property;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.ios.IOSDriver;
+import io.appium.java_client.remote.MobilePlatform;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import lombok.ToString;
 import lombok.extern.log4j.Log4j2;
@@ -674,7 +675,7 @@ public class VerisoftDriver implements
      * @param capabilities  a capabilities object.
      */
     private void createRemoteDriver(@Nullable URL remoteAddress, Capabilities capabilities) {
-        WebDriver tempDriver;
+        WebDriver tempDriver = null;
 
         String browserName = capabilities.getBrowserName();
         String platformName = (capabilities.getCapability("platformName") == null ?
@@ -682,7 +683,10 @@ public class VerisoftDriver implements
 
         // Mobile Driver section
         if (this instanceof VerisoftMobileDriver) {
-            tempDriver = new RemoteWebDriver(remoteAddress, capabilities);
+            if (platformName.equalsIgnoreCase(MobilePlatform.ANDROID))
+                tempDriver = new AndroidDriver(remoteAddress, capabilities);
+            else if (platformName.equalsIgnoreCase(MobilePlatform.IOS))
+                tempDriver = new IOSDriver(remoteAddress, capabilities);
         }
 
         // Web Driver section
