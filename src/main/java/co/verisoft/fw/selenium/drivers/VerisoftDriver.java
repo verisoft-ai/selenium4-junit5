@@ -45,6 +45,7 @@ import org.openqa.selenium.logging.Logs;
 import org.openqa.selenium.print.PrintOptions;
 import org.openqa.selenium.remote.Augmentable;
 import org.openqa.selenium.remote.Browser;
+import org.openqa.selenium.remote.HttpCommandExecutor;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.safari.SafariDriver;
 import org.openqa.selenium.safari.SafariOptions;
@@ -134,6 +135,7 @@ import java.util.concurrent.TimeUnit;
 @ToString
 @Augmentable
 @Slf4j
+//@Deprecated
 public class VerisoftDriver implements
         WebDriver,
         JavascriptExecutor,
@@ -157,7 +159,7 @@ public class VerisoftDriver implements
     public VerisoftDriver(@Nullable Capabilities capabilities) {
         initListeners();
         try {
-            createRemoteDriver(null, capabilities);
+            createRemoteDriver((URL)null, capabilities);
         } catch (Throwable t) {
             log.error("Error instanciate local VerisoftDriver", t);
             throw new RuntimeException(t);
@@ -186,7 +188,7 @@ public class VerisoftDriver implements
 
     }
 
-    public void addListener(@NotNull WebDriverListener listener){
+    public void addListener(@NotNull WebDriverListener listener) {
         if (webDriverlisteners == null)
             initListeners();
 
@@ -208,6 +210,17 @@ public class VerisoftDriver implements
             log.error("Error instanciate local VerisoftDriver", t);
             throw new RuntimeException(t);
         }
+    }
+
+    public VerisoftDriver(HttpCommandExecutor commandExecutor, Capabilities capabilities) {
+        initListeners();
+        try {
+            createRemoteDriver(commandExecutor, capabilities);
+        } catch (Throwable t) {
+            log.error("Error instanciate local VerisoftDriver", t);
+            throw new RuntimeException(t);
+        }
+
     }
 
 
@@ -731,6 +744,39 @@ public class VerisoftDriver implements
             } else {
                 tempDriver = new RemoteWebDriver(remoteAddress, capabilities);
             }
+        }
+
+        initDriver(tempDriver);
+    }
+
+
+
+    /**
+     * Private method to create a proper WebDriver object. If the remoteAddress is null, it will create a
+     * local instance of WebDriver. If the remoteAddress is not null, it will create a RemoteWebDriver object,
+     * which can hold either remote of local adresses (http://localhost)
+     *
+     * @param commandExecutor HttpCommandExecutor object
+     * @param capabilities  a capabilities object.
+     */
+    private void createRemoteDriver(HttpCommandExecutor commandExecutor, Capabilities capabilities) {
+        WebDriver tempDriver = null;
+
+        String browserName = capabilities.getBrowserName();
+        String platformName = (capabilities.getCapability("platformName") == null ?
+                "" : capabilities.getCapability("platformName").toString().trim());
+
+        // Mobile Driver section
+        if (this instanceof VerisoftMobileDriver) {
+            if (platformName.equalsIgnoreCase(MobilePlatform.ANDROID))
+                tempDriver = new AndroidDriver(commandExecutor, capabilities);
+            else if (platformName.equalsIgnoreCase(MobilePlatform.IOS))
+                tempDriver = new IOSDriver(commandExecutor, capabilities);
+        }
+
+        // Web Driver section
+        else {
+            tempDriver = new RemoteWebDriver(commandExecutor, capabilities);
         }
 
         initDriver(tempDriver);

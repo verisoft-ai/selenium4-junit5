@@ -43,6 +43,7 @@ import java.util.Objects;
  * @since 0.0.3 (Feb 2022)
  * @author <a href="mailto:nir@verisoft.co">Nir Gallner</a>
  */
+
 public final class AlertListener implements WebDriverListener {
 
     private ActionTime actionTime;

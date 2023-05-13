@@ -50,7 +50,6 @@ public abstract class WebBasePage extends BasePage implements WebBasePageJS {
         //wait for page be fully loaded before continue
         Waits.pageToFullyLoad(driver, timeOut);
 
-        PageFactory.initElements(driver, this);
         log.debug("Created new page object instance: " + this.getClass());
     }
 

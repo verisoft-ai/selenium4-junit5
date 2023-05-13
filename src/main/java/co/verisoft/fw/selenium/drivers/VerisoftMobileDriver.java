@@ -31,9 +31,11 @@ import io.appium.java_client.screenrecording.BaseStartScreenRecordingOptions;
 import io.appium.java_client.screenrecording.BaseStopScreenRecordingOptions;
 import io.appium.java_client.screenrecording.CanRecordScreen;
 import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.Nullable;
 import org.openqa.selenium.*;
 import org.openqa.selenium.html5.Location;
+import org.openqa.selenium.remote.HttpCommandExecutor;
 import org.openqa.selenium.remote.Response;
 import org.openqa.selenium.remote.html5.RemoteLocationContext;
 
@@ -72,7 +74,7 @@ import java.util.Set;
 @SuppressWarnings({"deprecation", "rawtypes"})
 @Slf4j
 @ToString
-@Deprecated
+//@Deprecated
 public class VerisoftMobileDriver extends VerisoftDriver implements
         SupportsContextSwitching, SupportsRotation, SupportsLocation,
         HidesKeyboard, HasDeviceTime, PullsFiles,
@@ -86,6 +88,10 @@ public class VerisoftMobileDriver extends VerisoftDriver implements
 
     public VerisoftMobileDriver(URL remoteAddress, Capabilities capabilities) {
         super(remoteAddress, capabilities);
+    }
+
+    public VerisoftMobileDriver(HttpCommandExecutor commandExecutor, Capabilities capabilities) {
+        super(commandExecutor, capabilities);
     }
 
     @Override

@@ -36,7 +36,7 @@ import java.util.Set;
  */
 public interface WebBasePageJS {
 
-    int timeout = new Property().getIntProperty("selenium_wait_timeout");
+    int timeout = new Property().getIntProperty("selenium.wait.timeout");
 
     /**
      * click on element by using Java Script

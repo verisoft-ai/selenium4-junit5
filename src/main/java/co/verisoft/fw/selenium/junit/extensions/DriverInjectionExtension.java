@@ -31,6 +31,7 @@ import org.junit.jupiter.api.TestTemplate;
 import org.junit.jupiter.api.extension.*;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.remote.HttpCommandExecutor;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
@@ -104,7 +105,18 @@ public class DriverInjectionExtension implements ParameterResolver, AfterEachCal
     private Object resolveWebDriver(ExtensionContext extensionContext, Parameter parameter, Optional<Object> testInstance, Class<?> type) {
         Optional<Capabilities> capabilities = annotationsReader.getCapabilities(parameter,
                 extensionContext.getTestInstance());
-        return new VerisoftDriver(capabilities.orElse(null));
+
+        Optional<Object> commandExecutor = annotationsReader.getCommandExecutor(parameter,
+                testInstance);
+
+        Optional<URL> url = annotationsReader.getUrl(parameter, testInstance, "");
+
+        if (commandExecutor.isPresent())
+            return new VerisoftDriver(((HttpCommandExecutor) commandExecutor.get()), capabilities.orElse(null));
+        else if (url.isPresent())
+            return new VerisoftDriver(url.orElse(null), capabilities.orElse(null));
+        else
+            return new VerisoftDriver(capabilities.orElse(null));
     }
 
 
@@ -116,10 +128,19 @@ public class DriverInjectionExtension implements ParameterResolver, AfterEachCal
      * @return a VerisoftMobileDriver object.
      */
     private Object resolveMobileDriver(ExtensionContext extensionContext, Optional<Object> testInstance, Parameter parameter) {
+
         Optional<Capabilities> capabilities = annotationsReader.getCapabilities(parameter,
                 extensionContext.getTestInstance());
+
+        Optional<Object> commandExecutor = annotationsReader.getCommandExecutor(parameter,
+                testInstance);
+
         Optional<URL> url = annotationsReader.getUrl(parameter, testInstance, "");
-        return new VerisoftMobileDriver(url.orElse(null), capabilities.orElse(null));
+
+        if (commandExecutor.isPresent())
+            return new VerisoftMobileDriver(((HttpCommandExecutor) commandExecutor.get()), capabilities.orElse(null));
+        else
+            return new VerisoftMobileDriver(url.orElse(null), capabilities.orElse(null));
     }
 
 

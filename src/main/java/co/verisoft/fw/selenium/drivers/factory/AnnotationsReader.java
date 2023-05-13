@@ -128,6 +128,34 @@ public class AnnotationsReader {
         return out;
     }
 
+
+    public Optional<Object> getCommandExecutor(Parameter parameter,
+                                            Optional<Object> testInstance) {
+        Optional<Object> out = empty();
+
+        try {
+            Object commandExecutorValue;
+            DriverCommandExecutor commandExecutor = parameter.getAnnotation(DriverCommandExecutor.class);
+            if (commandExecutor != null) {
+                // Search first DriverUrl annotation in parameter
+                commandExecutorValue = commandExecutor.value();
+                out = Optional.of(commandExecutorValue);
+            } else {
+                // If not, search DriverUrl in any field
+                Optional<Object> annotatedField = seekFieldAnnotatedWith(
+                        testInstance, DriverCommandExecutor.class);
+                if (annotatedField.isPresent()) {
+                    commandExecutorValue = annotatedField.get();
+                    out = Optional.of(commandExecutorValue);
+                }
+            }
+
+        } catch (Exception e) {
+            log.warn("Exception getting HttpCommandExecutor", e);
+        }
+        return out;
+    }
+
     public boolean isBoolean(String s) {
         boolean isBool = s.equalsIgnoreCase("true")
                 || s.equalsIgnoreCase("false");
