@@ -36,7 +36,7 @@ import java.util.Objects;
  */
 @ToString
 @NoArgsConstructor
-@Log4j2
+@Slf4j
 /**
  * Listener class for Alert events
  *

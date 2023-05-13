@@ -70,6 +70,7 @@ import java.util.Set;
  * @since 1.9.6
  */
 @SuppressWarnings({"deprecation", "rawtypes"})
+@Slf4j
 @ToString
 @Deprecated
 public class VerisoftMobileDriver extends VerisoftDriver implements

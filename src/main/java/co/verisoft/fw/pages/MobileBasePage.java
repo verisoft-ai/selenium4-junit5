@@ -39,7 +39,7 @@ import java.time.Duration;
  * @author <a href="mailto:nir@verisoft.co">Nir Gallner</a> @ <a href="http://www.verisoft.co">www.VeriSoft.co</a>
  * @since 2.0.1
  */
-@Log4j2
+@Slf4j
 @ToString
 public abstract class MobileBasePage extends BasePage {
 

@@ -8,7 +8,7 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 
 import java.io.File;
 
-@Log4j2
+@Slf4j
 /**
  * If activated, it creates a file for WebDriver logs, sets it in the ./target/logs directory, and
  * set the log level (verbose) accourding to property file.
@@ -46,7 +46,7 @@ public class SeleniumLogExtesion implements BeforeAllCallback {
 
         // Declare the file
         System.setProperty("webdriver.chrome.logfile", logFileName);
-        String verbose = new Property("sel4jup5.properties").getProperty("selenium.logs.verbose");
+        String verbose = new Property("root.config.properties").getProperty("selenium.logs.verbose");
         System.setProperty("webdriver.chrome.verboseLogging", verbose);
     }
 }

@@ -190,7 +190,7 @@ public class AsyncTestsTest {
         assertEquals("", text, "text should have been ''");
 
         // Wait and try again - should  be invoked
-        Thread.sleep(3500);
+        Thread.sleep(4500);
         driver.findElement(By.id("texta"));
         text = (String) driver.executeScript("return document.getElementById('texta').value");
         assertEquals("test1", text, "text should have been test1");

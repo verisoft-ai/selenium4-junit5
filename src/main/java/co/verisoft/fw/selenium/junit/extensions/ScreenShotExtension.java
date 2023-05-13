@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-@Log4j2
+@Slf4j
 /**
  * If activated, extension creates a screenshot when a test failed, and pushes it's name into the
  * local thread store
@@ -62,7 +62,7 @@ public class ScreenShotExtension implements AfterTestExecutionCallback {
             FileUtils.moveFile(screenshot, file);
 
             // Get the screenshot list from the store and put the value
-            Map<String, List<String>> screenShots = StoreManager.getStore(StoreType.LOCAL_THREAD)
+            Map<String, List<String>> screenShots = StoreManager.getStore(StoreType.GLOBAL)
                     .getValueFromStore("screenshots");
 
 

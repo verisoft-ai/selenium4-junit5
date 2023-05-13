@@ -24,6 +24,7 @@ import co.verisoft.fw.utils.Property;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.ios.IOSDriver;
+import io.appium.java_client.remote.MobilePlatform;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import lombok.ToString;
 import lombok.extern.log4j.Log4j2;
@@ -34,9 +35,11 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.ie.InternetExplorerOptions;
 import org.openqa.selenium.interactions.*;
 import org.openqa.selenium.logging.Logs;
 import org.openqa.selenium.print.PrintOptions;
@@ -44,6 +47,7 @@ import org.openqa.selenium.remote.Augmentable;
 import org.openqa.selenium.remote.Browser;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.safari.SafariDriver;
+import org.openqa.selenium.safari.SafariOptions;
 import org.openqa.selenium.support.events.EventFiringDecorator;
 import org.openqa.selenium.support.events.EventFiringWebDriver;
 import org.openqa.selenium.support.events.WebDriverListener;
@@ -129,8 +133,7 @@ import java.util.concurrent.TimeUnit;
 @SuppressWarnings("deprecation")
 @ToString
 @Augmentable
-@Log4j2
-@Deprecated
+@Slf4j
 public class VerisoftDriver implements
         WebDriver,
         JavascriptExecutor,
@@ -706,7 +709,7 @@ public class VerisoftDriver implements
      * @param capabilities  a capabilities object.
      */
     private void createRemoteDriver(@Nullable URL remoteAddress, Capabilities capabilities) {
-        WebDriver tempDriver;
+        WebDriver tempDriver = null;
 
         String browserName = capabilities.getBrowserName();
         String platformName = (capabilities.getCapability("platformName") == null ?
@@ -714,28 +717,10 @@ public class VerisoftDriver implements
 
         // Mobile Driver section
         if (this instanceof VerisoftMobileDriver) {
-
-            // Create a new driver object - android
-            if (platformName.equalsIgnoreCase("android")) {
-                tempDriver = remoteAddress == null ?
-                        new AndroidDriver(capabilities) :
-                        new RemoteWebDriver(remoteAddress, capabilities);
-            }
-
-
-            // Create a new driver object - ios
-            else if (platformName.equalsIgnoreCase("ios")) {
-                tempDriver = remoteAddress == null ?
-                        new IOSDriver(capabilities) :
-                        new IOSDriver(remoteAddress, capabilities);
-            }
-
-            // Appium generic
-            else {
-                tempDriver = remoteAddress == null ?
-                        new AppiumDriver(capabilities) :
-                        new AppiumDriver(remoteAddress, capabilities);
-            }
+            if (platformName.equalsIgnoreCase(MobilePlatform.ANDROID))
+                tempDriver = new AndroidDriver(remoteAddress, capabilities);
+            else if (platformName.equalsIgnoreCase(MobilePlatform.IOS))
+                tempDriver = new IOSDriver(remoteAddress, capabilities);
         }
 
         // Web Driver section
@@ -775,7 +760,7 @@ public class VerisoftDriver implements
      * @return a new WebDriver object
      */
     private WebDriver instanciateLocalDriver(Capabilities capabilities) {
-        Property prop = new Property("webdrivermanager.properties");
+
 
         boolean isHeadless;
         String browserName = capabilities.getBrowserName().toLowerCase();
@@ -783,62 +768,58 @@ public class VerisoftDriver implements
         switch (browserName) {
 
             case "chrome":
-                try {
+                if (capabilities.getCapability("driverVersion") == null)
                     WebDriverManager.chromedriver().setup();
-                } catch (Throwable t) {
-                    String version = prop.getProperty("chromeDriverVersion");
-                    WebDriverManager.chromedriver().driverVersion(version).setup();
-                }
+                else
+                    WebDriverManager.chromedriver().driverVersion(capabilities.getBrowserVersion()).setup();
 
-                final ChromeOptions chromeOptions = new ChromeOptions();
-                isHeadless = capabilities.is("headless");
-                if (isHeadless)
-                    chromeOptions.setHeadless(isHeadless);
+                ChromeOptions chromeOptions = new ChromeOptions();
+                chromeOptions.merge(capabilities);
                 return new ChromeDriver(chromeOptions);
 
             case "firefox":
 
-                try {
+                if (capabilities.getCapability("browserVersion") == null)
                     WebDriverManager.firefoxdriver().setup();
-                } catch (Throwable t) {
-                    String version = prop.getProperty("geckoDriverVersion");
-                    WebDriverManager.firefoxdriver().driverVersion(version).setup();
-                }
+                else
+                    WebDriverManager.firefoxdriver().driverVersion(capabilities.getBrowserVersion()).setup();
 
-                final FirefoxOptions firefoxOptions = new FirefoxOptions();
-                isHeadless = capabilities.is("headless");
-                if (isHeadless)
-                    firefoxOptions.setHeadless(isHeadless);
+
+                FirefoxOptions firefoxOptions = new FirefoxOptions();
+                capabilities.merge(firefoxOptions);
                 return new FirefoxDriver(firefoxOptions);
 
             case "ie":
-                try {
+                if (capabilities.getCapability("browserVersion") == null)
                     WebDriverManager.iedriver().setup();
-                } catch (Throwable t) {
-                    String version = prop.getProperty("internetExplorerVersion");
-                    WebDriverManager.iedriver().driverVersion(version).setup();
-                }
+                else
+                    WebDriverManager.iedriver().driverVersion(capabilities.getBrowserVersion()).setup();
 
-                return new InternetExplorerDriver();
+                InternetExplorerOptions internetExplorerOptions = new InternetExplorerOptions();
+                internetExplorerOptions.merge(capabilities);
+                return new InternetExplorerDriver(internetExplorerOptions);
 
             case "edge":
-                try {
+                if (capabilities.getCapability("browserVersion") == null)
                     WebDriverManager.edgedriver().setup();
-                } catch (Throwable t) {
-                    String version = prop.getProperty("edgeDriverVersion");
-                    WebDriverManager.edgedriver().driverVersion(version).setup();
-                }
+                else
+                    WebDriverManager.edgedriver().driverVersion(capabilities.getBrowserVersion()).setup();
 
-                return new EdgeDriver();
+
+                EdgeOptions edgeOptions = new EdgeOptions();
+                edgeOptions.merge(capabilities);
+                return new EdgeDriver(edgeOptions);
 
             case "safari":
-                try {
+                if (capabilities.getCapability("browserVersion") == null)
                     WebDriverManager.safaridriver().setup();
-                } catch (Throwable t) {
-                    String version = prop.getProperty("safariDriverVersion");
-                    WebDriverManager.safaridriver().driverVersion(version).setup();
-                }
-                return new SafariDriver();
+                else
+                    WebDriverManager.safaridriver().driverVersion(capabilities.getBrowserVersion()).setup();
+
+
+                SafariOptions safariOptions = new SafariOptions();
+                safariOptions.merge(capabilities);
+                return new SafariDriver(safariOptions);
 
             default:
                 break;

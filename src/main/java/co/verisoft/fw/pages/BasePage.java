@@ -45,7 +45,7 @@ import java.util.Arrays;
  * 30 Mar 2020
  */
 @ToString
-@Log4j2
+@Slf4j
 public abstract class BasePage {
 
     protected WebDriver driver;
@@ -72,11 +72,17 @@ public abstract class BasePage {
             if (((VerisoftMobileDriver) driver).getCapabilities().getPlatformName().equals(Platform.ANDROID)){
                 platform = MobilePlatform.ANDROID;
                 automationName = AutomationName.ANDROID_UIAUTOMATOR2;
+
+            }
+
+            else if (((VerisoftMobileDriver) driver).getCapabilities().getPlatformName().equals(Platform.IOS)){
+                platform = MobilePlatform.IOS;
+                automationName = AutomationName.IOS_XCUI_TEST;
             }
 
             PageFactory.initElements(new AppiumElementLocatorFactory(driver,
                             Duration.ofSeconds(1),
-                            new DefaultElementByBuilder(MobilePlatform.ANDROID, AutomationName.ANDROID_UIAUTOMATOR2)),
+                            new DefaultElementByBuilder(platform, automationName)),
                     this);
         }
         else

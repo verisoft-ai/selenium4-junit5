@@ -19,7 +19,7 @@ import java.util.HashMap;
  * @author Rommel Malqued
  * @since Aug 2021
  */
-@Log4j2
+@Slf4j
 public class CapabilitiesReader {
 
     private static JSONArray parseJSON(String jsonLocation) throws Exception {

@@ -40,7 +40,7 @@ import java.util.regex.Pattern;
  * @author David Yehezkel
  * @since 1.9.6
  */
-@Log4j2
+@Slf4j
 @ToString
 public final class Waits {
     private Waits() {
