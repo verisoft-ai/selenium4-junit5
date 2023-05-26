@@ -236,7 +236,6 @@
                     <testFailureIgnore>false</testFailureIgnore>
                     <argLine>
                         @{jaCoCoArgLine} -Xmx1024m
-                        -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
                     </argLine>
 
                 </configuration>
