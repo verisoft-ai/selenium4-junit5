@@ -1,0 +1,72 @@
+pipeline {
+    agent {
+        node {
+            label 'demo-docker-slave'
+        }
+    }
+
+    triggers {
+        bitbucketPush()
+    }
+
+    stages {
+        stage('Clone') {
+            steps {
+                git url: 'https://NirGallner@bitbucket.org/nir_gallner/selenium4-junit5.git', branch: 'master'
+
+            }
+        }
+        stage('Compile'){
+            steps{
+                sh 'mvn -Dmaven.test.failure.ignore=true clean compile validate'
+            }
+        }
+
+        stage('Test'){
+            steps{
+                sh 'mvn -Dmaven.test.failure.ignore=true test'
+
+                // To run Maven on a Windows agent, use
+                // bat "mvn -Dmaven.test.failure.ignore=true clean package"
+            }
+
+            post {
+                // If Maven was able to run the tests, even if some of the test
+                // failed, record the test results and archive the jar file.
+                success {
+                    junit '**/target/surefire-reports/TEST-*.xml'
+                }
+            }
+        }
+        
+    }
+
+    post{
+        always{
+        //    archiveArtifacts artifacts: '**/Extent-Report/**/*.*', allowEmptyArchive: true, fingerprint: true, onlyIfSuccessful: false
+        //    archiveArtifacts artifacts: '**/logs/**/*.*', allowEmptyArchive: true, fingerprint: true, onlyIfSuccessful: false
+           archiveArtifacts artifacts: '**/XrayReport/**/*.*', allowEmptyArchive: true, fingerprint: true, onlyIfSuccessful: false
+
+           publishHTML (target : [allowMissing: false,  alwaysLinkToLastBuild: true, keepAll: true, reportDir: 'target/Extent-Report/', reportFiles: 'TestReport.html',
+                        reportName: 'Results', reportTitles: 'Results'])
+
+        }
+        failure{
+            
+            slackSend( channel: "#infra", token: "slack_webhook token", color: "bad", message: "FAILED: ${custom_msg()} no", notifyCommitters: true)
+        }
+        success{
+            slackSend( channel: "#infra", token: "slack_webhook token", color: "good", message: "PASSED: ${custom_msg()}", notifyCommitters: true)
+        }
+    }
+}
+
+
+def custom_msg()
+{
+  def JENKINS_URL= "http://65.109.141.131:9080"
+  def JOB_NAME = env.JOB_NAME
+  def BUILD_ID= env.BUILD_ID
+  def JENKINS_LOG= "Job [${env.JOB_NAME}] Logs path: ${JENKINS_URL}/job/${JOB_NAME}/${BUILD_ID}/console"
+  return JENKINS_LOG
+}
