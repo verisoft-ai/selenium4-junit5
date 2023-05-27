@@ -43,13 +43,18 @@ pipeline {
 
     post{
         always{
-        //    archiveArtifacts artifacts: '**/Extent-Report/**/*.*', allowEmptyArchive: true, fingerprint: true, onlyIfSuccessful: false
-        //    archiveArtifacts artifacts: '**/logs/**/*.*', allowEmptyArchive: true, fingerprint: true, onlyIfSuccessful: false
-           archiveArtifacts artifacts: '**/XrayReport/**/*.*', allowEmptyArchive: true, fingerprint: true, onlyIfSuccessful: false
+            try{
+                //    archiveArtifacts artifacts: '**/Extent-Report/**/*.*', allowEmptyArchive: true, fingerprint: true, onlyIfSuccessful: false
+                //    archiveArtifacts artifacts: '**/logs/**/*.*', allowEmptyArchive: true, fingerprint: true, onlyIfSuccessful: false
+                archiveArtifacts artifacts: '**/XrayReport/**/*.*', allowEmptyArchive: true, fingerprint: true, onlyIfSuccessful: false
 
-           publishHTML (target : [allowMissing: false,  alwaysLinkToLastBuild: true, keepAll: true, reportDir: 'target/Extent-Report/', reportFiles: 'TestReport.html',
-                        reportName: 'Results', reportTitles: 'Results'])
-
+                publishHTML (target : [allowMissing: false,  alwaysLinkToLastBuild: true, keepAll: true, reportDir: 'target/Extent-Report/', reportFiles: 'TestReport.html',
+                                       reportName: 'Results', reportTitles: 'Results'])
+            }
+            catch(Exception e){
+                echo 'Could not archive some of the artifacts: ' + e.toString()
+            }
+            
         }
         failure{
             
