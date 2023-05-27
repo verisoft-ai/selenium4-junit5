@@ -43,7 +43,7 @@ pipeline {
 
     post{
         always{
-
+                echo 'Will not archive since currently it results in build failure. TODO: SHOULD BE FIXED'
                 //    archiveArtifacts artifacts: '**/Extent-Report/**/*.*', allowEmptyArchive: true, fingerprint: true, onlyIfSuccessful: false
                 //    archiveArtifacts artifacts: '**/logs/**/*.*', allowEmptyArchive: true, fingerprint: true, onlyIfSuccessful: false
                  // archiveArtifacts artifacts: '**/XrayReport/**/*.*', allowEmptyArchive: true, fingerprint: true, onlyIfSuccessful: false
