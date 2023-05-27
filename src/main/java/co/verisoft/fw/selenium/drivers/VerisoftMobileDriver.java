@@ -83,7 +83,7 @@ public class VerisoftMobileDriver extends VerisoftDriver implements
         PushesFiles, CanRecordScreen, HasBattery, HasSettings {
 
     public VerisoftMobileDriver(Capabilities capabilities) {
-        super(capabilities);
+        super((URL)null, capabilities);
     }
 
     public VerisoftMobileDriver(URL remoteAddress, Capabilities capabilities) {

@@ -22,13 +22,17 @@ import co.verisoft.fw.selenium.drivers.factory.DriverCapabilities;
 import co.verisoft.fw.selenium.drivers.factory.DriverUrl;
 import co.verisoft.fw.selenium.junit.extensions.DriverInjectionExtension;
 import co.verisoft.fw.utils.Asserts;
+import config.BaseTest;
+import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -36,37 +40,26 @@ import java.net.URL;
 
 @Disabled
 @ExtendWith(DriverInjectionExtension.class)
-public class DriverInjectionTest {
+public class DriverInjectionTest extends BaseTest {
 
     private static final String pageTestUrl = "file://" +
             new File(System.getProperty("user.dir") +
                     "/src/test/resources/DelegateDriverTestForm.html").getAbsolutePath();
 
     @DriverCapabilities
-    DesiredCapabilities capabilities = new DesiredCapabilities();
+    private DesiredCapabilities capabilities = new DesiredCapabilities();
     {
-        capabilities.setCapability("platformName", "android");
-        capabilities.setCapability("appPackage", "com.leumi.leumiwallet");
-        capabilities.setCapability("appActivity", "com.ngsoft.app.ui.LMTestSettingActivity");
-        capabilities.setCapability("deviceName", "RFCTA2182SF");
-        capabilities.setCapability("securityToken", "eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI2YTY0NDgyYi00YzA1LTQ1OTQtOWNhNS1hODViMDczNmU1NzkifQ.eyJpYXQiOjE2NzMxNzg3NjksImp0aSI6IjY5MmIyMzU3LTk3MzMtNDlkMi05ZDQxLTdhYmZjMWFiODI0YyIsImlzcyI6Imh0dHBzOi8vYXV0aDcucGVyZmVjdG9tb2JpbGUuY29tL2F1dGgvcmVhbG1zL2xldW1pcWEtcGVyZmVjdG9tb2JpbGUtY29tIiwiYXVkIjoiaHR0cHM6Ly9hdXRoNy5wZXJmZWN0b21vYmlsZS5jb20vYXV0aC9yZWFsbXMvbGV1bWlxYS1wZXJmZWN0b21vYmlsZS1jb20iLCJzdWIiOiJjZjllYjA4MC02M2FkLTRmZWEtOGQwZi0xZTY3NjA4MzI2NWEiLCJ0eXAiOiJPZmZsaW5lIiwiYXpwIjoib2ZmbGluZS10b2tlbi1nZW5lcmF0b3IiLCJub25jZSI6ImYxMzM4MjA2LWMyN2ItNGVkMy04MTYzLWE1NDhlNDRjNTYxZiIsInNlc3Npb25fc3RhdGUiOiI3YWUyM2Y2Ni1kNDdmLTQ5YjEtYjQyNi03MDExY2E1N2ZjZjgiLCJzY29wZSI6Im9wZW5pZCBvZmZsaW5lX2FjY2VzcyBwcm9maWxlIGVtYWlsIn0.FwyDgRDzg3VOw3ZrC_WRnyAPcimVHcFKoE2yjbY8XgE");
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--no-sandbox");
+        options.addArguments("--headless");
 
+        capabilities.setBrowserName("chrome");
+        options.merge(capabilities);
     }
-//    DesiredCapabilities capabilities = new DesiredCapabilities();
-//
-//    {
-//        capabilities.setCapability("platformName", "android");
-//        capabilities.setCapability("deviceName", "emulator-5554");
-//        capabilities.setCapability("appPackage", "com.android.chrome");
-//        capabilities.setCapability("appActivity", "com.google.android.apps.chrome.Main");
-//        capabilities.setCapability("automationName", "uiAutomator2");
-//        //capabilities.setCapability("fullReset", "true");
-//
-//    }
 
+    @Autowired
     @DriverUrl
-    private final URL url = new URL("https://leumiqa.perfectomobile.com/nexperience/perfectomobile/wd/hub");
-//    private final URL url = new URL("http://localhost:4723/wd/hub");
+    @Nullable URL url;
 
     public DriverInjectionTest() throws MalformedURLException {
     }
@@ -75,6 +68,7 @@ public class DriverInjectionTest {
     @Test
     @Tag("smoke")
     public void shouldWebCreateWebDriver(VerisoftDriver driver) {
+
         driver.get(pageTestUrl);
         WebElement element = driver.findElement(By.id("checkbox"));
     }

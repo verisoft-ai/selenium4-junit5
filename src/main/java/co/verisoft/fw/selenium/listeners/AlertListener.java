@@ -19,7 +19,6 @@ package co.verisoft.fw.selenium.listeners;
 import co.verisoft.fw.utils.ActionTime;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.support.events.WebDriverListener;

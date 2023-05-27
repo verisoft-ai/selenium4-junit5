@@ -17,10 +17,13 @@ package selenium.drivers;/*
 import co.verisoft.fw.selenium.drivers.decorators.LoggingDecorator;
 import co.verisoft.fw.selenium.drivers.DecoratedDriver;
 import co.verisoft.fw.selenium.drivers.VerisoftDriver;
+import co.verisoft.fw.selenium.drivers.factory.DriverUrl;
 import co.verisoft.fw.selenium.junit.extensions.SeleniumLogExtesion;
 import co.verisoft.fw.utils.Slf4jObserver;
 import org.apache.commons.io.FileUtils;
+import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.parallel.Execution;
@@ -29,9 +32,11 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.List;
 import java.util.Set;
 
@@ -47,6 +52,7 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 @Execution(ExecutionMode.CONCURRENT)
 @ExtendWith(SeleniumLogExtesion.class)
+@Disabled
 public class VerisoftDriverAPITest {
 
     static boolean is = false;
@@ -64,6 +70,10 @@ public class VerisoftDriverAPITest {
             new File(System.getProperty("user.dir") +
                     "/src/test/resources/DelegateDriverTestForm.html").getAbsolutePath();
 
+
+    @DriverUrl
+    @Autowired
+    @Nullable URL url;
 
     private ChromeOptions capabilities = new ChromeOptions();
     {

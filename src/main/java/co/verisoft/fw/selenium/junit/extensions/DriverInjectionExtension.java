@@ -24,8 +24,6 @@ import co.verisoft.fw.selenium.drivers.factory.AnnotationsReader;
 import co.verisoft.fw.selenium.drivers.factory.SingleSession;
 import io.appium.java_client.AppiumDriver;
 import lombok.ToString;
-import lombok.extern.log4j.Log4j;
-import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.TestTemplate;
 import org.junit.jupiter.api.extension.*;

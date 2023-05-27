@@ -19,7 +19,6 @@ package co.verisoft.fw.utils;
 
 
 import lombok.ToString;
-import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.openqa.selenium.*;

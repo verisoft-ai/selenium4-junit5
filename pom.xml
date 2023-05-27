@@ -7,7 +7,7 @@
     <groupId>co.verisoft</groupId>
     <artifactId>Selenium4-Junit5</artifactId>
     <packaging>jar</packaging>
-    <version>0.0.2-SNAPSHOT</version>
+    <version>0.1.3-SNAPSHOT</version>
     <name>${project.groupId}:${project.artifactId}</name>
     <description>VeriSoft framewordk for testing web and mobile applications. Selenium Module</description>
     <url>https://bitbucket.org/nir_gallner/selenium4-junit5</url>
@@ -36,22 +36,23 @@
     <properties>
 
         <!-- Dependencies -->
-        <log4j2.version>2.20.0</log4j2.version>
         <slf4j.version>2.0.6</slf4j.version>
         <aspectj.version>1.9.7</aspectj.version>
         <maven.compiler.version>3.10.1</maven.compiler.version>
         <lombok.version>1.18.26</lombok.version>
-        <verisoft.test.api.version>0.1</verisoft.test.api.version>
+        <spring.version>5.3.27</spring.version>
+        <verisoft.test.api.version>0.1.3-SNAPSHOT</verisoft.test.api.version>
 
 
         <!-- Maven plugins versions-->
         <maven.javadoc.version>3.3.1</maven.javadoc.version>
         <maven.source.plugin.version>3.2.1</maven.source.plugin.version>
-        <maven.surefire.plugin.version>3.0.0-M5</maven.surefire.plugin.version> <!--after change to 3.0.0-M5 break -->
+        <maven.surefire.plugin.version>3.1.0</maven.surefire.plugin.version> <!--after change to 3.0.0-M5 break -->
         <maven.javadoc.plugin.version>3.3.1</maven.javadoc.plugin.version>
         <jacoco.maven.plugin.version>0.8.7</jacoco.maven.plugin.version>
         <nexus.staging.maven.version>1.6.7</nexus.staging.maven.version>
         <maven.gpg.plugin.version>3.0.1</maven.gpg.plugin.version>
+        <maven.release.plugin.version>3.0.0</maven.release.plugin.version>
 
 
         <!-- Test dependencies -->
@@ -59,7 +60,7 @@
         <junit.jupiter.version>5.9.2</junit.jupiter.version>
 
         <!-- Java -->
-        <java.version>1.8</java.version>
+        <java.version>11</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
 
@@ -170,6 +171,28 @@
             <version>${maven.compiler.version}</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.springframework/spring-core -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.springframework/spring-context -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.springframework/spring-test -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+
+
     </dependencies>
     <distributionManagement>
         <snapshotRepository>
@@ -207,6 +230,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>
+                <version>${maven.release.plugin.version}</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -229,7 +253,9 @@
                     <target>${java.version}</target>
                 </configuration>
             </plugin>
+
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven.surefire.plugin.version}</version>
                 <configuration>
@@ -237,10 +263,9 @@
                     <argLine>
                         @{jaCoCoArgLine} -Xmx1024m
                     </argLine>
-
                 </configuration>
-
             </plugin>
+
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>

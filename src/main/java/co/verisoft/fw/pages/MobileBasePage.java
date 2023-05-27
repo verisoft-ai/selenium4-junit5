@@ -22,14 +22,11 @@ import co.verisoft.fw.selenium.drivers.VerisoftMobileDriver;
 import co.verisoft.fw.utils.Waits;
 import io.appium.java_client.PerformsTouchActions;
 import io.appium.java_client.TouchAction;
-import io.appium.java_client.pagefactory.AppiumFieldDecorator;
 import io.appium.java_client.touch.WaitOptions;
 import io.appium.java_client.touch.offset.PointOption;
 import lombok.ToString;
-import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.*;
-import org.openqa.selenium.support.PageFactory;
 
 import java.time.Duration;
 

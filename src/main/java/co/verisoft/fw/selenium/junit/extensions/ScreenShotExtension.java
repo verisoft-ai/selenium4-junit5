@@ -3,7 +3,6 @@ package co.verisoft.fw.selenium.junit.extensions;
 import co.verisoft.fw.selenium.drivers.VerisoftDriverManager;
 import co.verisoft.fw.store.StoreManager;
 import co.verisoft.fw.store.StoreType;
-import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;

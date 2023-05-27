@@ -16,12 +16,9 @@ package co.verisoft.fw.selenium.listeners;
  * limitations under the License.
  */
 
-import co.verisoft.fw.store.StoreManager;
-import co.verisoft.fw.store.StoreType;
 import co.verisoft.fw.utils.ActionTime;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -30,7 +27,10 @@ import org.openqa.selenium.interactions.Sequence;
 import org.openqa.selenium.support.events.WebDriverListener;
 
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Listener for all WebElement related actions

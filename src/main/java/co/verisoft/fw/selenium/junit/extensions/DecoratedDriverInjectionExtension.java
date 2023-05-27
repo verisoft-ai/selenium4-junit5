@@ -5,7 +5,7 @@ import co.verisoft.fw.selenium.drivers.decorators.LoggingDecorator;
 import co.verisoft.fw.selenium.drivers.factory.AnnotationsReader;
 import co.verisoft.fw.selenium.drivers.factory.SingleSession;
 import io.appium.java_client.AppiumDriver;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.TestTemplate;
 import org.junit.jupiter.api.extension.*;
 import org.openqa.selenium.Capabilities;
@@ -16,7 +16,7 @@ import java.lang.reflect.Parameter;
 import java.net.URL;
 import java.util.Optional;
 
-@Log4j2
+@Slf4j
 public class DecoratedDriverInjectionExtension implements ParameterResolver, AfterEachCallback, AfterAllCallback {
 
     AnnotationsReader annotationsReader;

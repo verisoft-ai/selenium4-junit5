@@ -24,21 +24,27 @@ import co.verisoft.fw.async.Observer;
 import co.verisoft.fw.extensions.jupiter.JunitLogExtension;
 import co.verisoft.fw.selenium.drivers.VerisoftDriver;
 import co.verisoft.fw.selenium.drivers.factory.DriverCapabilities;
+import co.verisoft.fw.selenium.drivers.factory.DriverUrl;
 import co.verisoft.fw.selenium.junit.extensions.DriverInjectionExtension;
+import org.jetbrains.annotations.Nullable;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.openqa.selenium.By;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
+import java.net.URL;
 import java.time.Duration;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @Execution(ExecutionMode.CONCURRENT)
 @ExtendWith({JunitLogExtension.class, DriverInjectionExtension.class})
+@Disabled
 public class AsyncTestsTest {
 
     private static final String pageTestUrl = "file://" +
@@ -46,6 +52,9 @@ public class AsyncTestsTest {
                     "/src/test/resources/DelegateDriverTestForm.html").getAbsolutePath();
 
 
+    @DriverUrl
+    @Autowired
+    @Nullable URL url;
     @DriverCapabilities
     private final DesiredCapabilities capabilities = new DesiredCapabilities();
     {

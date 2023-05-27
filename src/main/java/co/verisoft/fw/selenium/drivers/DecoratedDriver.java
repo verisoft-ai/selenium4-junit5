@@ -27,7 +27,7 @@ import io.appium.java_client.ios.IOSDriver;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import lombok.Getter;
 import lombok.ToString;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.openqa.selenium.*;
@@ -124,7 +124,7 @@ import java.util.Set;
  */
 
 @ToString
-@Log4j2
+@Slf4j
 @Getter
 public class DecoratedDriver implements
         WebDriver,
