@@ -17,6 +17,7 @@
  */
 package co.verisoft.fw.selenium.drivers;
 
+
 import co.verisoft.fw.report.observer.Report;
 import io.appium.java_client.*;
 import io.appium.java_client.android.AndroidDriver;
