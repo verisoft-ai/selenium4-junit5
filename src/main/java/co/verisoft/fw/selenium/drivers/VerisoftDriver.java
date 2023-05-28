@@ -23,6 +23,8 @@ import co.verisoft.fw.selenium.listeners.*;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.ios.IOSDriver;
 import io.appium.java_client.remote.MobilePlatform;
+import io.cloudbeat.junit.CbJunitExtension;
+import io.cloudbeat.selenium.CbWebDriverListener;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
@@ -151,6 +153,8 @@ public class VerisoftDriver implements
         if (webDriverlisteners != null)
             return;
 
+        CbWebDriverListener cbWebDriverListener = CbJunitExtension.getWebDriverListener(this.driver);
+
         this.webDriverlisteners = new ArrayList<>();
 
         webDriverlisteners.add(new AlertListener());
@@ -160,6 +164,7 @@ public class VerisoftDriver implements
         webDriverlisteners.add(new DriverListener());
         webDriverlisteners.add(new WebElementListener());
         webDriverlisteners.add(new WindowListener());
+        webDriverlisteners.add(cbWebDriverListener);
 
         // Create asyncListener object to be activated here
         if (asyncListener == null) {

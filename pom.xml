@@ -87,6 +87,28 @@
             <scope>compile</scope>
         </dependency>
 
+        <dependency>
+            <groupId>io.cloudbeat</groupId>
+            <artifactId>cb-kit-junit5</artifactId>
+            <version>1.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>io.cloudbeat</groupId>
+            <artifactId>cb-kit-selenium4</artifactId>
+            <version>1.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>io.cloudbeat</groupId>
+            <artifactId>cb-kit-common</artifactId>
+            <version>1.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.cloudbeat</groupId>
+            <artifactId>cb-kit-junit5</artifactId>
+            <version>1.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
         <dependency>
