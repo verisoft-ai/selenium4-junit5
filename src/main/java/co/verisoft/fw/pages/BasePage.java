@@ -17,6 +17,7 @@ package co.verisoft.fw.pages;
 
 
 import co.verisoft.fw.selenium.drivers.VerisoftMobileDriver;
+import co.verisoft.fw.utils.Property;
 import co.verisoft.fw.utils.Waits;
 import io.appium.java_client.pagefactory.AppiumElementLocatorFactory;
 import io.appium.java_client.pagefactory.DefaultElementByBuilder;
@@ -28,7 +29,7 @@ import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
-import org.springframework.core.convert.Property;
+
 
 import java.time.Duration;
 import java.util.Arrays;
@@ -56,6 +57,7 @@ public abstract class BasePage {
      * @param driver a WebDriver object to store and use
      */
     public BasePage(WebDriver driver) {
+
         Property prop = new Property();
         timeOut = prop.getIntProperty("selenium.wait.timeout");
         pollingInterval = prop.getIntProperty("polling.interval");
