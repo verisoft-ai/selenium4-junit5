@@ -164,7 +164,7 @@ public class VerisoftDriver implements
         webDriverlisteners.add(new DriverListener());
         webDriverlisteners.add(new WebElementListener());
         webDriverlisteners.add(new WindowListener());
-        webDriverlisteners.add(cbWebDriverListener);
+        //webDriverlisteners.add(cbWebDriverListener);
 
         // Create asyncListener object to be activated here
         if (asyncListener == null) {
@@ -806,7 +806,7 @@ public class VerisoftDriver implements
         switch (browserName) {
 
             case "chrome":
-                if (capabilities.getCapability("driverVersion") == null)
+                if (capabilities.getCapability("browserVersion") == null)
                     WebDriverManager.chromedriver().setup();
                 else
                     WebDriverManager.chromedriver().driverVersion(capabilities.getBrowserVersion()).setup();
@@ -837,7 +837,7 @@ public class VerisoftDriver implements
                 internetExplorerOptions.merge(capabilities);
                 return new InternetExplorerDriver(internetExplorerOptions);
 
-            case "MicrosoftEdge":
+            case "microsoftedge":
                 if (capabilities.getCapability("browserVersion") == null)
                     WebDriverManager.edgedriver().setup();
                 else
