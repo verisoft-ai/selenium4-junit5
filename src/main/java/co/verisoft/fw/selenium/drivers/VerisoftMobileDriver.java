@@ -33,6 +33,7 @@ import io.appium.java_client.screenrecording.BaseStopScreenRecordingOptions;
 import io.appium.java_client.screenrecording.CanRecordScreen;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.NotImplementedException;
 import org.jetbrains.annotations.Nullable;
 import org.openqa.selenium.*;
 import org.openqa.selenium.html5.Location;
@@ -414,5 +415,15 @@ public class VerisoftMobileDriver extends VerisoftDriver implements
         String result = ((SupportsContextSwitching) this.driver).getContext();
         Report.debug("Appium Driver using: getContext-> result: " + result);
         return result;
+    }
+
+    @Override
+    public ExecutesMethod assertExtensionExists(String s) {
+        throw new NotImplementedException("Not yet implemented");
+    }
+
+    @Override
+    public ExecutesMethod markExtensionAbsence(String s) {
+        throw new NotImplementedException("Not yet implemented");
     }
 }

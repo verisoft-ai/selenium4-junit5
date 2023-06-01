@@ -832,7 +832,7 @@ public class VerisoftDriver implements
                 internetExplorerOptions.merge(capabilities);
                 return new InternetExplorerDriver(internetExplorerOptions);
 
-            case "edge":
+            case "microsoftedge":
                 if (capabilities.getCapability("browserVersion") == null)
                     WebDriverManager.edgedriver().setup();
                 else
