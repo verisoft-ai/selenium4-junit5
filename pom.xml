@@ -70,7 +70,7 @@
         <project.reporting.outputEncoding>${java.encoding}</project.reporting.outputEncoding>
 
         <!-- Selenium -->
-        <io.appium.version>8.3.0</io.appium.version>
+        <io.appium.version>8.5.0</io.appium.version>
         <webdrivermanager.version>5.3.3</webdrivermanager.version>
         <org.selenium.version>4.9.1</org.selenium.version>
 

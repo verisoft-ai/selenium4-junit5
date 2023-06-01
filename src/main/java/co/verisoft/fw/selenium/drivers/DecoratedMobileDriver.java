@@ -13,6 +13,7 @@ import io.appium.java_client.remote.SupportsRotation;
 import io.appium.java_client.screenrecording.BaseStartScreenRecordingOptions;
 import io.appium.java_client.screenrecording.BaseStopScreenRecordingOptions;
 import io.appium.java_client.screenrecording.CanRecordScreen;
+import org.apache.commons.lang3.NotImplementedException;
 import org.jetbrains.annotations.Nullable;
 import org.openqa.selenium.*;
 import org.openqa.selenium.html5.Location;
@@ -287,5 +288,15 @@ public class DecoratedMobileDriver extends DecoratedDriver
     @Override
     public String getContext() {
         return ((SupportsContextSwitching) decoratedDriver).getContext();
+    }
+
+    @Override
+    public ExecutesMethod assertExtensionExists(String s) {
+        throw new NotImplementedException("Not yet implemented");
+    }
+
+    @Override
+    public ExecutesMethod markExtensionAbsence(String s) {
+        throw new NotImplementedException("Not yet implemented");
     }
 }
