@@ -6,6 +6,7 @@ import co.verisoft.fw.store.StoreType;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
+import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
@@ -20,6 +21,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import static org.junit.jupiter.api.extension.ExtensionContext.Namespace.GLOBAL;
+
 @Slf4j
 /**
  * If activated, extension creates a screenshot when a test failed, and pushes it's name into the
@@ -29,6 +32,7 @@ import java.util.Objects;
  * @author <a href="mailto:nir@verisoft.co">Nir Gallner</a> @ <a href="http://www.verisoft.co">www.VeriSoft.co</a>
  */
 public class ScreenShotExtension implements AfterTestExecutionCallback {
+
 
 
     /**
@@ -69,7 +73,7 @@ public class ScreenShotExtension implements AfterTestExecutionCallback {
                     new ArrayList<>() :
                     screenShots.get(extensionContext.getDisplayName());
 
-            paths.add("../screenshots/" + file.getName());
+            paths.add(file.getName());
             screenShots.put(extensionContext.getDisplayName(), paths);
         }
     }
