@@ -16,12 +16,12 @@
  * limitations under the License.
  */
 
+import co.verisoft.fw.asserts.Asserts;
 import co.verisoft.fw.selenium.drivers.VerisoftDriver;
 import co.verisoft.fw.selenium.drivers.VerisoftMobileDriver;
 import co.verisoft.fw.selenium.drivers.factory.DriverCapabilities;
 import co.verisoft.fw.selenium.drivers.factory.DriverUrl;
 import co.verisoft.fw.selenium.junit.extensions.DriverInjectionExtension;
-import co.verisoft.fw.utils.Asserts;
 import config.BaseTest;
 import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.Disabled;
