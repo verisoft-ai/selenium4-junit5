@@ -1,0 +1,44 @@
+{
+  "objectsRepository": [
+    {
+      "objectId": "WIKI-SEARCH",
+      "locators": [
+        {
+          "type": "id",
+          "value": "searchInput",
+          "grade": 80
+        },
+        {
+          "type": "xpath",
+          "value": "id",
+          "grade": 90
+        },
+        {
+          "type": "css",
+          "value": "id",
+          "grade": 50
+        }
+      ]
+    },
+    {
+      "objectId": "LOC-1",
+      "locators": [
+        {
+          "type": "xpath",
+          "value": "\\xpath",
+          "grade": 34
+        },
+        {
+          "type": "id",
+          "value": "id",
+          "grade": 80
+        },
+        {
+          "type": "css",
+          "value": "id",
+          "grade": 50
+        }
+      ]
+    }
+  ]
+}

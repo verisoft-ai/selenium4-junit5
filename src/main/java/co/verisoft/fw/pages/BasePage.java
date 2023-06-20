@@ -16,6 +16,7 @@
 package co.verisoft.fw.pages;
 
 
+import co.verisoft.fw.objectrepository.ObjectReporsitoryFactory;
 import co.verisoft.fw.selenium.drivers.VerisoftMobileDriver;
 import co.verisoft.fw.utils.Property;
 import co.verisoft.fw.utils.Waits;
@@ -87,6 +88,7 @@ public abstract class BasePage {
         else
             PageFactory.initElements(driver, this);
 
+        ObjectReporsitoryFactory.initObjects(driver, this);
     }
 
 
