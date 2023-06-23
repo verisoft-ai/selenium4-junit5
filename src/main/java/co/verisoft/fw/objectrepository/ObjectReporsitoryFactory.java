@@ -14,6 +14,7 @@ public class ObjectReporsitoryFactory {
     private ObjectReporsitoryFactory() {
     }
 
+    //TODO: add support to List<WebElement>
     public static void initObjects(WebDriver driver, Object page) {
         Field[] allFields = page.getClass().getDeclaredFields();
         for (Field field : allFields) {
