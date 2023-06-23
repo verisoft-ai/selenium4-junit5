@@ -46,6 +46,7 @@ import org.openqa.selenium.remote.HttpCommandExecutor;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.safari.SafariDriver;
 import org.openqa.selenium.safari.SafariOptions;
+import org.openqa.selenium.support.decorators.Decorated;
 import org.openqa.selenium.support.events.EventFiringDecorator;
 import org.openqa.selenium.support.events.WebDriverListener;
 import org.openqa.selenium.virtualauthenticator.HasVirtualAuthenticator;
@@ -174,6 +175,12 @@ public class VerisoftDriver implements
             initListeners();
 
         webDriverlisteners.add(listener);
+
+        if (Objects.nonNull(this.driver)){
+            WebDriver original = ((WebDriver) ((Decorated) this.driver).getOriginal());
+            initDriver(original);
+        }
+
     }
 
     public VerisoftDriver(Capabilities capabilities){
