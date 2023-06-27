@@ -13,5 +13,6 @@ import java.util.List;
 @ToString
 public class LocatorObject {
     private String objectId;
+    private String pageName;
     private List<Locator> locators;
 }
