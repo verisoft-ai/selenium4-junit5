@@ -1,5 +1,6 @@
 package co.verisoft.fw.objectrepository;
 
+import co.verisoft.fw.report.observer.Report;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,6 +44,8 @@ public class DynamicWebElement implements InvocationHandler {
                 // NO-OP
             }
         }
+
+        Report.warn("Could not perform findElement to element " + this.elementObjectId);
         return null;
     }
 
@@ -67,7 +70,7 @@ public class DynamicWebElement implements InvocationHandler {
 
 
     private static By resolveLocator(Locator locator) {
-        switch (locator.getType()){
+        switch (locator.getType()) {
             case "id":
                 return By.id(locator.getValue());
             case "xpath":
