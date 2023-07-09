@@ -68,7 +68,10 @@ public class DynamicWebElement implements InvocationHandler {
             uniqueLocatorObject = locatorObjects.get(0);
 
 
-        assert uniqueLocatorObject != null;
+        if (Objects.isNull(uniqueLocatorObject))
+            throw new IllegalArgumentException("Unable to find a unique locator in object repository during page object initialization," +
+                    "Do you have a locator with page: " + pageName + " and ID: " + elementObjectId + " in the object repository?");
+
         List<Locator> locators = uniqueLocatorObject.getLocators();
         Collections.sort(locators);
         return locators;
