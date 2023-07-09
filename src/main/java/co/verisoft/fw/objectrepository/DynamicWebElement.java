@@ -3,6 +3,7 @@ package co.verisoft.fw.objectrepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.Nullable;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -20,6 +21,7 @@ public class DynamicWebElement implements InvocationHandler {
 
     private WebDriver driver;
     private String elementObjectId;
+    private @Nullable String pageName;
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {

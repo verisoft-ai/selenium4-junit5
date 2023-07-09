@@ -2,6 +2,7 @@ package co.verisoft.fw.objectrepository;
 
 import co.verisoft.fw.report.observer.Report;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.Nullable;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
@@ -16,6 +17,8 @@ public class ObjectReporsitoryFactory {
 
     //TODO: add support to List<WebElement>
     public static void initObjects(WebDriver driver, Object page) {
+        @Nullable String pageName = getPageName();
+        
         Field[] allFields = page.getClass().getDeclaredFields();
         for (Field field : allFields) {
             field.setAccessible(true);
@@ -32,5 +35,9 @@ public class ObjectReporsitoryFactory {
                 }
             }
         }
+    }
+
+    private static String getPageName(Object page) {
+        if (page.getClass().getAnnotation(PageName.class))
     }
 }
