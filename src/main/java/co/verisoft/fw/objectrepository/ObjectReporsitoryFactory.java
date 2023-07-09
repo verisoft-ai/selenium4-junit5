@@ -8,6 +8,7 @@ import org.openqa.selenium.WebElement;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Proxy;
+import java.util.Objects;
 
 @Slf4j
 public class ObjectReporsitoryFactory {
@@ -17,8 +18,8 @@ public class ObjectReporsitoryFactory {
 
     //TODO: add support to List<WebElement>
     public static void initObjects(WebDriver driver, Object page) {
-        @Nullable String pageName = getPageName();
-        
+        @Nullable String pageName = getPageName(page);
+
         Field[] allFields = page.getClass().getDeclaredFields();
         for (Field field : allFields) {
             field.setAccessible(true);
@@ -28,7 +29,7 @@ public class ObjectReporsitoryFactory {
                     field.set(page, (WebElement) Proxy.newProxyInstance(
                             WebElement.class.getClassLoader(),
                             new Class[]{WebElement.class},
-                            new DynamicWebElement(driver, field.getAnnotation(ObjectRepositoryItem.class).id())));
+                            new DynamicWebElement(driver, field.getAnnotation(ObjectRepositoryItem.class).id(), pageName)));
                 } catch (Exception e) {
                     Report.error("Could not proxy object from object repository. Message is " + e.getMessage());
                     throw new RuntimeException(e);
@@ -37,7 +38,10 @@ public class ObjectReporsitoryFactory {
         }
     }
 
-    private static String getPageName(Object page) {
-        if (page.getClass().getAnnotation(PageName.class))
+    private static @Nullable String getPageName(Object page) {
+        if (Objects.nonNull(page.getClass().getAnnotation(PageObjectName.class)))
+            return page.getClass().getSimpleName();
+        else
+            return null;
     }
 }

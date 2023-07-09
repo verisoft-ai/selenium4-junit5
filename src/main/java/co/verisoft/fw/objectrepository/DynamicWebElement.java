@@ -15,6 +15,8 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Slf4j
 @AllArgsConstructor
@@ -34,7 +36,7 @@ public class DynamicWebElement implements InvocationHandler {
     private WebElement resolveElementFromRepository(Object proxy) throws IOException {
 
         ObjectRepository repository = retrieveObjectRepository();
-        List<Locator> sortedLocatorsList = getSortedLocatorsList(repository, this.elementObjectId);
+        List<Locator> sortedLocatorsList = getSortedLocatorsList(repository, this.elementObjectId, pageName);
 
         for (Locator locator : sortedLocatorsList) {
             By by = resolveLocator(locator);
@@ -50,13 +52,24 @@ public class DynamicWebElement implements InvocationHandler {
     }
 
 
-    private static List<Locator> getSortedLocatorsList(ObjectRepository repository, String elementObjectId) {
-        LocatorObject locatorObject = repository.getObjectsRepository().stream()
+    private static List<Locator> getSortedLocatorsList(ObjectRepository repository, String elementObjectId, @Nullable String pageName) {
+        List<LocatorObject> locatorObjects = repository.getObjectsRepository().stream()
                 .filter(locator -> (locator.getObjectId()
-                        .equalsIgnoreCase(elementObjectId))).findAny().orElse(null);
+                        .equalsIgnoreCase(elementObjectId))).collect(Collectors.toList());
 
-        assert locatorObject != null;
-        List<Locator> locators = locatorObject.getLocators();
+        LocatorObject uniqueLocatorObject;
+        if (Objects.nonNull(pageName))
+            uniqueLocatorObject = locatorObjects.stream()
+                    .filter(locator -> (locator.getPageName()
+                            .equalsIgnoreCase(pageName))).findFirst().orElse(null);
+        else if (locatorObjects.isEmpty())
+            uniqueLocatorObject=null;
+        else
+            uniqueLocatorObject = locatorObjects.get(0);
+
+
+        assert uniqueLocatorObject != null;
+        List<Locator> locators = uniqueLocatorObject.getLocators();
         Collections.sort(locators);
         return locators;
     }
