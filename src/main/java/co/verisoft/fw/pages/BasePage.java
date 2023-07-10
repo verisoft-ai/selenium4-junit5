@@ -26,6 +26,7 @@ import io.appium.java_client.remote.AutomationName;
 import io.appium.java_client.remote.MobilePlatform;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
+import org.openqa.selenium.By;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -96,7 +97,7 @@ public abstract class BasePage {
      * This is a default implementation of isOnPage.
      * It receives one or more WebElements and checks if they are present
      *
-     * @param elements One or more WebElements to check for presense
+     * @param elements One or more WebElements to check for presence
      * @return true- all elements specified were present, false - otherwise
      */
     public boolean isOnPage(WebElement... elements) {
@@ -110,12 +111,30 @@ public abstract class BasePage {
         }
     }
 
+    /**
+     * This is a another implementation of isOnPage.
+     * It receives a locator and checks if all the WebElements located by this locator are present
+     *
+     * @param locator By parameter to check for presence
+     * @return true- all elements specified were present, false - otherwise
+     */
+    public boolean isOnPage(By locator) {
+        try {
+            Waits.visibilityOfAllElementsLocatedBy(driver, timeOut, locator);
+            log.info("elements " + locator + " was present on page");
+            return true;
+        } catch (Exception e) {
+            log.info("elements " + locator + " wasn't present on page");
+            return false;
+        }
+    }
+
 
     /**
      * check if the main page url contains the text
      *
      * @param fraction part of url to be search for
-     * @return true if text contains false other wise
+     * @return true if text contains false otherwise
      */
     public boolean urlContains(String fraction) {
         try {
