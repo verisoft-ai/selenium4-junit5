@@ -3,6 +3,7 @@ package co.verisoft.fw.objectrepository;
 import co.verisoft.fw.report.observer.Report;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.Nullable;
 import org.openqa.selenium.By;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @AllArgsConstructor
+@ToString
 public class DynamicWebElement implements InvocationHandler {
 
     private WebDriver driver;
@@ -29,6 +31,8 @@ public class DynamicWebElement implements InvocationHandler {
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         WebElement e = resolveElementFromRepository(proxy);
+        if (Objects.isNull(e) && method.getName().equals("toString"))
+            return this.toString();
         return method.invoke(e, args);
     }
 
