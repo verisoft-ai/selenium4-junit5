@@ -4,6 +4,11 @@ import lombok.ToString;
 import org.openqa.selenium.*;
 
 import java.util.List;
+/**
+ * A placeholder class representing a non-interactable WebElement.
+ * This class implements the WebElement interface with empty or unsupported behavior.
+ * It is used to invoke functions on dynamic web element without throwing exceptions.
+ */
 @ToString
 public class NonInteractableWebElement implements WebElement {
     @Override
