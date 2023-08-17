@@ -49,7 +49,7 @@ public class DynamicWebElement implements InvocationHandler {
             }
         }
 
-        Report.warn("Could not perform findElement to element " + this.elementObjectId);
+        log.debug("Could not perform findElement to element " + this.elementObjectId);
         return new NonInteractableWebElement();
     }
 
