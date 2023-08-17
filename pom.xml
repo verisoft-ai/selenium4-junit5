@@ -7,7 +7,7 @@
     <groupId>co.verisoft</groupId>
     <artifactId>Selenium4-Junit5</artifactId>
     <packaging>jar</packaging>
-    <version>0.1.14</version>
+    <version>0.1.15-SNAPSHOT</version>
     <name>${project.groupId}:${project.artifactId}</name>
     <description>VeriSoft framewordk for testing web and mobile applications. Selenium Module</description>
     <url>https://bitbucket.org/nir_gallner/selenium4-junit5</url>
