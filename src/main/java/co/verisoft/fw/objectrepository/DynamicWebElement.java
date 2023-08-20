@@ -31,8 +31,6 @@ public class DynamicWebElement implements InvocationHandler {
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         WebElement e = resolveElementFromRepository(proxy);
-        if (Objects.isNull(e) && method.getName().equals("toString"))
-            return this.toString();
         return method.invoke(e, args);
     }
 
@@ -51,8 +49,8 @@ public class DynamicWebElement implements InvocationHandler {
             }
         }
 
-        Report.warn("Could not perform findElement to element " + this.elementObjectId);
-        return null;
+        log.debug("Could not perform findElement to element " + this.elementObjectId);
+        return new NonInteractableWebElement();
     }
 
 
