@@ -797,7 +797,7 @@ public class VerisoftDriver implements
         initListeners();
         initDriver(otherDriver);
     }
-    
+
     /**
      * Cretes a local driver instance
      *
