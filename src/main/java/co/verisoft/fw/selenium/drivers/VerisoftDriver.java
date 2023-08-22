@@ -793,6 +793,11 @@ public class VerisoftDriver implements
     }
 
 
+    public VerisoftDriver(WebDriver otherDriver){
+        initListeners();
+        initDriver(otherDriver);
+    }
+    
     /**
      * Cretes a local driver instance
      *
