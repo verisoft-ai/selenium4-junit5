@@ -34,6 +34,7 @@ import org.openqa.selenium.remote.HttpCommandExecutor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.net.URL;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -158,8 +159,9 @@ public class DriverInjectionExtension implements ParameterResolver, AfterEachCal
     public void afterEach(ExtensionContext extensionContext) throws Exception {
 
         // Close the driver, unless test class is marked as @SingleSession, which will has 1 driver for class
-        if (!isSingleSession(extensionContext))
-            VerisoftDriverManager.getDriver().quit();
+        WebDriver driver = VerisoftDriverManager.getDriver();
+        if (!isSingleSession(extensionContext) && Objects.nonNull(driver))
+            driver.quit();
     }
 
 

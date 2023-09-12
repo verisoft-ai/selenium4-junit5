@@ -48,6 +48,12 @@ public class ScreenShotExtension implements TestExecutionExceptionHandler {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm");
         LocalDateTime now = LocalDateTime.now();
 
+        if (Objects.isNull(VerisoftDriverManager.getDriver())){
+            log.error("Cannot retrieve driver - driver is null. No screen shot is " +
+                    "available for null driver");
+            return;
+        }
+
         File screenshot = ((TakesScreenshot) VerisoftDriverManager.getDriver()).getScreenshotAs(OutputType.FILE);
         File dir = new File("target/screenshots/");
 
