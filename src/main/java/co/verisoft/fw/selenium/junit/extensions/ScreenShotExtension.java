@@ -5,8 +5,6 @@ import co.verisoft.fw.store.StoreManager;
 import co.verisoft.fw.store.StoreType;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
-import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
-import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
 import org.openqa.selenium.OutputType;
@@ -22,8 +20,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import static org.junit.jupiter.api.extension.ExtensionContext.Namespace.GLOBAL;
-
 @Slf4j
 /**
  * If activated, extension creates a screenshot when a test failed, and pushes it's name into the
@@ -33,8 +29,6 @@ import static org.junit.jupiter.api.extension.ExtensionContext.Namespace.GLOBAL;
  * @author <a href="mailto:nir@verisoft.co">Nir Gallner</a> @ <a href="http://www.verisoft.co">www.VeriSoft.co</a>
  */
 public class ScreenShotExtension implements TestExecutionExceptionHandler {
-
-
     /**
      * If test has failed, take a screenshot and put it in the store
      *
@@ -42,7 +36,6 @@ public class ScreenShotExtension implements TestExecutionExceptionHandler {
      * @param throwable
      * @throws Throwable
      */
-
     @Override
     public void handleTestExecutionException(ExtensionContext extensionContext, Throwable throwable) throws Throwable {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm");
@@ -71,7 +64,7 @@ public class ScreenShotExtension implements TestExecutionExceptionHandler {
         FileUtils.moveFile(screenshot, file);
 
         // Get the screenshot list from the store and put the value
-        Map<String, List<String>> screenShots = StoreManager.getStore(StoreType.GLOBAL)
+        Map<String, List<String>> screenShots = StoreManager.getStore(StoreType.LOCAL_THREAD)
                 .getValueFromStore("screenshots");
 
 
