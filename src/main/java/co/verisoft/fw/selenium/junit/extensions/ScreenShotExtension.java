@@ -64,7 +64,7 @@ public class ScreenShotExtension implements TestExecutionExceptionHandler {
         FileUtils.moveFile(screenshot, file);
 
         // Get the screenshot list from the store and put the value
-        Map<String, List<String>> screenShots = StoreManager.getStore(StoreType.GLOBAL)
+        Map<String, List<String>> screenShots = StoreManager.getStore(StoreType.LOCAL_THREAD)
                 .getValueFromStore("screenshots");
 
 
