@@ -296,9 +296,9 @@ public class DecoratedDriver implements
             case "chrome":
                 String version = prop.getProperty("chromeDriverVersion");
                 if (!version.isEmpty())
-                    WebDriverManager.chromedriver().driverVersion(version).setup();
+                    WebDriverManager.chromedriver().clearDriverCache().driverVersion(version).setup();
                 else
-                    WebDriverManager.chromedriver().setup();
+                    WebDriverManager.chromedriver().clearDriverCache().setup();
 
                 ChromeOptions chromeOptions = new ChromeOptions();
                 isHeadless = capabilities.is("headless");

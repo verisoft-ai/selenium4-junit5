@@ -40,38 +40,41 @@ public class ScreenShotExtension implements TestExecutionExceptionHandler {
     public void handleTestExecutionException(ExtensionContext extensionContext, Throwable throwable) throws Throwable {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm");
         LocalDateTime now = LocalDateTime.now();
-        File screenshot = null;
-        try {
-            screenshot = ((TakesScreenshot) VerisoftDriverManager.getDriver()).getScreenshotAs(OutputType.FILE);
-        } catch (NullPointerException e) {
-            log.warn("Failed to take a screenshot because we have no screen yet " + e.getMessage());
+
+        if (Objects.isNull(VerisoftDriverManager.getDriver())){
+            log.error("Cannot retrieve driver - driver is null. No screen shot is " +
+                    "available for null driver");
+            return;
         }
+
+        File screenshot = ((TakesScreenshot) VerisoftDriverManager.getDriver()).getScreenshotAs(OutputType.FILE);
         File dir = new File("target/screenshots/");
+
         if (!dir.exists())
             Files.createDirectories(dir.toPath());
+
         Method method = extensionContext.getTestMethod().get();
         dtf = DateTimeFormatter.ofPattern("HHmmss");
         File file = new File(dir, String.format("%s_%s_%s.png",
                 method.getDeclaringClass().getName(),
                 method.getName(),
                 dtf.format(now)));
+
         FileUtils.deleteQuietly(file);
         FileUtils.moveFile(screenshot, file);
-        if (screenshot != null) {
-            FileUtils.moveFile(screenshot, file);
 
-            // Get the screenshot list from the store and put the value
-            Map<String, List<String>> screenShots = StoreManager.getStore(StoreType.LOCAL_THREAD)
-                    .getValueFromStore("screenshots");
-            screenShots.get(extensionContext.getDisplayName());
-            List<String> paths = Objects.isNull(screenShots.get(extensionContext.getDisplayName())) ?
-                    new ArrayList<>() :
-                    screenShots.get(extensionContext.getDisplayName());
-            paths.add(file.getName());
-            screenShots.put(extensionContext.getDisplayName(), paths);
-            paths.add(file.getName());
-            screenShots.put(extensionContext.getDisplayName(), paths);
-        }
+        // Get the screenshot list from the store and put the value
+        Map<String, List<String>> screenShots = StoreManager.getStore(StoreType.GLOBAL)
+                .getValueFromStore("screenshots");
+
+
+        List<String> paths = Objects.isNull(screenShots.get(extensionContext.getDisplayName())) ?
+                new ArrayList<>() :
+                screenShots.get(extensionContext.getDisplayName());
+
+        paths.add(file.getName());
+        screenShots.put(extensionContext.getDisplayName(), paths);
         throw throwable;
     }
+
 }
