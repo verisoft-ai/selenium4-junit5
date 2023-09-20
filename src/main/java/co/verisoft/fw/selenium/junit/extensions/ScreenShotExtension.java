@@ -44,7 +44,8 @@ public class ScreenShotExtension implements TestExecutionExceptionHandler {
         if (Objects.isNull(VerisoftDriverManager.getDriver())){
             log.error("Cannot retrieve driver - driver is null. No screen shot is " +
                     "available for null driver");
-            return;
+            throw throwable;
+           // return;
         }
 
         File screenshot = ((TakesScreenshot) VerisoftDriverManager.getDriver()).getScreenshotAs(OutputType.FILE);
