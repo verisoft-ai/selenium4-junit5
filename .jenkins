@@ -1,7 +1,7 @@
 pipeline {
     agent {
         node {
-            label 'demo-docker-slave'
+            label 'verisoft-2'
         }
     }
 
