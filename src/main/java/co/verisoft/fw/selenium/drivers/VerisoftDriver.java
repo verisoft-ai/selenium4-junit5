@@ -20,6 +20,13 @@ package co.verisoft.fw.selenium.drivers;
 
 import co.verisoft.fw.async.AsyncListenerImp;
 import co.verisoft.fw.selenium.listeners.*;
+import co.verisoft.fw.store.StoreManager;
+import co.verisoft.fw.store.StoreType;
+import co.verisoft.fw.utils.Property;
+import com.perfecto.reportium.client.ReportiumClient;
+import com.perfecto.reportium.client.ReportiumClientFactory;
+import com.perfecto.reportium.model.PerfectoExecutionContext;
+import com.perfecto.reportium.test.TestContext;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.ios.IOSDriver;
 import io.appium.java_client.remote.MobilePlatform;
@@ -146,6 +153,7 @@ public class VerisoftDriver implements
     protected WebDriver driver;
     private AsyncListenerImp asyncListener;
     private List<WebDriverListener> webDriverlisteners;
+    private Property prop = new Property("perfectolog.properties");
 
 
     private void initListeners() {
@@ -176,16 +184,17 @@ public class VerisoftDriver implements
 
         webDriverlisteners.add(listener);
 
-        if (Objects.nonNull(this.driver)){
+        if (Objects.nonNull(this.driver)) {
             WebDriver original = ((WebDriver) ((Decorated) this.driver).getOriginal());
             initDriver(original);
         }
 
     }
 
-    public VerisoftDriver(Capabilities capabilities){
+    public VerisoftDriver(Capabilities capabilities) {
         setupDriver(null, capabilities);
     }
+
     /**
      * C-tor for local and remote drivers
      *
@@ -196,7 +205,7 @@ public class VerisoftDriver implements
         setupDriver(remoteAddress, capabilities);
     }
 
-    private void setupDriver(@Nullable URL remoteAddress, Capabilities capabilities){
+    private void setupDriver(@Nullable URL remoteAddress, Capabilities capabilities) {
         initListeners();
         try {
             createRemoteDriver(remoteAddress, capabilities);
@@ -204,6 +213,11 @@ public class VerisoftDriver implements
             log.error("Error instanciate local VerisoftDriver", t);
             throw new RuntimeException(t);
         }
+        if (prop.getBooleanProperty("perfecto.report"))
+        {
+           initReportium(this.driver);
+        }
+
     }
 
     public VerisoftDriver(HttpCommandExecutor commandExecutor, Capabilities capabilities) {
@@ -744,14 +758,13 @@ public class VerisoftDriver implements
     }
 
 
-
     /**
      * Private method to create a proper WebDriver object. If the remoteAddress is null, it will create a
      * local instance of WebDriver. If the remoteAddress is not null, it will create a RemoteWebDriver object,
      * which can hold either remote of local adresses (http://localhost)
      *
      * @param commandExecutor HttpCommandExecutor object
-     * @param capabilities  a capabilities object.
+     * @param capabilities    a capabilities object.
      */
     private void createRemoteDriver(HttpCommandExecutor commandExecutor, Capabilities capabilities) {
         WebDriver tempDriver = null;
@@ -793,7 +806,7 @@ public class VerisoftDriver implements
     }
 
 
-    public VerisoftDriver(WebDriver otherDriver){
+    public VerisoftDriver(WebDriver otherDriver) {
         initListeners();
         initDriver(otherDriver);
     }
@@ -871,4 +884,18 @@ public class VerisoftDriver implements
         }
         throw new IllegalStateException("Illegal browser name");
     }
+
+    private void initReportium(WebDriver driver)
+    {
+        String [] tags=StoreManager.getStore(StoreType.LOCAL_THREAD).getValueFromStore("TAGS");
+        String testName=StoreManager.getStore(StoreType.LOCAL_THREAD).getValueFromStore("TESTNAME");
+
+        PerfectoExecutionContext perfectoExecutionContext = new PerfectoExecutionContext.PerfectoExecutionContextBuilder()
+                .withWebDriver(driver)
+                .build();
+        ReportiumClient reportiumClient = new ReportiumClientFactory().createPerfectoReportiumClient(perfectoExecutionContext);
+        reportiumClient.testStart(testName, new TestContext(tags));
+        StoreManager.getStore(StoreType.LOCAL_THREAD).putValueInStore("REPORTIUM",reportiumClient);
+    }
+
 }
