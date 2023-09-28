@@ -20,6 +20,7 @@ package co.verisoft.fw.selenium.drivers;
 
 import co.verisoft.fw.async.AsyncListenerImp;
 import co.verisoft.fw.selenium.listeners.*;
+import co.verisoft.fw.store.Store;
 import co.verisoft.fw.store.StoreManager;
 import co.verisoft.fw.store.StoreType;
 import co.verisoft.fw.utils.Property;
@@ -185,14 +186,14 @@ public class VerisoftDriver implements
 
         webDriverlisteners.add(listener);
 
-        if (Objects.nonNull(this.driver)) {
+        if (Objects.nonNull(this.driver)){
             WebDriver original = ((WebDriver) ((Decorated) this.driver).getOriginal());
             initDriver(original);
         }
 
     }
 
-    public VerisoftDriver(Capabilities capabilities) {
+    public VerisoftDriver(Capabilities capabilities){
         setupDriver(null, capabilities);
     }
 
@@ -206,7 +207,7 @@ public class VerisoftDriver implements
         setupDriver(remoteAddress, capabilities);
     }
 
-    private void setupDriver(@Nullable URL remoteAddress, Capabilities capabilities) {
+    private void setupDriver(@Nullable URL remoteAddress, Capabilities capabilities){
         initListeners();
         try {
             createRemoteDriver(remoteAddress, capabilities);
@@ -765,7 +766,7 @@ public class VerisoftDriver implements
      * which can hold either remote of local adresses (http://localhost)
      *
      * @param commandExecutor HttpCommandExecutor object
-     * @param capabilities    a capabilities object.
+     * @param capabilities a capabilities object.
      */
     private void createRemoteDriver(HttpCommandExecutor commandExecutor, Capabilities capabilities) {
         WebDriver tempDriver = null;
@@ -807,7 +808,7 @@ public class VerisoftDriver implements
     }
 
 
-    public VerisoftDriver(WebDriver otherDriver) {
+    public VerisoftDriver(WebDriver otherDriver){
         initListeners();
         initDriver(otherDriver);
     }
@@ -886,6 +887,26 @@ public class VerisoftDriver implements
         throw new IllegalStateException("Illegal browser name");
     }
 
+    /**
+     * Initializes the Perfecto Reportium client for reporting test results.
+     *
+     * This method sets up the Perfecto Reportium client to enable the reporting of test results
+     * for the current test execution. It requires a WebDriver instance, test tags, and the test name
+     * as input parameters.
+     *
+     * @param driver The WebDriver instance used for the test execution.
+     *
+     * @throws NullPointerException if the 'driver' parameter is null.
+     *
+     * @see StoreManager#getStore(StoreType) StoreManager.getStore(StoreType.LOCAL_THREAD)
+     * @see PerfectoExecutionContext.PerfectoExecutionContextBuilder
+     * @see ReportiumClientFactory#createPerfectoReportiumClient(PerfectoExecutionContext)
+     * @see ReportiumClient#testStart(String, TestContext)
+     * @see StoreManager#getStore(StoreType) StoreManager.getStore(StoreType.LOCAL_THREAD)
+     * @see Store#putValueInStore(Object, Object) Store.putValueInStore(Object, Object)
+     * @author Gili Eliach
+     * @since 09.23
+     */
     private void initReportium(WebDriver driver)
     {
         String [] tags=StoreManager.getStore(StoreType.LOCAL_THREAD).getValueFromStore("TAGS");

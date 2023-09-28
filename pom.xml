@@ -78,25 +78,7 @@
         <reportium-sdk.version>2.3</reportium-sdk.version>
 
     </properties>
-    <repositories>
-        <repository>
-            <id>oss.sonatype.org-snapshot</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
 
-        <!-- Perfecto Repository -->
-        <repository>
-            <id>perfectomobile</id>
-            <name>Perfecto mobile</name>
-            <url>https://repo1.perfectomobile.com/public/repositories/maven</url>
-        </repository>
-    </repositories>
     <dependencies>
 
         <!-- https://mvnrepository.com/artifact/io.appium/java-client -->
@@ -245,20 +227,20 @@
                     <autoReleaseAfterClose>true</autoReleaseAfterClose>
                 </configuration>
             </plugin>
-<!--            <plugin>-->
-<!--                <groupId>org.apache.maven.plugins</groupId>-->
-<!--                <artifactId>maven-gpg-plugin</artifactId>-->
-<!--                <version>${maven.gpg.plugin.version}</version>-->
-<!--                <executions>-->
-<!--                    <execution>-->
-<!--                        <id>sign-artifacts</id>-->
-<!--                        <phase>verify</phase>-->
-<!--                        <goals>-->
-<!--                            <goal>sign</goal>-->
-<!--                        </goals>-->
-<!--                    </execution>-->
-<!--                </executions>-->
-<!--            </plugin>-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>${maven.gpg.plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>
@@ -344,5 +326,23 @@
             </plugin>
         </plugins>
     </build>
+    <repositories>
+        <repository>
+            <id>oss.sonatype.org-snapshot</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
 
+        <!-- Perfecto Repository -->
+        <repository>
+            <id>perfectomobile</id>
+            <name>Perfecto mobile</name>
+            <url>https://repo1.perfectomobile.com/public/repositories/maven</url>
+        </repository>
+    </repositories>
 </project>

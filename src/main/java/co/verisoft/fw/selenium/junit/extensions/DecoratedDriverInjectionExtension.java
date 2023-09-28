@@ -94,41 +94,12 @@ public class DecoratedDriverInjectionExtension implements ParameterResolver, Aft
      * @return a VerisoftMobileDriver object.
      */
     private Object resolveMobileDriver(ExtensionContext extensionContext, Optional<Object> testInstance, Parameter parameter) {
-
         Optional<Capabilities> capabilities = annotationsReader.getCapabilities(parameter,
                 extensionContext.getTestInstance());
-        //String perfectoDeviceId = annotationsReader.getPerfectoDeviceId(parameter);
-        Capabilities newCapabilities;
-        if((extensionContext.getElement().isPresent() && extensionContext.getElement().get().isAnnotationPresent(PerfectoDeviceId.class))) {
-            String perfectoDeviceId = extensionContext.getElement().get().getAnnotation(PerfectoDeviceId.class).value();
-            if (perfectoDeviceId != null && capabilities != null) {
-                Capabilities capabilitiesNotNull = capabilities.orElse(null);
-                Map<String, ?> capabilitiesMap = capabilitiesNotNull.asMap();
-                if (capabilitiesMap.get("deviceName") != null)
-                    capabilitiesMap.remove("deviceName");
-                Map<String,String> map = new HashMap<>();
-                map.put("deviceName",perfectoDeviceId);
-
-                Class<? extends Capabilities> capabilityClassName = capabilitiesNotNull.getClass();
-                try {
-                    Constructor<? extends Capabilities> constructor = capabilityClassName.getConstructor(Map.class);
-                    Capabilities newCapabilities1 = constructor.newInstance(map);
-                    capabilities = Optional.of(capabilitiesNotNull.merge(newCapabilities1));
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        }
-
-        Optional<Object> commandExecutor = annotationsReader.getCommandExecutor(parameter,
-                testInstance);
-
         Optional<URL> url = annotationsReader.getUrl(parameter, testInstance, "");
-
-        if (commandExecutor.isPresent())
-            return new VerisoftMobileDriver(((HttpCommandExecutor) commandExecutor.get()), capabilities.orElse(null));
-        else
-            return new VerisoftMobileDriver(url.orElse(null), capabilities.orElse(null));
+        DecoratedMobileDriver driver =  new DecoratedMobileDriver(capabilities.orElse(null));
+        driver.decorateDriver(LoggingDecorator.class);
+        return driver;
     }
 
 
