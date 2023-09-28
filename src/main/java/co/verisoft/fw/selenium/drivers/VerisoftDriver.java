@@ -25,6 +25,7 @@ import co.verisoft.fw.store.StoreType;
 import co.verisoft.fw.utils.Property;
 import com.perfecto.reportium.client.ReportiumClient;
 import com.perfecto.reportium.client.ReportiumClientFactory;
+import com.perfecto.reportium.model.Job;
 import com.perfecto.reportium.model.PerfectoExecutionContext;
 import com.perfecto.reportium.test.TestContext;
 import io.appium.java_client.android.AndroidDriver;
@@ -892,6 +893,7 @@ public class VerisoftDriver implements
 
         PerfectoExecutionContext perfectoExecutionContext = new PerfectoExecutionContext.PerfectoExecutionContextBuilder()
                 .withWebDriver(driver)
+                .withJob(new Job(testName,0))
                 .build();
         ReportiumClient reportiumClient = new ReportiumClientFactory().createPerfectoReportiumClient(perfectoExecutionContext);
         reportiumClient.testStart(testName, new TestContext(tags));
