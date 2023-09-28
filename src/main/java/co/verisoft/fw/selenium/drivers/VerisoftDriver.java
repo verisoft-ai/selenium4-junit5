@@ -729,7 +729,8 @@ public class VerisoftDriver implements
      *
      * @param remoteAddress Address of the driver. Use either null for local instances or a url to
      *                      Selenium Grid or Url to external supplier.
-     * @param capabilities  a capabilities object.
+     * @param capabilities
+     * a capabilities object.
      */
     private void createRemoteDriver(@Nullable URL remoteAddress, Capabilities capabilities) {
         WebDriver tempDriver = null;
@@ -766,7 +767,7 @@ public class VerisoftDriver implements
      * which can hold either remote of local adresses (http://localhost)
      *
      * @param commandExecutor HttpCommandExecutor object
-     * @param capabilities a capabilities object.
+     * @param capabilities  a capabilities object.
      */
     private void createRemoteDriver(HttpCommandExecutor commandExecutor, Capabilities capabilities) {
         WebDriver tempDriver = null;
