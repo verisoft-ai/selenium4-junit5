@@ -1,7 +1,7 @@
 pipeline {
     agent {
         node {
-            label 'demo-docker-slave'
+            label 'verisoft-2'
         }
     }
 
@@ -12,7 +12,7 @@ pipeline {
     stages {
         stage('Clone') {
             steps {
-                git url: 'https://NirGallner@bitbucket.org/nir_gallner/selenium4-junit5.git', branch: 'master'
+                git url: 'https://NirGallner@bitbucket.org/nir_gallner/selenium4-junit5.git', branch: '${branchName}'
 
             }
         }
