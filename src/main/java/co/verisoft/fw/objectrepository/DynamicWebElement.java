@@ -1,6 +1,5 @@
 package co.verisoft.fw.objectrepository;
 
-import co.verisoft.fw.report.observer.Report;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.ToString;
