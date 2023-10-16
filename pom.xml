@@ -53,6 +53,8 @@
         <nexus.staging.maven.version>1.6.7</nexus.staging.maven.version>
         <maven.gpg.plugin.version>3.0.1</maven.gpg.plugin.version>
         <maven.release.plugin.version>3.0.0</maven.release.plugin.version>
+        <io.netty.netty-common.version>4.1.100.Final</io.netty.netty-common.version>
+        <org.asynchttpclient.async-http-client.version>2.12.3</org.asynchttpclient.async-http-client.version>
 
 
         <!-- Test dependencies -->
@@ -167,6 +169,18 @@
             <scope>compile</scope>
         </dependency>
 
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-common</artifactId>
+            <version>${io.netty.netty-common.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.asynchttpclient</groupId>
+            <artifactId>async-http-client</artifactId>
+            <version>${org.asynchttpclient.async-http-client.version}</version>
+            <scope>compile</scope>
+        </dependency>
 
         <!-- https://mvnrepository.com/artifact/co.verisoft/test-api -->
         <dependency>
