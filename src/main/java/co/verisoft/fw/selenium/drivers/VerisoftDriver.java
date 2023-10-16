@@ -19,11 +19,14 @@
 package co.verisoft.fw.selenium.drivers;
 
 import co.verisoft.fw.async.AsyncListenerImp;
+import co.verisoft.fw.report.observer.ReportLevel;
 import co.verisoft.fw.selenium.listeners.*;
+import co.verisoft.fw.selenium.observers.PerfectoLogObserver;
 import co.verisoft.fw.store.Store;
 import co.verisoft.fw.store.StoreManager;
 import co.verisoft.fw.store.StoreType;
 import co.verisoft.fw.utils.Property;
+
 import com.perfecto.reportium.client.ReportiumClient;
 import com.perfecto.reportium.client.ReportiumClientFactory;
 import com.perfecto.reportium.model.Job;
@@ -155,7 +158,7 @@ public class VerisoftDriver implements
     protected WebDriver driver;
     private AsyncListenerImp asyncListener;
     private List<WebDriverListener> webDriverlisteners;
-    private Property prop = new Property("perfectolog.properties");
+    private Property prop = new Property("application.properties");
 
 
     private void initListeners() {
@@ -219,6 +222,7 @@ public class VerisoftDriver implements
         {
            initReportium(this.driver);
         }
+
 
     }
 
@@ -919,6 +923,8 @@ public class VerisoftDriver implements
         ReportiumClient reportiumClient = new ReportiumClientFactory().createPerfectoReportiumClient(perfectoExecutionContext);
         reportiumClient.testStart(testName, new TestContext(tags));
         StoreManager.getStore(StoreType.LOCAL_THREAD).putValueInStore("REPORTIUM",reportiumClient);
+        PerfectoLogObserver perfectoLogObserver = new PerfectoLogObserver(ReportLevel.DEBUG);
+
     }
 
 }
