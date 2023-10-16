@@ -66,7 +66,7 @@ pipeline {
 
 def custom_msg()
 {
-  def JENKINS_URL= "http://65.109.141.131:9080"
+  def JENKINS_URL= "http://95.216.217.133:9080"
   def JOB_NAME = env.JOB_NAME
   def BUILD_ID= env.BUILD_ID
   def JENKINS_LOG= "Job [${env.JOB_NAME}] Logs path: ${JENKINS_URL}/job/${JOB_NAME}/${BUILD_ID}/console"
