@@ -1,7 +1,7 @@
 pipeline {
     agent {
         node {
-            label 'demo-docker-slave'
+            label 'verisoft-2'
         }
     }
 
@@ -12,7 +12,7 @@ pipeline {
     stages {
         stage('Clone') {
             steps {
-                git url: 'https://NirGallner@bitbucket.org/nir_gallner/selenium4-junit5.git', branch: 'master'
+                git url: 'https://NirGallner@bitbucket.org/nir_gallner/selenium4-junit5.git', branch: '${branchName}'
 
             }
         }
@@ -66,7 +66,7 @@ pipeline {
 
 def custom_msg()
 {
-  def JENKINS_URL= "http://65.109.141.131:9080"
+  def JENKINS_URL= "http://95.216.217.133:9080"
   def JOB_NAME = env.JOB_NAME
   def BUILD_ID= env.BUILD_ID
   def JENKINS_LOG= "Job [${env.JOB_NAME}] Logs path: ${JENKINS_URL}/job/${JOB_NAME}/${BUILD_ID}/console"

@@ -7,9 +7,9 @@
     <groupId>co.verisoft</groupId>
     <artifactId>Selenium4-Junit5</artifactId>
     <packaging>jar</packaging>
-    <version>0.1.19</version>
+    <version>0.1.20-SNAPSHOT</version>
     <name>${project.groupId}:${project.artifactId}</name>
-    <description>VeriSoft framewordk for testing web and mobile applications. Selenium Module</description>
+    <description>VeriSoft framework for testing web and mobile applications. Selenium Module</description>
     <url>https://bitbucket.org/nir_gallner/selenium4-junit5</url>
     <developers>
         <developer>
@@ -41,7 +41,7 @@
         <maven.compiler.version>3.10.1</maven.compiler.version>
         <lombok.version>1.18.26</lombok.version>
         <spring.version>5.3.27</spring.version>
-        <verisoft.test.api.version>0.1.15</verisoft.test.api.version>
+        <verisoft.test.api.version>0.1.19-SNAPSHOT</verisoft.test.api.version>
 
 
         <!-- Maven plugins versions-->
@@ -53,6 +53,8 @@
         <nexus.staging.maven.version>1.6.7</nexus.staging.maven.version>
         <maven.gpg.plugin.version>3.0.1</maven.gpg.plugin.version>
         <maven.release.plugin.version>3.0.0</maven.release.plugin.version>
+        <io.netty.netty-common.version>4.1.100.Final</io.netty.netty-common.version>
+        <org.asynchttpclient.async-http-client.version>2.12.3</org.asynchttpclient.async-http-client.version>
 
 
         <!-- Test dependencies -->
@@ -75,6 +77,8 @@
         <org.selenium.version>4.12.1</org.selenium.version>
 
         <org.junit.jupiter.version>5.8.2</org.junit.jupiter.version>
+        <reportium-sdk.version>2.3</reportium-sdk.version>
+
     </properties>
 
     <dependencies>
@@ -85,8 +89,21 @@
             <artifactId>java-client</artifactId>
             <version>${io.appium.version}</version>
             <scope>compile</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.seleniumhq.selenium</groupId>
+                    <artifactId>selenium-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.seleniumhq.selenium</groupId>
+                    <artifactId>selenium-remote-driver</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.seleniumhq.selenium</groupId>
+                    <artifactId>selenium-support</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
-
 
 
         <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
@@ -156,6 +173,18 @@
             <scope>compile</scope>
         </dependency>
 
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-common</artifactId>
+            <version>${io.netty.netty-common.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.asynchttpclient</groupId>
+            <artifactId>async-http-client</artifactId>
+            <version>${org.asynchttpclient.async-http-client.version}</version>
+            <scope>compile</scope>
+        </dependency>
 
         <!-- https://mvnrepository.com/artifact/co.verisoft/test-api -->
         <dependency>
@@ -193,6 +222,18 @@
             <version>${spring.version}</version>
         </dependency>
 
+        <!-- Reporting SDK -->
+        <dependency>
+            <groupId>com.perfecto.reporting-sdk</groupId>
+            <artifactId>reportium-java</artifactId>
+            <version>${reportium-sdk.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.seleniumhq.selenium</groupId>
+                    <artifactId>selenium-api</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
 
     </dependencies>
     <distributionManagement>
@@ -323,6 +364,13 @@
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
+        </repository>
+
+        <!-- Perfecto Repository -->
+        <repository>
+            <id>perfectomobile</id>
+            <name>Perfecto mobile</name>
+            <url>https://repo1.perfectomobile.com/public/repositories/maven</url>
         </repository>
     </repositories>
 </project>
