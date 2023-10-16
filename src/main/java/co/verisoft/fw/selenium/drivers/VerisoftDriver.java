@@ -19,9 +19,9 @@
 package co.verisoft.fw.selenium.drivers;
 
 import co.verisoft.fw.async.AsyncListenerImp;
-import co.verisoft.fw.perfecto.PerfectoLogObserver;
 import co.verisoft.fw.report.observer.ReportLevel;
 import co.verisoft.fw.selenium.listeners.*;
+import co.verisoft.fw.selenium.observers.PerfectoLogObserver;
 import co.verisoft.fw.store.Store;
 import co.verisoft.fw.store.StoreManager;
 import co.verisoft.fw.store.StoreType;
@@ -158,7 +158,7 @@ public class VerisoftDriver implements
     protected WebDriver driver;
     private AsyncListenerImp asyncListener;
     private List<WebDriverListener> webDriverlisteners;
-    private Property prop = new Property("perfectolog.properties");
+    private Property prop = new Property("application.properties");
 
 
     private void initListeners() {
@@ -222,6 +222,7 @@ public class VerisoftDriver implements
         {
            initReportium(this.driver);
         }
+
 
     }
 
