@@ -29,6 +29,7 @@ public class PerfectoLogExtension implements BeforeEachCallback, AfterTestExecut
     public void beforeEach(ExtensionContext extensionContext) throws Exception {
         String[] tags = extensionContext.getTags().toArray(new String[0]);
         String testName = extensionContext.getDisplayName();
+        StoreManager.getStore(StoreType.LOCAL_THREAD).putValueInStore("PERFECTO_LOG", true);
         setTagsAndTestName(tags, testName);
 
     }

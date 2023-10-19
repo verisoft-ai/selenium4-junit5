@@ -218,9 +218,10 @@ public class VerisoftDriver implements
             log.error("Error instanciate local VerisoftDriver", t);
             throw new RuntimeException(t);
         }
-        if (prop.getBooleanProperty("perfecto.report"))
-        {
-           initReportium(this.driver);
+        Optional<Boolean> optionalReportToPerfecto = Optional.ofNullable((Boolean) StoreManager.getStore(StoreType.LOCAL_THREAD).getValueFromStore("PERFECTO_LOG"));
+
+        if (prop.getBooleanProperty("perfecto.report") && optionalReportToPerfecto.orElse(false)) {
+            initReportium(this.driver);
         }
 
 
