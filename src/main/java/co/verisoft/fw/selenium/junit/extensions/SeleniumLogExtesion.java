@@ -18,12 +18,14 @@ import java.io.File;
 public class SeleniumLogExtesion implements BeforeAllCallback {
 
     private static boolean executed = false;
-
+    private static final Object lock = new Object();
     @Override
     public void beforeAll(ExtensionContext extensionContext) throws Exception {
-        if (!executed) {
-            createWebDriverLogFile();
-            executed = true;
+        synchronized (lock) {
+            if (!executed) {
+                createWebDriverLogFile();
+                executed = true;
+            }
         }
 
     }
