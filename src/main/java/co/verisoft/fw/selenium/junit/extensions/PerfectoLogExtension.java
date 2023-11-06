@@ -3,9 +3,9 @@ package co.verisoft.fw.selenium.junit.extensions;
 import co.verisoft.fw.store.Store;
 import co.verisoft.fw.store.StoreManager;
 import co.verisoft.fw.store.StoreType;
+import co.verisoft.fw.utils.Property;
 import com.perfecto.reportium.client.ReportiumClient;
 import com.perfecto.reportium.test.result.TestResultFactory;
-import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -53,12 +53,14 @@ public class PerfectoLogExtension implements BeforeEachCallback, AfterTestExecut
      */
     @Override
     public void afterTestExecution(ExtensionContext context) throws Exception {
-        ReportiumClient reportiumClient = StoreManager.getStore(StoreType.LOCAL_THREAD).getValueFromStore("REPORTIUM");
-        if (context.getExecutionException().isPresent()) {
-            reportiumClient.testStop(TestResultFactory.createFailure("Test Failed"));
+        if (new Property("application.properties").getBooleanProperty("perfecto.report")) {
+            ReportiumClient reportiumClient = StoreManager.getStore(StoreType.LOCAL_THREAD).getValueFromStore("REPORTIUM");
+            if (context.getExecutionException().isPresent()) {
+                reportiumClient.testStop(TestResultFactory.createFailure("Test Failed"));
 
-        } else {
-            reportiumClient.testStop(TestResultFactory.createSuccess());
+            } else {
+                reportiumClient.testStop(TestResultFactory.createSuccess());
+            }
         }
     }
 
