@@ -839,7 +839,7 @@ public class VerisoftDriver implements
                     WebDriverManager.chromedriver().driverVersion(capabilities.getBrowserVersion()).setup();
 
                 ChromeOptions chromeOptions = new ChromeOptions();
-                chromeOptions.merge(capabilities);
+                chromeOptions=chromeOptions.merge(capabilities);
                 return new ChromeDriver(chromeOptions);
 
             case "firefox":
@@ -851,17 +851,17 @@ public class VerisoftDriver implements
 
 
                 FirefoxOptions firefoxOptions = new FirefoxOptions();
-                capabilities.merge(firefoxOptions);
+                firefoxOptions=firefoxOptions.merge(capabilities);
                 return new FirefoxDriver(firefoxOptions);
 
-            case "ie":
+            case "internet explorer":
                 if (capabilities.getCapability("browserVersion") == null)
                     WebDriverManager.iedriver().setup();
                 else
                     WebDriverManager.iedriver().driverVersion(capabilities.getBrowserVersion()).setup();
 
                 InternetExplorerOptions internetExplorerOptions = new InternetExplorerOptions();
-                internetExplorerOptions.merge(capabilities);
+                internetExplorerOptions=internetExplorerOptions.merge(capabilities);
                 return new InternetExplorerDriver(internetExplorerOptions);
 
             case "microsoftedge":
@@ -872,7 +872,7 @@ public class VerisoftDriver implements
 
 
                 EdgeOptions edgeOptions = new EdgeOptions();
-                edgeOptions.merge(capabilities);
+                edgeOptions=edgeOptions.merge(capabilities);
                 return new EdgeDriver(edgeOptions);
 
             case "safari":
@@ -883,7 +883,7 @@ public class VerisoftDriver implements
 
 
                 SafariOptions safariOptions = new SafariOptions();
-                safariOptions.merge(capabilities);
+                safariOptions=safariOptions.merge(capabilities);
                 return new SafariDriver(safariOptions);
 
             default:
