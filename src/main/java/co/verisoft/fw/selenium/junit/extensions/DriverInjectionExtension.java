@@ -22,6 +22,8 @@ import co.verisoft.fw.selenium.drivers.VerisoftDriverManager;
 import co.verisoft.fw.selenium.drivers.VerisoftMobileDriver;
 import co.verisoft.fw.selenium.drivers.factory.AnnotationsReader;
 import co.verisoft.fw.selenium.drivers.factory.SingleSession;
+import co.verisoft.fw.store.StoreManager;
+import co.verisoft.fw.store.StoreType;
 import io.appium.java_client.AppiumDriver;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +32,7 @@ import org.junit.jupiter.api.extension.*;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.HttpCommandExecutor;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
@@ -162,6 +165,11 @@ public class DriverInjectionExtension implements ParameterResolver, AfterEachCal
         WebDriver driver = VerisoftDriverManager.getDriver();
         if (!isSingleSession(extensionContext) && Objects.nonNull(driver))
             driver.quit();
+        else {
+            assert driver != null;
+            String deviceSessionId = ((RemoteWebDriver) driver).getSessionId().toString();
+            StoreManager.getStore(StoreType.LOCAL_THREAD).putValueInStore("deviceSessionId", deviceSessionId);
+        }
     }
 
 
