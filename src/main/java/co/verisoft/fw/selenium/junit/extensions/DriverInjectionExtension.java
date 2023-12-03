@@ -129,7 +129,13 @@ public class DriverInjectionExtension implements ParameterResolver, AfterEachCal
      * @param parameter paameter extracted from the test to be initizlized with WebDriver based object
      * @return a VerisoftMobileDriver object.
      */
-    private Object resolveMobileDriver(ExtensionContext extensionContext, Optional<Object> testInstance, Parameter parameter) {
+    private VerisoftMobileDriver resolveMobileDriver(ExtensionContext extensionContext, Optional<Object> testInstance, Parameter parameter) {
+
+        if (isSingleSession(extensionContext)){
+            WebDriver driver = VerisoftDriverManager.getDriver();
+            if (driver != null)
+                return (VerisoftMobileDriver) driver;
+        }
 
         Optional<Capabilities> capabilities = annotationsReader.getCapabilities(parameter,
                 extensionContext.getTestInstance());
@@ -163,13 +169,8 @@ public class DriverInjectionExtension implements ParameterResolver, AfterEachCal
 
         // Close the driver, unless test class is marked as @SingleSession, which will has 1 driver for class
         WebDriver driver = VerisoftDriverManager.getDriver();
-        if (!isSingleSession(extensionContext) && Objects.nonNull(driver))
+        if (extensionContext.getExecutionException().isPresent() || (!isSingleSession(extensionContext) && Objects.nonNull(driver)))
             driver.quit();
-        else {
-            assert driver != null;
-            String deviceSessionId = ((RemoteWebDriver) driver).getSessionId().toString();
-            StoreManager.getStore(StoreType.LOCAL_THREAD).putValueInStore("deviceSessionId", deviceSessionId);
-        }
     }
 
 
