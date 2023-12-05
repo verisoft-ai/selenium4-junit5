@@ -134,7 +134,7 @@ public class DriverInjectionExtension implements ParameterResolver, AfterEachCal
         if (isSingleSession(extensionContext)){
             WebDriver driver = VerisoftDriverManager.getDriver();
             if (driver != null)
-                return (VerisoftMobileDriver) driver;
+                return new VerisoftMobileDriver(driver);
         }
 
         Optional<Capabilities> capabilities = annotationsReader.getCapabilities(parameter,
