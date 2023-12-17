@@ -42,14 +42,20 @@ public abstract class WebBasePage extends BasePage implements WebBasePageJS {
     protected WebDriver driver;
 
     public WebBasePage(WebDriver driver) {
+        this(driver,true);
+    }
+    public WebBasePage(WebDriver driver, boolean waitForPageToLoad) {
         super(driver);
         this.driver = driver;
 
-        //wait for page be fully loaded before continue
-        Waits.pageToFullyLoad(driver, timeOut);
+        if (waitForPageToLoad) {
+            // Wait for the page to be fully loaded before continuing
+            Waits.pageToFullyLoad(driver, timeOut);
+        }
 
         log.debug("Created new page object instance: " + this.getClass());
     }
+
 
     /**
      * mouse hover using Selenium Actions
