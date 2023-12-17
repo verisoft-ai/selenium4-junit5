@@ -58,35 +58,7 @@ public class DynamicWebElements implements InvocationHandler {
         log.debug("Could not perform findElements to element " + this.elementObjectId);
         return Collections.emptyList();
     }
-//List<WebElement> resolveElementsFromRepository(Object proxy) throws IOException {
-//    ObjectRepository repository = retrieveObjectRepository();
-//    List<Locator> sortedLocatorsList = getSortedLocatorsList(repository, this.elementObjectId, pageName);
-//
-//    List<WebElement> foundElements = new ArrayList<>();
-//
-//    for (Locator locator : sortedLocatorsList) {
-//        By by = resolveLocator(locator);
-//        try {
-//            List<WebElement> elements = this.driver.findElements(by);
-//            for (WebElement element : elements) {
-//                if (!foundElements.contains(element)) {
-//                    // Element not in the list, add it
-//                    foundElements.add(element);
-//                    log.debug("Found element using locator: {}", by);
-//                }
-//            }
-//        } catch (Exception e) {
-//            // Log exception (if needed) and continue to the next locator
-//            log.debug("Exception while finding elements with locator: {}. Exception: {}", by, e.getMessage());
-//        }
-//    }
-//
-//    if (foundElements.isEmpty()) {
-//        log.debug("Could not perform findElements for element {}", this.elementObjectId);
-//    }
-//
-//    return foundElements;
-//}
+
     private static List<Locator> getSortedLocatorsList(ObjectRepository repository, String elementObjectId, @Nullable String pageName) {
         List<LocatorObject> locatorObjects = repository.getObjectsRepository().stream()
                 .filter(locator -> (locator.getObjectId()
@@ -98,7 +70,7 @@ public class DynamicWebElements implements InvocationHandler {
                     .filter(locator -> (locator.getPageName()
                             .equalsIgnoreCase(pageName))).findFirst().orElse(null);
         else if (locatorObjects.isEmpty())
-            uniqueLocatorObject=null;
+            uniqueLocatorObject = null;
         else
             uniqueLocatorObject = locatorObjects.get(0);
 
