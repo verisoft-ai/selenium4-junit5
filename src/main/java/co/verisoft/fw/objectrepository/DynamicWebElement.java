@@ -20,12 +20,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @ToString
-
-public class DynamicWebElement extends AbstractDynamicElement{//} implements InvocationHandler {
-
-//    private WebDriver driver;
-//    private String elementObjectId;
-//    private @Nullable String pageName;
+public class DynamicWebElement extends AbstractDynamicElement{
 
     public DynamicWebElement(WebDriver driver, String elementObjectId,@Nullable String pageName)
     {
@@ -36,7 +31,6 @@ public class DynamicWebElement extends AbstractDynamicElement{//} implements Inv
         WebElement e = resolveElementFromRepository(proxy);
         return method.invoke(e, args);
     }
-
 
     private WebElement resolveElementFromRepository(Object proxy) throws IOException {
 
@@ -55,61 +49,4 @@ public class DynamicWebElement extends AbstractDynamicElement{//} implements Inv
         log.debug("Could not perform findElement to element " + this.elementObjectId);
         return new NonInteractableWebElement();
     }
-
-
-//    private static List<Locator> getSortedLocatorsList(ObjectRepository repository, String elementObjectId, @Nullable String pageName) {
-//        List<LocatorObject> locatorObjects = repository.getObjectsRepository().stream()
-//                .filter(locator -> (locator.getObjectId()
-//                        .equalsIgnoreCase(elementObjectId))).collect(Collectors.toList());
-//
-//        LocatorObject uniqueLocatorObject;
-//        if (Objects.nonNull(pageName))
-//            uniqueLocatorObject = locatorObjects.stream()
-//                    .filter(locator -> (locator.getPageName()
-//                            .equalsIgnoreCase(pageName))).findFirst().orElse(null);
-//        else if (locatorObjects.isEmpty())
-//            uniqueLocatorObject=null;
-//        else
-//            uniqueLocatorObject = locatorObjects.get(0);
-//
-//
-//        if (Objects.isNull(uniqueLocatorObject))
-//            throw new IllegalArgumentException("Unable to find a unique locator in object repository during page object initialization," +
-//                    "Do you have a locator with page: " + pageName + " and ID: " + elementObjectId + " in the object repository?");
-//
-//        List<Locator> locators = uniqueLocatorObject.getLocators();
-//        Collections.sort(locators);
-//        return locators;
-//    }
-//
-//
-//    private static ObjectRepository retrieveObjectRepository() throws IOException {
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        File file = new File("src/test/resources/objectsRepository.json"); // TODO: refactor hard coded file name
-//        return objectMapper.readValue(file, ObjectRepository.class);
-//    }
-//
-//
-//    private static By resolveLocator(Locator locator) {
-//        switch (locator.getType()) {
-//            case "id":
-//                return By.id(locator.getValue());
-//            case "xpath":
-//                return By.xpath(locator.getValue());
-//            case "cssSelector":
-//                return By.cssSelector(locator.getValue());
-//            case "name":
-//                return By.name(locator.getValue());
-//            case "className":
-//                return By.className(locator.getValue());
-//            case "linkText":
-//                return By.linkText(locator.getValue());
-//            case "partialLinkText":
-//                return By.partialLinkText(locator.getValue());
-//            case "tagName":
-//                return By.tagName(locator.getValue());
-//            default:
-//                return null;
-//        }
-//    }
 }
