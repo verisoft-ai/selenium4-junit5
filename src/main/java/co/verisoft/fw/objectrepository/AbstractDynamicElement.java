@@ -9,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.Nullable;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,6 +18,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
 @Slf4j
 @Getter
 @Setter
@@ -30,9 +30,8 @@ public abstract class AbstractDynamicElement implements InvocationHandler {
     protected String elementObjectId;
     protected @Nullable String pageName;
 
-
-
-
+    @Override
+    public abstract Object invoke(Object proxy, Method method, Object[] args) throws Throwable;
 
     static List<Locator> getSortedLocatorsList(ObjectRepository repository, String elementObjectId, @Nullable String pageName) {
         List<LocatorObject> locatorObjects = repository.getObjectsRepository().stream()
@@ -45,7 +44,7 @@ public abstract class AbstractDynamicElement implements InvocationHandler {
                     .filter(locator -> (locator.getPageName()
                             .equalsIgnoreCase(pageName))).findFirst().orElse(null);
         else if (locatorObjects.isEmpty())
-            uniqueLocatorObject=null;
+            uniqueLocatorObject = null;
         else
             uniqueLocatorObject = locatorObjects.get(0);
 
@@ -90,5 +89,4 @@ public abstract class AbstractDynamicElement implements InvocationHandler {
         }
     }
 
-    @Override
-    public abstract Object invoke(Object proxy, Method method, Object[] args) throws Throwable;}
+}
