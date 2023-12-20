@@ -96,9 +96,6 @@ public class VerisoftMobileDriver extends VerisoftDriver implements
         super(commandExecutor, capabilities);
     }
 
-    public VerisoftMobileDriver(WebDriver otherDriver){
-        super(otherDriver);
-    }
     @Override
     public BatteryInfo getBatteryInfo() {
         Report.debug("Appium Driver using: BatteryInfo");
@@ -418,6 +415,16 @@ public class VerisoftMobileDriver extends VerisoftDriver implements
         String result = ((SupportsContextSwitching) this.driver).getContext();
         Report.debug("Appium Driver using: getContext-> result: " + result);
         return result;
+    }
+
+    public AndroidDriver getAndroidDriver()
+    {
+       return ((AndroidDriver)(((WrapsDriver) this.getWrappedDriver()).getWrappedDriver()));
+    }
+
+    public IOSDriver getIOSDriver()
+    {
+        return ((IOSDriver)(((WrapsDriver) this.getWrappedDriver()).getWrappedDriver()));
     }
 
     @Override
