@@ -86,7 +86,6 @@ public class DriverInjectionExtension implements ParameterResolver, AfterEachCal
         // Mobile Driver
         if (AppiumDriver.class.isAssignableFrom(type) || VerisoftMobileDriver.class.isAssignableFrom(type))
             return resolveMobileDriver(extensionContext, testInstance, parameter);
-
         // Web Driver
         else if (WebDriver.class.isAssignableFrom(type))
             return resolveWebDriver(extensionContext, parameter, testInstance, type);
