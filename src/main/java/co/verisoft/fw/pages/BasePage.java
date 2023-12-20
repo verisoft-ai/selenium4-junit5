@@ -21,6 +21,7 @@ import co.verisoft.fw.selenium.drivers.VerisoftMobileDriver;
 import co.verisoft.fw.utils.Property;
 import co.verisoft.fw.utils.Waits;
 import io.appium.java_client.pagefactory.AppiumElementLocatorFactory;
+import io.appium.java_client.pagefactory.AppiumFieldDecorator;
 import io.appium.java_client.pagefactory.DefaultElementByBuilder;
 import io.appium.java_client.remote.AutomationName;
 import io.appium.java_client.remote.MobilePlatform;
@@ -81,10 +82,13 @@ public abstract class BasePage {
                 automationName = AutomationName.IOS_XCUI_TEST;
             }
 
-            PageFactory.initElements(new AppiumElementLocatorFactory(driver,
-                            Duration.ofSeconds(1),
-                            new DefaultElementByBuilder(platform, automationName)),
-                    this);
+//            PageFactory.initElements(new AppiumElementLocatorFactory(driver,
+//                            Duration.ofSeconds(1),
+//                            new DefaultElementByBuilder(platform, automationName)),
+//                    this);
+           PageFactory.initElements(new AppiumFieldDecorator(driver), this);
+
+
         }
         else
             PageFactory.initElements(driver, this);
