@@ -22,8 +22,6 @@ import co.verisoft.fw.selenium.drivers.VerisoftDriverManager;
 import co.verisoft.fw.selenium.drivers.VerisoftMobileDriver;
 import co.verisoft.fw.selenium.drivers.factory.AnnotationsReader;
 import co.verisoft.fw.selenium.drivers.factory.SingleSession;
-import co.verisoft.fw.store.StoreManager;
-import co.verisoft.fw.store.StoreType;
 import io.appium.java_client.AppiumDriver;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +30,6 @@ import org.junit.jupiter.api.extension.*;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.HttpCommandExecutor;
-import org.openqa.selenium.remote.RemoteWebDriver;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
@@ -86,6 +83,7 @@ public class DriverInjectionExtension implements ParameterResolver, AfterEachCal
         // Mobile Driver
         if (AppiumDriver.class.isAssignableFrom(type) || VerisoftMobileDriver.class.isAssignableFrom(type))
             return resolveMobileDriver(extensionContext, testInstance, parameter);
+
         // Web Driver
         else if (WebDriver.class.isAssignableFrom(type))
             return resolveWebDriver(extensionContext, parameter, testInstance, type);
@@ -128,13 +126,7 @@ public class DriverInjectionExtension implements ParameterResolver, AfterEachCal
      * @param parameter paameter extracted from the test to be initizlized with WebDriver based object
      * @return a VerisoftMobileDriver object.
      */
-    private VerisoftMobileDriver resolveMobileDriver(ExtensionContext extensionContext, Optional<Object> testInstance, Parameter parameter) {
-
-        if (isSingleSession(extensionContext)){
-            WebDriver driver = VerisoftDriverManager.getDriver();
-            if (driver != null)
-                return new VerisoftMobileDriver(driver);
-        }
+    private Object resolveMobileDriver(ExtensionContext extensionContext, Optional<Object> testInstance, Parameter parameter) {
 
         Optional<Capabilities> capabilities = annotationsReader.getCapabilities(parameter,
                 extensionContext.getTestInstance());
@@ -168,7 +160,7 @@ public class DriverInjectionExtension implements ParameterResolver, AfterEachCal
 
         // Close the driver, unless test class is marked as @SingleSession, which will has 1 driver for class
         WebDriver driver = VerisoftDriverManager.getDriver();
-        if (extensionContext.getExecutionException().isPresent() || (!isSingleSession(extensionContext) && Objects.nonNull(driver)))
+        if (!isSingleSession(extensionContext) && Objects.nonNull(driver))
             driver.quit();
     }
 

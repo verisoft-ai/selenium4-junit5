@@ -218,15 +218,13 @@ public class VerisoftDriver implements
             log.error("Error instanciate local VerisoftDriver", t);
             throw new RuntimeException(t);
         }
-        initPerfectoReport();
-    }
-
-    private void initPerfectoReport() {
         Optional<Boolean> optionalReportToPerfecto = Optional.ofNullable((Boolean) StoreManager.getStore(StoreType.LOCAL_THREAD).getValueFromStore("PERFECTO_LOG"));
 
         if (prop.getBooleanProperty("perfecto.report") && optionalReportToPerfecto.orElse(false)) {
             initReportium(this.driver);
         }
+
+
     }
 
     public VerisoftDriver(HttpCommandExecutor commandExecutor, Capabilities capabilities) {
@@ -237,7 +235,7 @@ public class VerisoftDriver implements
             log.error("Error instanciate local VerisoftDriver", t);
             throw new RuntimeException(t);
         }
-        initPerfectoReport();
+
     }
 
 
@@ -805,6 +803,7 @@ public class VerisoftDriver implements
      * @param driver the driver to add the listeners to
      */
     private void initDriver(WebDriver driver) {
+
         WebDriverListener[] listenersArr = new WebDriverListener[webDriverlisteners.size()];
         listenersArr = webDriverlisteners.toArray(listenersArr);
 
@@ -817,7 +816,6 @@ public class VerisoftDriver implements
     public VerisoftDriver(WebDriver otherDriver){
         initListeners();
         initDriver(otherDriver);
-        initPerfectoReport();
     }
 
     /**
