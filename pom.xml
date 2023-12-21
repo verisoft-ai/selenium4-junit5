@@ -7,7 +7,7 @@
     <groupId>co.verisoft</groupId>
     <artifactId>Selenium4-Junit5</artifactId>
     <packaging>jar</packaging>
-    <version>1.0.0-RC5</version>
+    <version>1.0.0-RC5-SNAPSHOT</version>
     <name>${project.groupId}:${project.artifactId}</name>
     <description>VeriSoft framework for testing web and mobile applications. Selenium Module</description>
     <url>https://bitbucket.org/nir_gallner/selenium4-junit5</url>
@@ -255,20 +255,20 @@
                     <autoReleaseAfterClose>true</autoReleaseAfterClose>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-gpg-plugin</artifactId>
-                <version>${maven.gpg.plugin.version}</version>
-                <executions>
-                    <execution>
-                        <id>sign-artifacts</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>sign</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+<!--            <plugin>-->
+<!--                <groupId>org.apache.maven.plugins</groupId>-->
+<!--                <artifactId>maven-gpg-plugin</artifactId>-->
+<!--                <version>${maven.gpg.plugin.version}</version>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <id>sign-artifacts</id>-->
+<!--                        <phase>verify</phase>-->
+<!--                        <goals>-->
+<!--                            <goal>sign</goal>-->
+<!--                        </goals>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>
