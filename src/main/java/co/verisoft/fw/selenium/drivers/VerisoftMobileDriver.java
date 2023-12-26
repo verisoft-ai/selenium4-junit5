@@ -417,6 +417,16 @@ public class VerisoftMobileDriver extends VerisoftDriver implements
         return result;
     }
 
+    public AndroidDriver getAndroidDriver()
+    {
+       return ((AndroidDriver)(((WrapsDriver) this.getWrappedDriver()).getWrappedDriver()));
+    }
+
+    public IOSDriver getIOSDriver()
+    {
+        return ((IOSDriver)(((WrapsDriver) this.getWrappedDriver()).getWrappedDriver()));
+    }
+
     @Override
     public ExecutesMethod assertExtensionExists(String s) {
         throw new NotImplementedException("Not yet implemented");
