@@ -34,7 +34,8 @@ public class ObjectReporsitoryFactory {
                     Report.error("Could not proxy object from object repository. Message is " + e.getMessage());
                     throw new RuntimeException(e);
                 }
-            } else if (isListOfWebElements(field)) {
+            } else if (isListOfWebElements(field) &&
+                    field.getAnnotation(ObjectRepositoryItem.class) != null) {
                 try {
                     field.set(page, createListWebElementProxy(driver, field.getAnnotation(ObjectRepositoryItem.class).id(), pageName));
                 } catch (Exception e) {
