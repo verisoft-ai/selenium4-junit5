@@ -66,32 +66,11 @@ public abstract class BasePage {
         pollingInterval = prop.getIntProperty("polling.interval");
         this.driver = driver;
         if (driver instanceof VerisoftMobileDriver) {
-
-            // Default - iOS
-            String platform = MobilePlatform.IOS;
-            String automationName= AutomationName.IOS_XCUI_TEST;
-
-            if (((VerisoftMobileDriver) driver).getCapabilities().getPlatformName().equals(Platform.ANDROID)){
-                platform = MobilePlatform.ANDROID;
-                automationName = AutomationName.ANDROID_UIAUTOMATOR2;
-
-            }
-
-            else if (((VerisoftMobileDriver) driver).getCapabilities().getPlatformName().equals(Platform.IOS)){
-                platform = MobilePlatform.IOS;
-                automationName = AutomationName.IOS_XCUI_TEST;
-            }
-
-//            PageFactory.initElements(new AppiumElementLocatorFactory(driver,
-//                            Duration.ofSeconds(1),
-//                            new DefaultElementByBuilder(platform, automationName)),
-//                    this);
            PageFactory.initElements(new AppiumFieldDecorator(driver), this);
-
-
         }
-        else
+        else {
             PageFactory.initElements(driver, this);
+        }
 
         ObjectReporsitoryFactory.initObjects(driver, this);
     }
