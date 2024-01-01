@@ -20,6 +20,9 @@ import co.verisoft.fw.objectrepository.ObjectReporsitoryFactory;
 import co.verisoft.fw.selenium.drivers.VerisoftMobileDriver;
 import co.verisoft.fw.utils.Property;
 import co.verisoft.fw.utils.Waits;
+import io.appium.java_client.android.AndroidDriver;
+import io.appium.java_client.ios.IOSDriver;
+import io.appium.java_client.pagefactory.AndroidFindBy;
 import io.appium.java_client.pagefactory.AppiumElementLocatorFactory;
 import io.appium.java_client.pagefactory.AppiumFieldDecorator;
 import io.appium.java_client.pagefactory.DefaultElementByBuilder;
@@ -32,6 +35,7 @@ import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.pagefactory.DefaultElementLocatorFactory;
 
 
 import java.time.Duration;
@@ -66,7 +70,15 @@ public abstract class BasePage {
         pollingInterval = prop.getIntProperty("polling.interval");
         this.driver = driver;
         if (driver instanceof VerisoftMobileDriver) {
-           PageFactory.initElements(new AppiumFieldDecorator(driver), this);
+            if (((VerisoftMobileDriver) driver).getCapabilities().getPlatformName().equals(Platform.ANDROID)){
+                AndroidDriver androidDriver=((VerisoftMobileDriver)driver).getAndroidDriver();
+                PageFactory.initElements(new AppiumFieldDecorator(androidDriver), this);
+            }
+
+            else if (((VerisoftMobileDriver) driver).getCapabilities().getPlatformName().equals(Platform.IOS)){
+                IOSDriver iosDriver=((VerisoftMobileDriver)driver).getIOSDriver();
+                PageFactory.initElements(new AppiumFieldDecorator(iosDriver), this);
+            }
         }
         else {
             PageFactory.initElements(driver, this);
