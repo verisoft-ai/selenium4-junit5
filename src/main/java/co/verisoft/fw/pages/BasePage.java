@@ -20,7 +20,11 @@ import co.verisoft.fw.objectrepository.ObjectReporsitoryFactory;
 import co.verisoft.fw.selenium.drivers.VerisoftMobileDriver;
 import co.verisoft.fw.utils.Property;
 import co.verisoft.fw.utils.Waits;
+import io.appium.java_client.android.AndroidDriver;
+import io.appium.java_client.ios.IOSDriver;
+import io.appium.java_client.pagefactory.AndroidFindBy;
 import io.appium.java_client.pagefactory.AppiumElementLocatorFactory;
+import io.appium.java_client.pagefactory.AppiumFieldDecorator;
 import io.appium.java_client.pagefactory.DefaultElementByBuilder;
 import io.appium.java_client.remote.AutomationName;
 import io.appium.java_client.remote.MobilePlatform;
@@ -31,6 +35,7 @@ import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.pagefactory.DefaultElementLocatorFactory;
 
 
 import java.time.Duration;
@@ -65,29 +70,19 @@ public abstract class BasePage {
         pollingInterval = prop.getIntProperty("polling.interval");
         this.driver = driver;
         if (driver instanceof VerisoftMobileDriver) {
-
-            // Default - iOS
-            String platform = MobilePlatform.IOS;
-            String automationName= AutomationName.IOS_XCUI_TEST;
-
             if (((VerisoftMobileDriver) driver).getCapabilities().getPlatformName().equals(Platform.ANDROID)){
-                platform = MobilePlatform.ANDROID;
-                automationName = AutomationName.ANDROID_UIAUTOMATOR2;
-
+                AndroidDriver androidDriver=((VerisoftMobileDriver)driver).getAndroidDriver();
+                PageFactory.initElements(new AppiumFieldDecorator(androidDriver), this);
             }
 
             else if (((VerisoftMobileDriver) driver).getCapabilities().getPlatformName().equals(Platform.IOS)){
-                platform = MobilePlatform.IOS;
-                automationName = AutomationName.IOS_XCUI_TEST;
+                IOSDriver iosDriver=((VerisoftMobileDriver)driver).getIOSDriver();
+                PageFactory.initElements(new AppiumFieldDecorator(iosDriver), this);
             }
-
-            PageFactory.initElements(new AppiumElementLocatorFactory(driver,
-                            Duration.ofSeconds(1),
-                            new DefaultElementByBuilder(platform, automationName)),
-                    this);
         }
-        else
+        else {
             PageFactory.initElements(driver, this);
+        }
 
         ObjectReporsitoryFactory.initObjects(driver, this);
     }

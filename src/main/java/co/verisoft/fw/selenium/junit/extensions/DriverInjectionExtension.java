@@ -30,6 +30,7 @@ import org.junit.jupiter.api.extension.*;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.HttpCommandExecutor;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
@@ -101,6 +102,11 @@ public class DriverInjectionExtension implements ParameterResolver, AfterEachCal
      * @return a VerisoftDriver object.
      */
     private Object resolveWebDriver(ExtensionContext extensionContext, Parameter parameter, Optional<Object> testInstance, Class<?> type) {
+        if (isSingleSession(extensionContext)) {
+            RemoteWebDriver driver = VerisoftDriverManager.getDriver();
+            if (driver != null && driver.getSessionId()!=null)
+                return new VerisoftDriver(driver);
+        }
         Optional<Capabilities> capabilities = annotationsReader.getCapabilities(parameter,
                 extensionContext.getTestInstance());
 
@@ -181,6 +187,7 @@ public class DriverInjectionExtension implements ParameterResolver, AfterEachCal
 
     /**
      * Is test class is marked as @SingleSession, which will has 1 driver for class?
+     *
      * @param extensionContext Junit 5 context object
      * @return True if the class is a single session class, false otherwise
      */
