@@ -131,7 +131,7 @@ public class DriverInjectionExtension implements ParameterResolver, AfterEachCal
      * @param parameter paameter extracted from the test to be initizlized with WebDriver based object
      * @return a VerisoftMobileDriver object.
      */
-    private VerisoftMobileDriver resolveMobileDriver(ExtensionContext extensionContext, Optional<Object> testInstance, Parameter parameter) {
+    private Object resolveMobileDriver(ExtensionContext extensionContext, Optional<Object> testInstance, Parameter parameter) {
 
         if (isSingleSession(extensionContext)){
             AppiumDriver driver = VerisoftDriverManager.getDriver();
