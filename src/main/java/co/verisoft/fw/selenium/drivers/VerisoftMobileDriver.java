@@ -96,6 +96,9 @@ public class VerisoftMobileDriver extends VerisoftDriver implements
         super(commandExecutor, capabilities);
     }
 
+    public VerisoftMobileDriver(WebDriver otherDriver){
+        super(otherDriver);
+    }
     @Override
     public BatteryInfo getBatteryInfo() {
         Report.debug("Appium Driver using: BatteryInfo");
