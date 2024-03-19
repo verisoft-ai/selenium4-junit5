@@ -159,7 +159,7 @@ public class VerisoftDriver implements
     private AsyncListenerImp asyncListener;
     private List<WebDriverListener> webDriverlisteners;
     private Property prop = new Property("application.properties");
-
+    //TODO:support driver name
 
     private void initListeners() {
         if (webDriverlisteners != null)
@@ -809,7 +809,7 @@ public class VerisoftDriver implements
         listenersArr = webDriverlisteners.toArray(listenersArr);
 
         this.driver = new EventFiringDecorator(listenersArr).decorate(driver);
-
+//TODO:SUPPORT LIST OF DRIVERS
         VerisoftDriverManager.addDriverToMap(driver);
     }
 

@@ -76,7 +76,7 @@ public class DriverInjectionExtension implements ParameterResolver, AfterEachCal
         Parameter parameter = parameterContext.getParameter();
         int index = parameterContext.getIndex();
         Optional<Object> testInstance = extensionContext.getTestInstance();
-
+        //TODO:VERISOFT DRIVER INDEX
         log.trace("Resolving parameter " + parameter + ", index " + index);
 
         Class<?> type = parameter.getType();
@@ -114,7 +114,7 @@ public class DriverInjectionExtension implements ParameterResolver, AfterEachCal
                 testInstance);
 
         Optional<URL> url = annotationsReader.getUrl(parameter, testInstance, "");
-
+        //TODO: add reflection to get the driver name
         if (commandExecutor.isPresent())
             return new VerisoftDriver(((HttpCommandExecutor) commandExecutor.get()), capabilities.orElse(null));
         else if (url.isPresent())
