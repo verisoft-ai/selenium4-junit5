@@ -92,7 +92,7 @@ public class DecoratedDriverInjectionExtension implements ParameterResolver, Aft
     private Object resolveMobileDriver(ExtensionContext extensionContext, Optional<Object> testInstance, Parameter parameter) {
         Optional<Capabilities> capabilities = annotationsReader.getCapabilities(parameter,
                 extensionContext.getTestInstance());
-        Optional<URL> url = annotationsReader.getUrl(parameter, testInstance, "");
+        Optional<URL> url = annotationsReader.getUrl(parameter, testInstance);
         DecoratedMobileDriver driver =  new DecoratedMobileDriver(capabilities.orElse(null));
         driver.decorateDriver(LoggingDecorator.class);
         return driver;

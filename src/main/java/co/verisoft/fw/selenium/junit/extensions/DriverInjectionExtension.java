@@ -17,11 +17,16 @@
  */
 package co.verisoft.fw.selenium.junit.extensions;
 
+import co.verisoft.fw.extensions.jupiter.ExtensionUtilities;
 import co.verisoft.fw.selenium.drivers.VerisoftDriver;
 import co.verisoft.fw.selenium.drivers.VerisoftDriverManager;
 import co.verisoft.fw.selenium.drivers.VerisoftMobileDriver;
 import co.verisoft.fw.selenium.drivers.factory.AnnotationsReader;
+import co.verisoft.fw.selenium.drivers.factory.DriverCapabilities;
+import co.verisoft.fw.selenium.drivers.factory.DriverName;
 import co.verisoft.fw.selenium.drivers.factory.SingleSession;
+import co.verisoft.fw.store.StoreManager;
+import co.verisoft.fw.store.StoreType;
 import io.appium.java_client.AppiumDriver;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +40,8 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.net.URL;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -74,11 +81,15 @@ public class DriverInjectionExtension implements ParameterResolver, AfterEachCal
 
         // First, get the type
         Parameter parameter = parameterContext.getParameter();
+
         int index = parameterContext.getIndex();
         Optional<Object> testInstance = extensionContext.getTestInstance();
-        //TODO:VERISOFT DRIVER INDEX
         log.trace("Resolving parameter " + parameter + ", index " + index);
+        String driverNameKey = Optional.ofNullable(parameter.getAnnotation(DriverName.class))
+                .map(DriverName::value)
+                .orElse(parameter.getName());
 
+        StoreManager.getStore(StoreType.LOCAL_THREAD).putValueInStore("current driver name",driverNameKey);
         Class<?> type = parameter.getType();
 
         // Mobile Driver
@@ -113,8 +124,7 @@ public class DriverInjectionExtension implements ParameterResolver, AfterEachCal
         Optional<Object> commandExecutor = annotationsReader.getCommandExecutor(parameter,
                 testInstance);
 
-        Optional<URL> url = annotationsReader.getUrl(parameter, testInstance, "");
-        //TODO: add reflection to get the driver name
+        Optional<URL> url = annotationsReader.getUrl(parameter, testInstance);
         if (commandExecutor.isPresent())
             return new VerisoftDriver(((HttpCommandExecutor) commandExecutor.get()), capabilities.orElse(null));
         else if (url.isPresent())
@@ -145,7 +155,7 @@ public class DriverInjectionExtension implements ParameterResolver, AfterEachCal
         Optional<Object> commandExecutor = annotationsReader.getCommandExecutor(parameter,
                 testInstance);
 
-        Optional<URL> url = annotationsReader.getUrl(parameter, testInstance, "");
+        Optional<URL> url = annotationsReader.getUrl(parameter, testInstance);
 
         if (commandExecutor.isPresent())
             return new VerisoftMobileDriver(((HttpCommandExecutor) commandExecutor.get()), capabilities.orElse(null));
@@ -170,18 +180,26 @@ public class DriverInjectionExtension implements ParameterResolver, AfterEachCal
     public void afterEach(ExtensionContext extensionContext) throws Exception {
 
         // Close the driver, unless test class is marked as @SingleSession, which will has 1 driver for class
-        WebDriver driver = VerisoftDriverManager.getDriver();
-        if (extensionContext.getExecutionException().isPresent() || (!isSingleSession(extensionContext) && Objects.nonNull(driver)))
-            driver.quit();
+        Map<String,WebDriver> drivers = VerisoftDriverManager.getDrivers();
+        if (extensionContext.getExecutionException().isPresent() || (!isSingleSession(extensionContext) && Objects.nonNull(drivers))) {
+            for (WebDriver driver : drivers.values()) {
+                driver.quit();
+            }
+        }
     }
 
 
     @Override
     public void afterAll(ExtensionContext extensionContext) throws Exception {
 
-        // Closes the driver
-        if (isSingleSession(extensionContext))
-            VerisoftDriverManager.getDriver().quit();
+        if (isSingleSession(extensionContext)) {
+            Map<String,WebDriver> drivers = VerisoftDriverManager.getDrivers();
+            if (drivers != null) {
+                for (WebDriver driver : drivers.values()) {
+                    driver.quit();
+                }
+            }
+        }
     }
 
 

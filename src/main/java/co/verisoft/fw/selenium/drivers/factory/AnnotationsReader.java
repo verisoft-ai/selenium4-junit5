@@ -15,6 +15,7 @@
  */
 package co.verisoft.fw.selenium.drivers.factory;
 
+import co.verisoft.fw.utils.CapabilitiesReader;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +26,7 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Parameter;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 import java.util.Optional;
@@ -67,22 +69,28 @@ public class AnnotationsReader {
     public Optional<Capabilities> getCapabilities(Parameter parameter,
                                                   Optional<Object> testInstance) {
         Optional<Capabilities> out = empty();
+        Capabilities capabilities;
         try {
-            DriverCapabilities driverCapabilities = parameter
-                    .getAnnotation(DriverCapabilities.class);
-
-            Capabilities capabilities;
+            DriverCapabilities driverCapabilities = parameter.getAnnotation(DriverCapabilities.class);
             if (driverCapabilities != null) {
-                // Search first DriverCapabilities annotation in parameter
-                capabilities = new DesiredCapabilities();
-                for (String capability : driverCapabilities.value()) {
-                    Optional<List<Object>> keyValue = getKeyValue(capability);
-                    keyValue.ifPresent(objects -> ((DesiredCapabilities) capabilities).setCapability(
-                            objects.get(0).toString(),
-                            objects.get(1)));
+                String driverCapabilitiesKey = driverCapabilities.value();
+                if (driverCapabilitiesKey != null) {
+                    capabilities = CapabilitiesReader.getDesiredCapabilities(driverCapabilitiesKey, System.getProperty("user.dir") + "/src/test/resources/capabilities.json");
+                    out = Optional.of(capabilities);
                 }
-                out = of(capabilities);
-            } else {
+            }
+//            if (driverCapabilities != null) {
+//                // Search first DriverCapabilities annotation in parameter
+//                capabilities = new DesiredCapabilities();
+//                for (String capability : driverCapabilities.value()) {
+//                    Optional<List<Object>> keyValue = getKeyValue(capability);
+//                    keyValue.ifPresent(objects -> ((DesiredCapabilities) capabilities).setCapability(
+//                            objects.get(0).toString(),
+//                            objects.get(1)));
+//                }
+//                out = of(capabilities);
+            //  }
+            else {
                 // If not, search DriverCapabilities in any field
                 Optional<Object> annotatedField = seekFieldAnnotatedWith(
                         testInstance, DriverCapabilities.class);
@@ -98,27 +106,24 @@ public class AnnotationsReader {
     }
 
     public Optional<URL> getUrl(Parameter parameter,
-                                Optional<Object> testInstance, String seleniumServerUrl) {
+                                Optional<Object> testInstance) {
         Optional<URL> out = empty();
 
         try {
-            if (seleniumServerUrl != null && !seleniumServerUrl.isEmpty()) {
-                out = of(new URL(seleniumServerUrl));
+
+            Object urlValue;
+            DriverUrl driverUrl = parameter.getAnnotation(DriverUrl.class);
+            if (driverUrl != null) {
+                // Search first DriverUrl annotation in parameter
+                urlValue = driverUrl.value();
+                out = of(new URL(urlValue.toString()));
             } else {
-                Object urlValue;
-                DriverUrl driverUrl = parameter.getAnnotation(DriverUrl.class);
-                if (driverUrl != null) {
-                    // Search first DriverUrl annotation in parameter
-                    urlValue = driverUrl.value();
+                // If not, search DriverUrl in any field
+                Optional<Object> annotatedField = seekFieldAnnotatedWith(
+                        testInstance, DriverUrl.class);
+                if (annotatedField.isPresent()) {
+                    urlValue = annotatedField.get();
                     out = of(new URL(urlValue.toString()));
-                } else {
-                    // If not, search DriverUrl in any field
-                    Optional<Object> annotatedField = seekFieldAnnotatedWith(
-                            testInstance, DriverUrl.class);
-                    if (annotatedField.isPresent()) {
-                        urlValue = annotatedField.get();
-                        out = of(new URL(urlValue.toString()));
-                    }
                 }
             }
         } catch (Exception e) {
@@ -129,7 +134,7 @@ public class AnnotationsReader {
 
 
     public Optional<Object> getCommandExecutor(Parameter parameter,
-                                            Optional<Object> testInstance) {
+                                               Optional<Object> testInstance) {
         Optional<Object> out = empty();
 
         try {
