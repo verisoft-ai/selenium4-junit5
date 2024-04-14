@@ -15,22 +15,15 @@
  */
 package co.verisoft.fw.selenium.drivers.factory;
 
-import co.verisoft.fw.config.EnvConfig;
 import co.verisoft.fw.utils.CapabilitiesReader;
+import io.appium.java_client.MobileCommand;
+import io.appium.java_client.remote.AppiumCommandExecutor;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.openqa.selenium.Capabilities;
-import org.openqa.selenium.remote.HttpCommandExecutor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.stereotype.Component;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.openqa.selenium.remote.http.HttpClient;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -151,7 +144,13 @@ public class AnnotationsReader {
             if (commandExecutor != null) {
                 // Search first DriverUrl annotation in parameter
                 commandExecutorValue = commandExecutor.value();
-                out = Optional.of(commandExecutorValue);
+                Class<?> cls = Class.forName((String) commandExecutorValue);
+                HttpClient.Factory instance = (HttpClient.Factory) cls.getDeclaredConstructor().newInstance();
+                Optional<URL> optionalUrl = getUrl(parameter, testInstance);
+                URL url = optionalUrl.orElse(new URL("http://127.0.0.1:4723/wd/hub/"));
+                out = Optional.of(new AppiumCommandExecutor(MobileCommand.commandRepository, url, instance));
+                return out;
+
             } else {
                 // If not, search DriverUrl in any field
                 Optional<Object> annotatedField = seekFieldAnnotatedWith(
@@ -167,34 +166,6 @@ public class AnnotationsReader {
         }
         return out;
     }
-
-//    public Optional<Object> getCommandExecutor(Parameter parameter, Object testInstance) {
-//        Optional<Object> out = Optional.empty();
-//
-//        try {
-//            DriverCommandExecutor commandExecutor = parameter.getAnnotation(DriverCommandExecutor.class);
-//            if (commandExecutor != null) {
-//                String beanName = commandExecutor.value();
-//                //Object commandExecutorBean = context;
-//                out = Optional.of(commandExecutorBean);
-//            } else if (testInstance != null) {
-//                // Iterate over fields to find the one annotated with DriverCommandExecutor
-//                for (Field field : testInstance.getClass().getDeclaredFields()) {
-//                    if (field.isAnnotationPresent(DriverCommandExecutor.class)) {
-//                        commandExecutor = field.getAnnotation(DriverCommandExecutor.class);
-//                        String beanName = commandExecutor.value();
-//                       // Object commandExecutorBean = context;//.getBean(beanName);
-//                        out = Optional.of(commandExecutorBean);
-//                        break;
-//                    }
-//                }
-//            }
-//        } catch (Exception e) {
-//            log.warn("Exception getting HttpCommandExecutor bean", e);
-//        }
-//
-//        return out;
-//    }
 
     public boolean isBoolean(String s) {
         boolean isBool = s.equalsIgnoreCase("true")
