@@ -15,18 +15,26 @@
  */
 package co.verisoft.fw.selenium.drivers.factory;
 
+import co.verisoft.fw.config.EnvConfig;
 import co.verisoft.fw.utils.CapabilitiesReader;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.openqa.selenium.Capabilities;
-import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.HttpCommandExecutor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.stereotype.Component;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Parameter;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 import java.util.Optional;
@@ -159,6 +167,34 @@ public class AnnotationsReader {
         }
         return out;
     }
+
+//    public Optional<Object> getCommandExecutor(Parameter parameter, Object testInstance) {
+//        Optional<Object> out = Optional.empty();
+//
+//        try {
+//            DriverCommandExecutor commandExecutor = parameter.getAnnotation(DriverCommandExecutor.class);
+//            if (commandExecutor != null) {
+//                String beanName = commandExecutor.value();
+//                //Object commandExecutorBean = context;
+//                out = Optional.of(commandExecutorBean);
+//            } else if (testInstance != null) {
+//                // Iterate over fields to find the one annotated with DriverCommandExecutor
+//                for (Field field : testInstance.getClass().getDeclaredFields()) {
+//                    if (field.isAnnotationPresent(DriverCommandExecutor.class)) {
+//                        commandExecutor = field.getAnnotation(DriverCommandExecutor.class);
+//                        String beanName = commandExecutor.value();
+//                       // Object commandExecutorBean = context;//.getBean(beanName);
+//                        out = Optional.of(commandExecutorBean);
+//                        break;
+//                    }
+//                }
+//            }
+//        } catch (Exception e) {
+//            log.warn("Exception getting HttpCommandExecutor bean", e);
+//        }
+//
+//        return out;
+//    }
 
     public boolean isBoolean(String s) {
         boolean isBool = s.equalsIgnoreCase("true")

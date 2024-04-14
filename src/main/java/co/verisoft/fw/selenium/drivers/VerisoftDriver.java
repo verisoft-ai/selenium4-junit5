@@ -832,7 +832,7 @@ public class VerisoftDriver implements
         switch (browserName) {
 
             case "chrome":
-                if (capabilities.getCapability("driverVersion") == null)
+                if (capabilities.getCapability("browserVersion") == null)
                     WebDriverManager.chromedriver().setup();
                 else
                     WebDriverManager.chromedriver().driverVersion(capabilities.getBrowserVersion()).setup();

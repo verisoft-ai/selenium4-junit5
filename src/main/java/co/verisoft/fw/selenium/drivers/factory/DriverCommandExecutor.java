@@ -12,5 +12,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.PARAMETER})
 public @interface DriverCommandExecutor {
-    String[] value() default {""};
+    String value() default "defaultHttpCommandExecutor";
 }

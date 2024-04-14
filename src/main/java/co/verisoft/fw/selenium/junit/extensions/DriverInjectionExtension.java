@@ -17,12 +17,11 @@
  */
 package co.verisoft.fw.selenium.junit.extensions;
 
-import co.verisoft.fw.extensions.jupiter.ExtensionUtilities;
+import co.verisoft.fw.extensions.jupiter.XrayPluginExtension;
 import co.verisoft.fw.selenium.drivers.VerisoftDriver;
 import co.verisoft.fw.selenium.drivers.VerisoftDriverManager;
 import co.verisoft.fw.selenium.drivers.VerisoftMobileDriver;
 import co.verisoft.fw.selenium.drivers.factory.AnnotationsReader;
-import co.verisoft.fw.selenium.drivers.factory.DriverCapabilities;
 import co.verisoft.fw.selenium.drivers.factory.DriverName;
 import co.verisoft.fw.selenium.drivers.factory.SingleSession;
 import co.verisoft.fw.store.StoreManager;
@@ -40,7 +39,6 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.net.URL;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
