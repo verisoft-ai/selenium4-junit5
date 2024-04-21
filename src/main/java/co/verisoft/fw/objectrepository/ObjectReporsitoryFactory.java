@@ -1,7 +1,6 @@
 package co.verisoft.fw.objectrepository;
 
 import co.verisoft.fw.report.observer.Report;
-import co.verisoft.fw.utils.Property;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.Nullable;
@@ -21,19 +20,20 @@ import java.util.Objects;
 public class ObjectReporsitoryFactory {
     protected static ObjectRepository repository;
 
-    static ObjectRepository retrieveObjectRepository() {
+    static ObjectRepository retrieveObjectRepository(String objectRepositoryFilePath) {
         ObjectMapper objectMapper = new ObjectMapper();
-        String repositoryFilePath = new Property().getProperty("object.repository.path");
-        File file = new File(repositoryFilePath);
         try {
+            File file = new File(objectRepositoryFilePath);
             return objectMapper.readValue(file, ObjectRepository.class);
+        } catch (NullPointerException e) {
+            throw new RuntimeException("Property 'object.repository.path' is not defined in root.config.properties file");
         } catch (IOException e) {
-            throw new RuntimeException("Object repository file not found" + e);
+            throw new RuntimeException(String.format("Object repository file not found (%s): ", objectRepositoryFilePath) + e);
         }
     }
 
-    public static void initObjects(WebDriver driver, Object page) {
-        repository = retrieveObjectRepository();
+    public static void initObjects(WebDriver driver, Object page, String objectRepositoryFilePath) {
+        repository = retrieveObjectRepository(objectRepositoryFilePath);
         @Nullable String pageName = getPageName(page);
 
         Field[] allFields = page.getClass().getDeclaredFields();

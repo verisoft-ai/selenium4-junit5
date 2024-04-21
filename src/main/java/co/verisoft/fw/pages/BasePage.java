@@ -23,12 +23,7 @@ import co.verisoft.fw.utils.Property;
 import co.verisoft.fw.utils.Waits;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.ios.IOSDriver;
-import io.appium.java_client.pagefactory.AndroidFindBy;
-import io.appium.java_client.pagefactory.AppiumElementLocatorFactory;
 import io.appium.java_client.pagefactory.AppiumFieldDecorator;
-import io.appium.java_client.pagefactory.DefaultElementByBuilder;
-import io.appium.java_client.remote.AutomationName;
-import io.appium.java_client.remote.MobilePlatform;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
@@ -36,10 +31,9 @@ import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
-import org.openqa.selenium.support.pagefactory.DefaultElementLocatorFactory;
 
 
-import java.time.Duration;
+import javax.annotation.Nullable;
 import java.util.Arrays;
 
 
@@ -66,27 +60,41 @@ public abstract class BasePage {
      * @param driver a WebDriver object to store and use
      */
     public BasePage(WebDriver driver) {
-
         Property prop = new Property();
         timeOut = prop.getIntProperty("selenium.wait.timeout");
         pollingInterval = prop.getIntProperty("polling.interval");
         this.driver = driver;
-        if (driver instanceof VerisoftMobileDriver) {
-            if (((VerisoftMobileDriver) driver).getCapabilities().getPlatformName().equals(Platform.ANDROID)){
-                AndroidDriver androidDriver=((VerisoftMobileDriver)driver).getAndroidDriver();
-                PageFactory.initElements(new AppiumFieldDecorator(androidDriver), this);
-            }
+        initElementsPageFactory(driver);
+        ObjectReporsitoryFactory.initObjects(driver, this, prop.getProperty("object.repository.path"));
+    }
 
-            else if (((VerisoftMobileDriver) driver).getCapabilities().getPlatformName().equals(Platform.IOS)){
-                IOSDriver iosDriver=((VerisoftMobileDriver)driver).getIOSDriver();
+    /**
+     * C-tor. Initializes generic properties such as timeOut and pollingInterval
+     *
+     * @param driver a WebDriver object to store and use
+     * @param objectRepositoryFilePath a custom path to the object repository file
+     */
+    public BasePage(WebDriver driver, String objectRepositoryFilePath) {
+        Property prop = new Property();
+        timeOut = prop.getIntProperty("selenium.wait.timeout");
+        pollingInterval = prop.getIntProperty("polling.interval");
+        this.driver = driver;
+        initElementsPageFactory(driver);
+        ObjectReporsitoryFactory.initObjects(driver, this, objectRepositoryFilePath);
+    }
+
+    private void initElementsPageFactory(WebDriver driver) {
+        if (driver instanceof VerisoftMobileDriver) {
+            if (((VerisoftMobileDriver) driver).getCapabilities().getPlatformName().equals(Platform.ANDROID)) {
+                AndroidDriver androidDriver = ((VerisoftMobileDriver) driver).getAndroidDriver();
+                PageFactory.initElements(new AppiumFieldDecorator(androidDriver), this);
+            } else if (((VerisoftMobileDriver) driver).getCapabilities().getPlatformName().equals(Platform.IOS)) {
+                IOSDriver iosDriver = ((VerisoftMobileDriver) driver).getIOSDriver();
                 PageFactory.initElements(new AppiumFieldDecorator(iosDriver), this);
             }
-        }
-        else {
+        } else {
             PageFactory.initElements(driver, this);
         }
-
-        ObjectReporsitoryFactory.initObjects(driver, this);
     }
 
 
@@ -149,6 +157,6 @@ public abstract class BasePage {
      *
      * @return true- all elements specified were present, false - otherwise
      */
-     public abstract boolean isOnPage();
+    public abstract boolean isOnPage();
 
 }
