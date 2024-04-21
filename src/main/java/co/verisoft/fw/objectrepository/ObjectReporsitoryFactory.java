@@ -1,6 +1,7 @@
 package co.verisoft.fw.objectrepository;
 
 import co.verisoft.fw.report.observer.Report;
+import co.verisoft.fw.utils.Property;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.Nullable;
@@ -22,7 +23,8 @@ public class ObjectReporsitoryFactory {
 
     static ObjectRepository retrieveObjectRepository() {
         ObjectMapper objectMapper = new ObjectMapper();
-        File file = new File("src/test/resources/objectsRepository.json"); // TODO: refactor hard coded file name
+        String repositoryFilePath = new Property().getProperty("object.repository.path");
+        File file = new File(repositoryFilePath);
         try {
             return objectMapper.readValue(file, ObjectRepository.class);
         } catch (IOException e) {
