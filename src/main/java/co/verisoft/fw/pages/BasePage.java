@@ -17,6 +17,7 @@ package co.verisoft.fw.pages;
 
 
 import co.verisoft.fw.objectrepository.ObjectReporsitoryFactory;
+import co.verisoft.fw.objectrepository.ObjectRepository;
 import co.verisoft.fw.selenium.drivers.VerisoftMobileDriver;
 import co.verisoft.fw.utils.Property;
 import co.verisoft.fw.utils.Waits;
@@ -56,6 +57,7 @@ public abstract class BasePage {
     protected WebDriver driver;
     protected final int timeOut;
     protected final int pollingInterval;
+    protected ObjectRepository repository;
 
 
     /**
