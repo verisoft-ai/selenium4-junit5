@@ -93,10 +93,10 @@ public abstract class BasePage {
         String objectRepositoryPath = root_prop.getProperty("object.repository.path");
 
         if (null == objectRepositoryPath) {
-            Properties prop = new Properties();
+            Properties default_prop = new Properties();
             try {
-                prop.load(Property.class.getClassLoader().getResourceAsStream("default.config.properties"));
-                objectRepositoryPath = prop.getProperty("object.repository.path");
+                default_prop.load(Property.class.getClassLoader().getResourceAsStream("default.config.properties"));
+                objectRepositoryPath = default_prop.getProperty("object.repository.path");
             } catch (Throwable e) {
                 throw new RuntimeException("Could not initialize property file. " + e);
             }
