@@ -33,8 +33,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
 
 
-import javax.annotation.Nullable;
 import java.util.Arrays;
+import java.util.Properties;
 
 
 /**
@@ -65,7 +65,7 @@ public abstract class BasePage {
         pollingInterval = prop.getIntProperty("polling.interval");
         this.driver = driver;
         initElementsPageFactory(driver);
-        ObjectReporsitoryFactory.initObjects(driver, this, prop.getProperty("object.repository.path"));
+        ObjectReporsitoryFactory.initObjects(driver, this, getRepositoryPath());
     }
 
     /**
@@ -81,6 +81,27 @@ public abstract class BasePage {
         this.driver = driver;
         initElementsPageFactory(driver);
         ObjectReporsitoryFactory.initObjects(driver, this, objectRepositoryFilePath);
+    }
+
+    /**
+     * A method that reads the object repository path from the projects "root.config.properties" file
+     * If the property is not found, it reads the object repository from the default property file "defaults.config.properties" from inside the package.
+     * @return String objectRepositoryPath.
+     */
+    private String getRepositoryPath() {
+        Property root_prop = new Property();
+        String objectRepositoryPath = root_prop.getProperty("object.repository.path");
+
+        if (null == objectRepositoryPath) {
+            Properties prop = new Properties();
+            try {
+                prop.load(Property.class.getClassLoader().getResourceAsStream("default.config.properties"));
+                objectRepositoryPath = prop.getProperty("object.repository.path");
+            } catch (Throwable e) {
+                throw new RuntimeException("Could not initialize property file. " + e);
+            }
+        }
+        return objectRepositoryPath;
     }
 
     private void initElementsPageFactory(WebDriver driver) {

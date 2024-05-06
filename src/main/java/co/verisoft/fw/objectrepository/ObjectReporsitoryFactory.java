@@ -26,7 +26,7 @@ public class ObjectReporsitoryFactory {
             File file = new File(objectRepositoryFilePath);
             return objectMapper.readValue(file, ObjectRepository.class);
         } catch (NullPointerException e) {
-            throw new RuntimeException("Property 'object.repository.path' is not defined in root.config.properties file");
+            throw new RuntimeException("Property 'object.repository.path' is not defined in root.config.properties or default.config.properties file");
         } catch (IOException e) {
             throw new RuntimeException(String.format("Object repository file not found (%s): ", objectRepositoryFilePath) + e);
         }
