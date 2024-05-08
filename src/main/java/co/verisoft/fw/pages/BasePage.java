@@ -17,17 +17,13 @@ package co.verisoft.fw.pages;
 
 
 import co.verisoft.fw.objectrepository.ObjectReporsitoryFactory;
+import co.verisoft.fw.objectrepository.ObjectRepository;
 import co.verisoft.fw.selenium.drivers.VerisoftMobileDriver;
 import co.verisoft.fw.utils.Property;
 import co.verisoft.fw.utils.Waits;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.ios.IOSDriver;
-import io.appium.java_client.pagefactory.AndroidFindBy;
-import io.appium.java_client.pagefactory.AppiumElementLocatorFactory;
 import io.appium.java_client.pagefactory.AppiumFieldDecorator;
-import io.appium.java_client.pagefactory.DefaultElementByBuilder;
-import io.appium.java_client.remote.AutomationName;
-import io.appium.java_client.remote.MobilePlatform;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
@@ -35,11 +31,10 @@ import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
-import org.openqa.selenium.support.pagefactory.DefaultElementLocatorFactory;
 
 
-import java.time.Duration;
 import java.util.Arrays;
+import java.util.Properties;
 
 
 /**
@@ -56,6 +51,7 @@ public abstract class BasePage {
     protected WebDriver driver;
     protected final int timeOut;
     protected final int pollingInterval;
+    protected ObjectRepository repository;
 
 
     /**
@@ -64,27 +60,62 @@ public abstract class BasePage {
      * @param driver a WebDriver object to store and use
      */
     public BasePage(WebDriver driver) {
-
         Property prop = new Property();
         timeOut = prop.getIntProperty("selenium.wait.timeout");
         pollingInterval = prop.getIntProperty("polling.interval");
         this.driver = driver;
-        if (driver instanceof VerisoftMobileDriver) {
-            if (((VerisoftMobileDriver) driver).getCapabilities().getPlatformName().equals(Platform.ANDROID)){
-                AndroidDriver androidDriver=((VerisoftMobileDriver)driver).getAndroidDriver();
-                PageFactory.initElements(new AppiumFieldDecorator(androidDriver), this);
-            }
+        initElementsPageFactory(driver);
+        ObjectReporsitoryFactory.initObjects(driver, this, getRepositoryPath());
+    }
 
-            else if (((VerisoftMobileDriver) driver).getCapabilities().getPlatformName().equals(Platform.IOS)){
-                IOSDriver iosDriver=((VerisoftMobileDriver)driver).getIOSDriver();
+    /**
+     * C-tor. Initializes generic properties such as timeOut and pollingInterval
+     *
+     * @param driver a WebDriver object to store and use
+     * @param objectRepositoryFilePath a custom path to the object repository file
+     */
+    public BasePage(WebDriver driver, String objectRepositoryFilePath) {
+        Property prop = new Property();
+        timeOut = prop.getIntProperty("selenium.wait.timeout");
+        pollingInterval = prop.getIntProperty("polling.interval");
+        this.driver = driver;
+        initElementsPageFactory(driver);
+        ObjectReporsitoryFactory.initObjects(driver, this, objectRepositoryFilePath);
+    }
+
+    /**
+     * A method that reads the object repository path from the projects "root.config.properties" file
+     * If the property is not found, it reads the object repository from the default property file "defaults.config.properties" from inside the package.
+     * @return String objectRepositoryPath.
+     */
+    private String getRepositoryPath() {
+        Property root_prop = new Property();
+        String objectRepositoryPath = root_prop.getProperty("object.repository.path");
+
+        if (null == objectRepositoryPath) {
+            Properties default_prop = new Properties();
+            try {
+                default_prop.load(Property.class.getClassLoader().getResourceAsStream("default.config.properties"));
+                objectRepositoryPath = default_prop.getProperty("object.repository.path");
+            } catch (Throwable e) {
+                throw new RuntimeException("Could not initialize property file. " + e);
+            }
+        }
+        return objectRepositoryPath;
+    }
+
+    private void initElementsPageFactory(WebDriver driver) {
+        if (driver instanceof VerisoftMobileDriver) {
+            if (((VerisoftMobileDriver) driver).getCapabilities().getPlatformName().equals(Platform.ANDROID)) {
+                AndroidDriver androidDriver = ((VerisoftMobileDriver) driver).getAndroidDriver();
+                PageFactory.initElements(new AppiumFieldDecorator(androidDriver), this);
+            } else if (((VerisoftMobileDriver) driver).getCapabilities().getPlatformName().equals(Platform.IOS)) {
+                IOSDriver iosDriver = ((VerisoftMobileDriver) driver).getIOSDriver();
                 PageFactory.initElements(new AppiumFieldDecorator(iosDriver), this);
             }
-        }
-        else {
+        } else {
             PageFactory.initElements(driver, this);
         }
-
-        ObjectReporsitoryFactory.initObjects(driver, this);
     }
 
 
@@ -147,6 +178,6 @@ public abstract class BasePage {
      *
      * @return true- all elements specified were present, false - otherwise
      */
-     public abstract boolean isOnPage();
+    public abstract boolean isOnPage();
 
 }

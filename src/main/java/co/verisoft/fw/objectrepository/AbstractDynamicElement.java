@@ -27,8 +27,10 @@ import java.util.stream.Collectors;
 public abstract class AbstractDynamicElement implements InvocationHandler {
 
     protected WebDriver driver;
+    protected ObjectRepository repository;
     protected String elementObjectId;
     protected @Nullable String pageName;
+
 
     @Override
     public abstract Object invoke(Object proxy, Method method, Object[] args) throws Throwable;
@@ -57,14 +59,6 @@ public abstract class AbstractDynamicElement implements InvocationHandler {
         Collections.sort(locators);
         return locators;
     }
-
-
-    static ObjectRepository retrieveObjectRepository() throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        File file = new File("src/test/resources/objectsRepository.json"); // TODO: refactor hard coded file name
-        return objectMapper.readValue(file, ObjectRepository.class);
-    }
-
 
     static By resolveLocator(Locator locator) {
         switch (locator.getType()) {

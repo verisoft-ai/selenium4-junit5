@@ -44,6 +44,10 @@ public abstract class WebBasePage extends BasePage implements WebBasePageJS {
     public WebBasePage(WebDriver driver) {
         this(driver,true);
     }
+
+    public WebBasePage(WebDriver driver, String objectRepositoryFilePath) {
+        this(driver,true, objectRepositoryFilePath);
+    }
     public WebBasePage(WebDriver driver, boolean waitForPageToLoad) {
         super(driver);
         this.driver = driver;
@@ -56,6 +60,17 @@ public abstract class WebBasePage extends BasePage implements WebBasePageJS {
         log.debug("Created new page object instance: " + this.getClass());
     }
 
+    public WebBasePage(WebDriver driver, boolean waitForPageToLoad, String objectRepositoryFilePath) {
+        super(driver, objectRepositoryFilePath);
+        this.driver = driver;
+
+        if (waitForPageToLoad) {
+            // Wait for the page to be fully loaded before continuing
+            Waits.pageToFullyLoad(driver, timeOut);
+        }
+
+        log.debug("Created new page object instance: " + this.getClass());
+    }
 
     /**
      * mouse hover using Selenium Actions
