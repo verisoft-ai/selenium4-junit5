@@ -53,6 +53,10 @@ public abstract class MobileBasePage extends BasePage {
         log.debug("Created new page object instance: " + this.getClass());
     }
 
+    public MobileBasePage(WebDriver driver, String objectRepositoryFilePath) {
+        super(driver, objectRepositoryFilePath);
+        this.driver = driver;
+    }
 
     /**
      * swap with x , y params

@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.Collections;
@@ -13,12 +14,13 @@ import java.util.List;
 
 @Slf4j
 @ToString
-public class DynamicWebElements extends AbstractDynamicElement{
+public class DynamicWebElements extends AbstractDynamicElement {
 
-public DynamicWebElements(WebDriver driver, String elementObjectId,String pageName)
-{
-    super(driver,elementObjectId,pageName);
-}
+    public DynamicWebElements(WebDriver driver, ObjectRepository repository,
+                              String elementObjectId, String pageName) {
+        super(driver, repository, elementObjectId, pageName);
+    }
+
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         List<WebElement> elements = resolveElementsFromRepository(proxy);
@@ -26,7 +28,6 @@ public DynamicWebElements(WebDriver driver, String elementObjectId,String pageNa
     }
 
     List<WebElement> resolveElementsFromRepository(Object proxy) throws IOException {
-        ObjectRepository repository = retrieveObjectRepository();
         List<Locator> sortedLocatorsList = getSortedLocatorsList(repository, this.elementObjectId, pageName);
 
         for (Locator locator : sortedLocatorsList) {
