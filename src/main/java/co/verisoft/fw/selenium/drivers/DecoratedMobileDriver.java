@@ -28,9 +28,9 @@ import java.util.Map;
 import java.util.Set;
 
 public class DecoratedMobileDriver extends DecoratedDriver
-        implements SupportsContextSwitching, SupportsRotation, SupportsLocation,
+        implements SupportsContextSwitching, SupportsRotation,
         HidesKeyboard, HasDeviceTime, PullsFiles,
-        InteractsWithApps, SupportsLegacyAppManagement,
+        InteractsWithApps,
         HasAppStrings, PerformsTouchActions, HasOnScreenKeyboard, LocksDevice,
         PushesFiles, CanRecordScreen, HasBattery, HasSettings {
     public DecoratedMobileDriver(@Nullable Capabilities capabilities) {
@@ -101,21 +101,6 @@ public class DecoratedMobileDriver extends DecoratedDriver
     @Override
     public String stopRecordingScreen() {
         return ((CanRecordScreen) decoratedDriver).stopRecordingScreen();
-    }
-
-    @Override
-    public RemoteLocationContext getLocationContext() {
-        return ((SupportsLocation) decoratedDriver).getLocationContext();
-    }
-
-    @Override
-    public Location location() {
-        return ((SupportsLocation) decoratedDriver).location();
-    }
-
-    @Override
-    public void setLocation(Location location) {
-        ((SupportsLocation) decoratedDriver).setLocation(location);
     }
 
     @Override
@@ -256,22 +241,6 @@ public class DecoratedMobileDriver extends DecoratedDriver
     @Override
     public void pushFile(String remotePath, File file) throws IOException {
         ((PushesFiles) decoratedDriver).pushFile(remotePath, file);
-    }
-
-    @Override
-    public void launchApp() {
-        ((SupportsLegacyAppManagement) decoratedDriver).launchApp();
-    }
-
-    @Override
-    public void resetApp() {
-        ((SupportsLegacyAppManagement) decoratedDriver).resetApp();
-    }
-
-
-    @Override
-    public void closeApp() {
-        ((SupportsLegacyAppManagement) decoratedDriver).closeApp();
     }
 
     @Override
