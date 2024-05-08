@@ -86,7 +86,14 @@ public final class DriverListener implements WebDriverListener {
     public void beforeGetCurrentUrl(WebDriver driver) {
         //No-Op
     }
-
+    @Override
+    public void afterGetCurrentUrl(WebDriver driver,String result) {
+        actionTime.captureEndTime();
+        log.debug("After Get current URL Operation " +
+                " result " + result +
+                " driver " + driver.toString() +
+                " Action time: " + actionTime.getDelta());
+    }
     @Override
     public void beforeGetTitle(WebDriver driver) {
         //No-Op
