@@ -44,6 +44,10 @@ public abstract class WebBasePage extends BasePage implements WebBasePageJS {
     public WebBasePage(WebDriver driver) {
         this(driver,true);
     }
+
+    public WebBasePage(WebDriver driver, String objectRepositoryFilePath) {
+        this(driver,true, objectRepositoryFilePath);
+    }
     public WebBasePage(WebDriver driver, boolean waitForPageToLoad) {
         super(driver);
         this.driver = driver;
