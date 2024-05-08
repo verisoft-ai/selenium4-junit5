@@ -36,30 +36,29 @@
     <properties>
 
         <!-- Dependencies -->
-        <slf4j.version>2.0.6</slf4j.version>
-        <aspectj.version>1.9.7</aspectj.version>
+        <slf4j.version>2.0.13</slf4j.version>
+        <aspectj.version>1.9.22</aspectj.version>
         <maven.compiler.version>3.10.1</maven.compiler.version>
-        <lombok.version>1.18.26</lombok.version>
-        <spring.version>5.3.27</spring.version>
-        <verisoft.test.api.version>1.0.0-RC2</verisoft.test.api.version>
+        <lombok.version>1.18.32</lombok.version>
+        <spring.version>6.1.6</spring.version>
+        <verisoft.test.api.version>1.0.0</verisoft.test.api.version>
 
 
         <!-- Maven plugins versions-->
-        <maven.javadoc.version>3.3.1</maven.javadoc.version>
         <maven.source.plugin.version>3.2.1</maven.source.plugin.version>
         <maven.surefire.plugin.version>3.1.0</maven.surefire.plugin.version> <!--after change to 3.0.0-M5 break -->
-        <maven.javadoc.plugin.version>3.3.1</maven.javadoc.plugin.version>
-        <jacoco.maven.plugin.version>0.8.7</jacoco.maven.plugin.version>
-        <nexus.staging.maven.version>1.6.7</nexus.staging.maven.version>
-        <maven.gpg.plugin.version>3.0.1</maven.gpg.plugin.version>
+        <maven.javadoc.plugin.version>3.4.1</maven.javadoc.plugin.version>
+        <jacoco.maven.plugin.version>0.8.8</jacoco.maven.plugin.version>
+        <nexus.staging.maven.version>1.6.13</nexus.staging.maven.version>
+        <maven.gpg.plugin.version>3.1.0</maven.gpg.plugin.version>
         <maven.release.plugin.version>3.0.0</maven.release.plugin.version>
-        <io.netty.netty-common.version>4.1.100.Final</io.netty.netty-common.version>
+        <io.netty.netty-common.version>4.1.109.Final</io.netty.netty-common.version>
         <org.asynchttpclient.async-http-client.version>2.12.3</org.asynchttpclient.async-http-client.version>
 
 
         <!-- Test dependencies -->
-        <junit.platform.version>1.10.0</junit.platform.version>
-        <junit.jupiter.version>5.10.0</junit.jupiter.version>
+        <junit.platform.version>1.10.2</junit.platform.version>
+        <junit.jupiter.version>5.10.2</junit.jupiter.version>
 
         <!-- Java -->
         <java.version>11</java.version>
@@ -72,11 +71,10 @@
         <project.reporting.outputEncoding>${java.encoding}</project.reporting.outputEncoding>
 
         <!-- Selenium -->
-        <io.appium.version>8.5.0</io.appium.version>
-        <webdrivermanager.version>5.5.3</webdrivermanager.version>
-        <org.selenium.version>4.12.1</org.selenium.version>
+        <io.appium.version>9.2.2</io.appium.version>
+        <webdrivermanager.version>5.8.0</webdrivermanager.version>
+        <org.selenium.version>4.20.0</org.selenium.version>
 
-        <org.junit.jupiter.version>5.8.2</org.junit.jupiter.version>
         <reportium-sdk.version>2.3</reportium-sdk.version>
 
     </properties>

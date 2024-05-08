@@ -303,7 +303,7 @@ public class DecoratedDriver implements
                 ChromeOptions chromeOptions = new ChromeOptions();
                 isHeadless = capabilities.is("headless");
                 if (isHeadless)
-                    chromeOptions.setHeadless(isHeadless);
+                    chromeOptions.addArguments("--headless");
 
                 chromeOptions.merge(capabilities);
                 return new ChromeDriver(chromeOptions);
@@ -320,7 +320,7 @@ public class DecoratedDriver implements
                 FirefoxOptions firefoxOptions = new FirefoxOptions();
                 isHeadless = capabilities.is("headless");
                 if (isHeadless)
-                    firefoxOptions.setHeadless(isHeadless);
+                    firefoxOptions.addArguments("--headless");
 
                 firefoxOptions.merge(capabilities);
                 return new FirefoxDriver(firefoxOptions);
