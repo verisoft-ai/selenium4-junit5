@@ -217,7 +217,7 @@ public class PerfectoUtils {
         RemoteExecuteMethod executeMethod = new RemoteExecuteMethod(driver);
         Map<String, String> params = new HashMap<String, String>();
         params.put("name", context);
-        executeMethod.execute(DriverCommand.SWITCH_TO_CONTEXT, params);
+        executeMethod.execute("switchToContext", params);
     }
 
     public static void waitForPresentTextVisual(RemoteWebDriver driver, String text,
@@ -266,7 +266,7 @@ public class PerfectoUtils {
      */
     public static String getCurrentContext(RemoteWebDriver driver) {
         RemoteExecuteMethod executeMethod = new RemoteExecuteMethod(driver);
-        return (String) executeMethod.execute(DriverCommand.GET_CURRENT_CONTEXT_HANDLE,
+        return (String) executeMethod.execute("getCurrentContextHandle",
                 null);
     }
 

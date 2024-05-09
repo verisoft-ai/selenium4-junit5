@@ -1,11 +1,14 @@
 package co.verisoft.fw.objectrepository;
 
 import co.verisoft.fw.report.observer.Report;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.Nullable;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
+import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Proxy;
@@ -15,11 +18,23 @@ import java.util.Objects;
 
 @Slf4j
 public class ObjectReporsitoryFactory {
+    protected static ObjectRepository repository;
 
-    private ObjectReporsitoryFactory() {
+    static ObjectRepository retrieveObjectRepository(String objectRepositoryFilePath) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            File file = new File(objectRepositoryFilePath);
+            return objectMapper.readValue(file, ObjectRepository.class);
+        } catch (NullPointerException e) {
+            throw new RuntimeException("Property 'object.repository.path' is not defined in root.config.properties or default.config.properties file");
+        } catch (IOException e) {
+            log.warn(String.format("Object repository file not found (%s): ", objectRepositoryFilePath) + e);
+            return new ObjectRepository();
+        }
     }
 
-    public static void initObjects(WebDriver driver, Object page) {
+    public static void initObjects(WebDriver driver, Object page, String objectRepositoryFilePath) {
+        repository = retrieveObjectRepository(objectRepositoryFilePath);
         @Nullable String pageName = getPageName(page);
 
         Field[] allFields = page.getClass().getDeclaredFields();
@@ -61,7 +76,7 @@ public class ObjectReporsitoryFactory {
         return Proxy.newProxyInstance(
                 WebElement.class.getClassLoader(),
                 new Class[]{WebElement.class},
-                new DynamicWebElement(driver, elementObjectId, pageName));
+                new DynamicWebElement(driver, repository, elementObjectId, pageName));
     }
 
     private static Object createListWebElementProxy(WebDriver driver, String elementObjectId, String pageName) {
@@ -69,7 +84,7 @@ public class ObjectReporsitoryFactory {
                 List.class.getClassLoader(),
                 new Class[]{List.class},
                 (proxy, method, args) -> {
-                    List<WebElement> elements = new DynamicWebElements(driver, elementObjectId, pageName).resolveElementsFromRepository(proxy);
+                    List<WebElement> elements = new DynamicWebElements(driver, repository, elementObjectId, pageName).resolveElementsFromRepository(proxy);
                     return method.invoke(elements, args);
                 });
     }

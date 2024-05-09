@@ -13,12 +13,13 @@ import java.util.List;
 
 @Slf4j
 @ToString
-public class DynamicWebElement extends AbstractDynamicElement{
+public class DynamicWebElement extends AbstractDynamicElement {
 
-    public DynamicWebElement(WebDriver driver, String elementObjectId,@Nullable String pageName)
-    {
-        super(driver,elementObjectId,pageName);
+    public DynamicWebElement(WebDriver driver, ObjectRepository repository,
+                             String elementObjectId, @Nullable String pageName) {
+        super(driver, repository, elementObjectId, pageName);
     }
+
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         WebElement e = resolveElementFromRepository(proxy);
@@ -27,7 +28,6 @@ public class DynamicWebElement extends AbstractDynamicElement{
 
     private WebElement resolveElementFromRepository(Object proxy) throws IOException {
 
-        ObjectRepository repository = retrieveObjectRepository();
         List<Locator> sortedLocatorsList = getSortedLocatorsList(repository, this.elementObjectId, pageName);
 
         for (Locator locator : sortedLocatorsList) {

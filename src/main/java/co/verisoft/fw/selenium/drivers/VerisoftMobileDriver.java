@@ -36,7 +36,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.NotImplementedException;
 import org.jetbrains.annotations.Nullable;
 import org.openqa.selenium.*;
-import org.openqa.selenium.html5.Location;
 import org.openqa.selenium.remote.HttpCommandExecutor;
 import org.openqa.selenium.remote.Response;
 import org.openqa.selenium.remote.html5.RemoteLocationContext;
@@ -78,9 +77,9 @@ import java.util.Set;
 @ToString
 //@Deprecated
 public class VerisoftMobileDriver extends VerisoftDriver implements
-        SupportsContextSwitching, SupportsRotation, SupportsLocation,
+        SupportsContextSwitching, SupportsRotation,
         HidesKeyboard, HasDeviceTime, PullsFiles,
-        InteractsWithApps, SupportsLegacyAppManagement,
+        InteractsWithApps,
         HasAppStrings, PerformsTouchActions, HasOnScreenKeyboard, LocksDevice,
         PushesFiles, CanRecordScreen, HasBattery, HasSettings {
 
@@ -171,26 +170,6 @@ public class VerisoftMobileDriver extends VerisoftDriver implements
     public String stopRecordingScreen() {
         Report.debug("Appium Driver using: stopRecordingScreen");
         return ((CanRecordScreen) this.driver).stopRecordingScreen();
-    }
-
-    @Override
-    public RemoteLocationContext getLocationContext() {
-        RemoteLocationContext ctx = ((SupportsLocation) this.driver).getLocationContext();
-        Report.debug("Appium Driver using: getLocationContext-> context is " + ctx);
-        return ctx;
-    }
-
-    @Override
-    public Location location() {
-        Location location = ((SupportsLocation) this.driver).location();
-        Report.debug("Appium Driver using: location-> location is " + location);
-        return location;
-    }
-
-    @Override
-    public void setLocation(Location location) {
-        Report.debug("Appium Driver using: setLocation-> location is " + location);
-        ((SupportsLocation) this.driver).setLocation(location);
     }
 
     @Override
@@ -378,25 +357,7 @@ public class VerisoftMobileDriver extends VerisoftDriver implements
         ((PushesFiles) this.driver).pushFile(remotePath, file);
     }
 
-    @Override
-    public void launchApp() {
-        Report.debug("Appium Driver using: launchApp ");
-        Report.info("Relaunch app");
-        ((SupportsLegacyAppManagement) this.driver).launchApp();
-    }
 
-    @Override
-    public void resetApp() {
-        Report.debug("Appium Driver using: resetApp ");
-        ((SupportsLegacyAppManagement) this.driver).resetApp();
-    }
-
-
-    @Override
-    public void closeApp() {
-        Report.debug("Appium Driver using: closeApp ");
-        ((SupportsLegacyAppManagement) this.driver).closeApp();
-    }
 
     @Override
     public WebDriver context(String name) {
