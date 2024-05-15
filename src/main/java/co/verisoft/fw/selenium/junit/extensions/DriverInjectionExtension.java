@@ -35,6 +35,8 @@ import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.HttpCommandExecutor;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.springframework.context.ApplicationContext;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
@@ -77,8 +79,17 @@ public class DriverInjectionExtension implements ParameterResolver, AfterEachCal
     @Override
     public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
 
-        // First, get the type
+        ApplicationContext applicationContext;
+        try {
+            applicationContext = SpringExtension.getApplicationContext(extensionContext);
+        }
+        catch (ParameterResolutionException e)
+        {
+            applicationContext=null;
+        }
+
         Parameter parameter = parameterContext.getParameter();
+
 
         int index = parameterContext.getIndex();
         Optional<Object> testInstance = extensionContext.getTestInstance();
@@ -92,10 +103,10 @@ public class DriverInjectionExtension implements ParameterResolver, AfterEachCal
 
         // Mobile Driver
         if (AppiumDriver.class.isAssignableFrom(type) || VerisoftMobileDriver.class.isAssignableFrom(type))
-            return resolveMobileDriver(extensionContext, testInstance, parameter);
+            return resolveMobileDriver(applicationContext,extensionContext, testInstance, parameter);
         // Web Driver
         else if (WebDriver.class.isAssignableFrom(type))
-            return resolveWebDriver(extensionContext, parameter, testInstance, type);
+            return resolveWebDriver(applicationContext,extensionContext, parameter, testInstance, type);
         else
             throw new RuntimeException("Could not resolve parameter. " + type + " is neither assignable from " +
                     "WebDriver nor VerisoftDriver / VerisoftMobileDriver");
@@ -110,19 +121,19 @@ public class DriverInjectionExtension implements ParameterResolver, AfterEachCal
      * @param type Type definition of the object to be initialized
      * @return a VerisoftDriver object.
      */
-    private Object resolveWebDriver(ExtensionContext extensionContext, Parameter parameter, Optional<Object> testInstance, Class<?> type) {
+    private Object resolveWebDriver(ApplicationContext applicationContext,ExtensionContext extensionContext, Parameter parameter, Optional<Object> testInstance, Class<?> type) {
         if (isSingleSession(extensionContext)) {
             RemoteWebDriver driver = VerisoftDriverManager.getDriver();
             if (driver != null && driver.getSessionId()!=null)
                 return new VerisoftDriver(driver);
         }
-        Optional<Capabilities> capabilities = annotationsReader.getCapabilities(parameter,
+        Optional<Capabilities> capabilities = annotationsReader.getCapabilities(applicationContext,parameter,
                 extensionContext.getTestInstance());
 
-        Optional<Object> commandExecutor = annotationsReader.getCommandExecutor(parameter,
+        Optional<Object> commandExecutor = annotationsReader.getCommandExecutor(applicationContext,parameter,
                 testInstance);
 
-        Optional<URL> url = annotationsReader.getUrl(parameter, testInstance);
+        Optional<URL> url = annotationsReader.getUrl(applicationContext,parameter, testInstance);
         if (commandExecutor.isPresent())
             return new VerisoftDriver(((HttpCommandExecutor) commandExecutor.get()), capabilities.orElse(null));
         else if (url.isPresent())
@@ -139,7 +150,7 @@ public class DriverInjectionExtension implements ParameterResolver, AfterEachCal
      * @param parameter paameter extracted from the test to be initizlized with WebDriver based object
      * @return a VerisoftMobileDriver object.
      */
-    private Object resolveMobileDriver(ExtensionContext extensionContext, Optional<Object> testInstance, Parameter parameter) {
+    private Object resolveMobileDriver(ApplicationContext applicationContext, ExtensionContext extensionContext, Optional<Object> testInstance, Parameter parameter) {
 
         if (isSingleSession(extensionContext)){
             AppiumDriver driver = VerisoftDriverManager.getDriver();
@@ -147,13 +158,13 @@ public class DriverInjectionExtension implements ParameterResolver, AfterEachCal
                 return new VerisoftMobileDriver(driver);
         }
 
-        Optional<Capabilities> capabilities = annotationsReader.getCapabilities(parameter,
+        Optional<Capabilities> capabilities = annotationsReader.getCapabilities(applicationContext, parameter,
                 extensionContext.getTestInstance());
 
-        Optional<Object> commandExecutor = annotationsReader.getCommandExecutor(parameter,
+        Optional<Object> commandExecutor = annotationsReader.getCommandExecutor(applicationContext,parameter,
                 testInstance);
 
-        Optional<URL> url = annotationsReader.getUrl(parameter, testInstance);
+        Optional<URL> url = annotationsReader.getUrl(applicationContext,parameter, testInstance);
 
         if (commandExecutor.isPresent())
             return new VerisoftMobileDriver(((HttpCommandExecutor) commandExecutor.get()), capabilities.orElse(null));
