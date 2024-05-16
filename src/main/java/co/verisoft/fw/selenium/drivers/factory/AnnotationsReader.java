@@ -16,6 +16,7 @@
 package co.verisoft.fw.selenium.drivers.factory;
 
 import co.verisoft.fw.utils.CapabilitiesReader;
+import co.verisoft.fw.utils.Property;
 import io.appium.java_client.MobileCommand;
 import io.appium.java_client.remote.AppiumCommandExecutor;
 import lombok.NoArgsConstructor;
@@ -75,10 +76,16 @@ public class AnnotationsReader {
         Capabilities capabilities;
         try {
             DriverCapabilities driverCapabilities = parameter.getAnnotation(DriverCapabilities.class);
+
             if (driverCapabilities != null) {
                 String driverCapabilitiesKey = driverCapabilities.value();
+                //if there is a value-key to bean or json
                 if (driverCapabilitiesKey != null) {
-                        capabilities = CapabilitiesReader.getDesiredCapabilities(driverCapabilitiesKey, "./src/test/resources/capabilities.json");
+                    //try import the capabilities from a json file, default path-src/test/resources/capabilities.json
+                    Property property=new Property("application.properties");
+                    String path = property.getProperty("capability.file.path");
+                    capabilities = CapabilitiesReader.getDesiredCapabilities(driverCapabilitiesKey, path != null ? path : "./src/test/resources/capabilities.json");
+                    //if there is no json with this key, checks for bean
                     if (capabilities==null) {
                         capabilities = context.getBean(driverCapabilities.value(), Capabilities.class);
                     }
@@ -114,6 +121,7 @@ public class AnnotationsReader {
                    urlValue= new URL (urlValue.toString());
                 }
                 catch(MalformedURLException e) {
+                    //if the value is not a link, try to get the bean
                     urlValue = applicationContext.getBean(driverUrl.value(), URL.class);
                     urlValue= new URL (urlValue.toString());
                 }
@@ -144,7 +152,7 @@ public class AnnotationsReader {
             DriverCommandExecutor commandExecutor = parameter.getAnnotation(DriverCommandExecutor.class);
             if (commandExecutor != null) {
                 try {
-                    // Search first DriverUrl annotation in parameter
+                    // create a default AppiumCommandExecutor by class name
                     commandExecutorValue = commandExecutor.value();
                     Class<?> cls = Class.forName((String) commandExecutorValue);
                     HttpClient.Factory instance = (HttpClient.Factory) cls.getDeclaredConstructor().newInstance();
@@ -153,11 +161,12 @@ public class AnnotationsReader {
                     out = Optional.of(new AppiumCommandExecutor(MobileCommand.commandRepository, url, instance));
                     return out;
                 } catch (ClassNotFoundException e) {
+                    //if there is no such class, try to get a bean
                     commandExecutorValue = applicationContext.getBean(commandExecutor.value(), HttpCommandExecutor.class);
                     out = Optional.of(commandExecutorValue);
                 }
             }else {
-                // If not, search DriverUrl in any field
+                // If not, search DriverCommandExecutor in any field
                 Optional<Object> annotatedField = seekFieldAnnotatedWith(
                         testInstance, DriverCommandExecutor.class);
                 if (annotatedField.isPresent()) {

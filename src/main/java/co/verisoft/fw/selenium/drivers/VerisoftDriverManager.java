@@ -71,7 +71,7 @@ public final class VerisoftDriverManager {
     }
 
     /**
-     * Returns driver with the current thread id
+     * Returns driver with the current thread id by the name
      *
      * @param driverName Name of the driver to retrieve
      * @return T - template of WebDriver. i.e, if you know that the stored WebDriver object is VeriSoftDriver,
@@ -87,7 +87,7 @@ public final class VerisoftDriverManager {
         return null;
     }
     /**
-     * Returns driver with the current thread id
+     * Returns driver with the current thread id, if you have more than 1 driver an error will be thrown
      *
      * @return T - template of WebDriver. i.e, if you know that the stored WebDriver object is VeriSoftDriver,
      * just do VerisoftDriver driver = VerisoftDriverMananer.getDriver();. No casting needed
