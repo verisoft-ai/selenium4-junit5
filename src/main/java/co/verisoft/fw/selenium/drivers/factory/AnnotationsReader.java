@@ -15,16 +15,22 @@
  */
 package co.verisoft.fw.selenium.drivers.factory;
 
+import co.verisoft.fw.utils.CapabilitiesReader;
+import co.verisoft.fw.utils.Property;
+import io.appium.java_client.MobileCommand;
+import io.appium.java_client.remote.AppiumCommandExecutor;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.Capabilities;
-import org.openqa.selenium.remote.DesiredCapabilities;
-
+import org.openqa.selenium.remote.HttpCommandExecutor;
+import org.openqa.selenium.remote.http.HttpClient;
+import org.springframework.context.ApplicationContext;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Parameter;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 import java.util.Optional;
@@ -64,25 +70,29 @@ import static java.util.Optional.of;
 @Slf4j
 public class AnnotationsReader {
 
-    public Optional<Capabilities> getCapabilities(Parameter parameter,
+    public Optional<Capabilities> getCapabilities(ApplicationContext context,Parameter parameter,
                                                   Optional<Object> testInstance) {
         Optional<Capabilities> out = empty();
+        Capabilities capabilities;
         try {
-            DriverCapabilities driverCapabilities = parameter
-                    .getAnnotation(DriverCapabilities.class);
+            DriverCapabilities driverCapabilities = parameter.getAnnotation(DriverCapabilities.class);
 
-            Capabilities capabilities;
             if (driverCapabilities != null) {
-                // Search first DriverCapabilities annotation in parameter
-                capabilities = new DesiredCapabilities();
-                for (String capability : driverCapabilities.value()) {
-                    Optional<List<Object>> keyValue = getKeyValue(capability);
-                    keyValue.ifPresent(objects -> ((DesiredCapabilities) capabilities).setCapability(
-                            objects.get(0).toString(),
-                            objects.get(1)));
+                String driverCapabilitiesKey = driverCapabilities.value();
+                //if there is a value-key to bean or json
+                if (driverCapabilitiesKey != null) {
+                    //try import the capabilities from a json file, default path-src/test/resources/capabilities.json
+                    Property property=new Property("application.properties");
+                    String path = property.getProperty("capability.file.path");
+                    capabilities = CapabilitiesReader.getDesiredCapabilities(driverCapabilitiesKey, path != null ? path : "./src/test/resources/capabilities.json");
+                    //if there is no json with this key, checks for bean
+                    if (capabilities==null) {
+                        capabilities = context.getBean(driverCapabilities.value(), Capabilities.class);
+                    }
+                    out = Optional.of(capabilities);
                 }
-                out = of(capabilities);
-            } else {
+            }
+            else {
                 // If not, search DriverCapabilities in any field
                 Optional<Object> annotatedField = seekFieldAnnotatedWith(
                         testInstance, DriverCapabilities.class);
@@ -97,28 +107,33 @@ public class AnnotationsReader {
         return out;
     }
 
-    public Optional<URL> getUrl(Parameter parameter,
-                                Optional<Object> testInstance, String seleniumServerUrl) {
+    public Optional<URL> getUrl(ApplicationContext applicationContext,Parameter parameter,
+                                Optional<Object> testInstance) {
         Optional<URL> out = empty();
 
         try {
-            if (seleniumServerUrl != null && !seleniumServerUrl.isEmpty()) {
-                out = of(new URL(seleniumServerUrl));
+            Object urlValue;
+            DriverUrl driverUrl = parameter.getAnnotation(DriverUrl.class);
+            if (driverUrl != null) {
+                // Search first DriverUrl annotation in parameter
+                try{
+                   urlValue = driverUrl.value();
+                   urlValue= new URL (urlValue.toString());
+                }
+                catch(MalformedURLException e) {
+                    //if the value is not a link, try to get the bean
+                    urlValue = applicationContext.getBean(driverUrl.value(), URL.class);
+                    urlValue= new URL (urlValue.toString());
+                }
+                out = of((URL) urlValue);
+
             } else {
-                Object urlValue;
-                DriverUrl driverUrl = parameter.getAnnotation(DriverUrl.class);
-                if (driverUrl != null) {
-                    // Search first DriverUrl annotation in parameter
-                    urlValue = driverUrl.value();
+                // If not, search DriverUrl in any field
+                Optional<Object> annotatedField = seekFieldAnnotatedWith(
+                        testInstance, DriverUrl.class);
+                if (annotatedField.isPresent()) {
+                    urlValue = annotatedField.get();
                     out = of(new URL(urlValue.toString()));
-                } else {
-                    // If not, search DriverUrl in any field
-                    Optional<Object> annotatedField = seekFieldAnnotatedWith(
-                            testInstance, DriverUrl.class);
-                    if (annotatedField.isPresent()) {
-                        urlValue = annotatedField.get();
-                        out = of(new URL(urlValue.toString()));
-                    }
                 }
             }
         } catch (Exception e) {
@@ -128,19 +143,30 @@ public class AnnotationsReader {
     }
 
 
-    public Optional<Object> getCommandExecutor(Parameter parameter,
-                                            Optional<Object> testInstance) {
+    public Optional<Object> getCommandExecutor(ApplicationContext applicationContext,Parameter parameter,
+                                               Optional<Object> testInstance) {
         Optional<Object> out = empty();
 
         try {
             Object commandExecutorValue;
             DriverCommandExecutor commandExecutor = parameter.getAnnotation(DriverCommandExecutor.class);
             if (commandExecutor != null) {
-                // Search first DriverUrl annotation in parameter
-                commandExecutorValue = commandExecutor.value();
-                out = Optional.of(commandExecutorValue);
-            } else {
-                // If not, search DriverUrl in any field
+                try {
+                    // create a default AppiumCommandExecutor by class name
+                    commandExecutorValue = commandExecutor.value();
+                    Class<?> cls = Class.forName((String) commandExecutorValue);
+                    HttpClient.Factory instance = (HttpClient.Factory) cls.getDeclaredConstructor().newInstance();
+                    Optional<URL> optionalUrl = getUrl(applicationContext, parameter, testInstance);
+                    URL url = optionalUrl.orElse(new URL("http://127.0.0.1:4723/wd/hub/"));
+                    out = Optional.of(new AppiumCommandExecutor(MobileCommand.commandRepository, url, instance));
+                    return out;
+                } catch (ClassNotFoundException e) {
+                    //if there is no such class, try to get a bean
+                    commandExecutorValue = applicationContext.getBean(commandExecutor.value(), HttpCommandExecutor.class);
+                    out = Optional.of(commandExecutorValue);
+                }
+            }else {
+                // If not, search DriverCommandExecutor in any field
                 Optional<Object> annotatedField = seekFieldAnnotatedWith(
                         testInstance, DriverCommandExecutor.class);
                 if (annotatedField.isPresent()) {

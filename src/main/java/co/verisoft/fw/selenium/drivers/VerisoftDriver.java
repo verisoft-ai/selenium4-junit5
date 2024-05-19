@@ -160,7 +160,6 @@ public class VerisoftDriver implements
     private List<WebDriverListener> webDriverlisteners;
     private Property prop = new Property("application.properties");
 
-
     private void initListeners() {
         if (webDriverlisteners != null)
             return;
@@ -762,7 +761,6 @@ public class VerisoftDriver implements
                 tempDriver = new RemoteWebDriver(remoteAddress, capabilities);
             }
         }
-
         initDriver(tempDriver);
     }
 
@@ -794,7 +792,6 @@ public class VerisoftDriver implements
         else {
             tempDriver = new RemoteWebDriver(commandExecutor, capabilities);
         }
-
         initDriver(tempDriver);
     }
 
@@ -835,7 +832,7 @@ public class VerisoftDriver implements
         switch (browserName) {
 
             case "chrome":
-                if (capabilities.getCapability("driverVersion") == null)
+                if (capabilities.getCapability("browserVersion") == null)
                     WebDriverManager.chromedriver().setup();
                 else
                     WebDriverManager.chromedriver().driverVersion(capabilities.getBrowserVersion()).setup();
