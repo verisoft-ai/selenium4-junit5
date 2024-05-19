@@ -10,6 +10,8 @@ import org.junit.jupiter.api.TestTemplate;
 import org.junit.jupiter.api.extension.*;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.WebDriver;
+import org.springframework.context.ApplicationContext;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
@@ -40,6 +42,7 @@ public class DecoratedDriverInjectionExtension implements ParameterResolver, Aft
 
     @Override
     public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
+        ApplicationContext applicationContext = SpringExtension.getApplicationContext(extensionContext);
 
         // First, get the type
         Parameter parameter = parameterContext.getParameter();
@@ -52,11 +55,11 @@ public class DecoratedDriverInjectionExtension implements ParameterResolver, Aft
 
         // Mobile Driver
         if (AppiumDriver.class.isAssignableFrom(type) || VerisoftMobileDriver.class.isAssignableFrom(type))
-            return resolveMobileDriver(extensionContext, testInstance, parameter);
+            return resolveMobileDriver(applicationContext,extensionContext, testInstance, parameter);
 
             // Web Driver
         else if (WebDriver.class.isAssignableFrom(type))
-            return resolveWebDriver(extensionContext, parameter, testInstance, type);
+            return resolveWebDriver(applicationContext,extensionContext, parameter, testInstance, type);
         else
             throw new RuntimeException("Could not resolve parameter. " + type + " is neither assignable from " +
                     "WebDriver nor VerisoftDriver / VerisoftMobileDriver");
@@ -72,8 +75,8 @@ public class DecoratedDriverInjectionExtension implements ParameterResolver, Aft
      * @param type             Type definition of the object to be initialized
      * @return a VerisoftDriver object.
      */
-    private Object resolveWebDriver(ExtensionContext extensionContext, Parameter parameter, Optional<Object> testInstance, Class<?> type) {
-        Optional<Capabilities> capabilities = annotationsReader.getCapabilities(parameter,
+    private Object resolveWebDriver(ApplicationContext applicationContext,ExtensionContext extensionContext, Parameter parameter, Optional<Object> testInstance, Class<?> type) {
+        Optional<Capabilities> capabilities= annotationsReader.getCapabilities(applicationContext,parameter,
                 extensionContext.getTestInstance());
         DecoratedDriver driver =  new DecoratedDriver(capabilities.orElse(null));
         driver.decorateDriver(LoggingDecorator.class);
@@ -89,10 +92,10 @@ public class DecoratedDriverInjectionExtension implements ParameterResolver, Aft
      * @param parameter        paameter extracted from the test to be initizlized with WebDriver based object
      * @return a VerisoftMobileDriver object.
      */
-    private Object resolveMobileDriver(ExtensionContext extensionContext, Optional<Object> testInstance, Parameter parameter) {
-        Optional<Capabilities> capabilities = annotationsReader.getCapabilities(parameter,
+    private Object resolveMobileDriver(ApplicationContext context,ExtensionContext extensionContext, Optional<Object> testInstance, Parameter parameter) {
+        Optional<Capabilities> capabilities =annotationsReader.getCapabilities(context,parameter,
                 extensionContext.getTestInstance());
-        Optional<URL> url = annotationsReader.getUrl(parameter, testInstance, "");
+        Optional<URL> url = annotationsReader.getUrl(context,parameter, testInstance);
         DecoratedMobileDriver driver =  new DecoratedMobileDriver(capabilities.orElse(null));
         driver.decorateDriver(LoggingDecorator.class);
         return driver;

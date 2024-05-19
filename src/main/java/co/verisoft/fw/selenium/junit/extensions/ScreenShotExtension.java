@@ -9,6 +9,7 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.WebDriver;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -41,40 +42,53 @@ public class ScreenShotExtension implements TestExecutionExceptionHandler {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm");
         LocalDateTime now = LocalDateTime.now();
 
-        if (Objects.isNull(VerisoftDriverManager.getDriver())){
-            log.error("Cannot retrieve driver - driver is null. No screen shot is " +
-                    "available for null driver");
+        Map<String, WebDriver> drivers = VerisoftDriverManager.getDrivers();
+
+        if (drivers == null || drivers.isEmpty()) {
+            log.error("No drivers available. No screenshots can be captured.");
             throw throwable;
         }
 
-        File screenshot = ((TakesScreenshot) VerisoftDriverManager.getDriver()).getScreenshotAs(OutputType.FILE);
-        File dir = new File("target/screenshots/");
+        for (Map.Entry<String, WebDriver> entry : drivers.entrySet()) {
+            String driverName = entry.getKey();
+            WebDriver driver = entry.getValue();
 
-        if (!dir.exists())
-            Files.createDirectories(dir.toPath());
+            if (driver == null) {
+                log.error("Cannot retrieve driver - driver is null for " + driverName);
+                continue;
+            }
 
-        Method method = extensionContext.getTestMethod().get();
-        dtf = DateTimeFormatter.ofPattern("HHmmss");
-        File file = new File(dir, String.format("%s_%s_%s.png",
-                method.getDeclaringClass().getName(),
-                method.getName(),
-                dtf.format(now)));
+            File screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+            File dir = new File("target/screenshots/");
 
-        FileUtils.deleteQuietly(file);
-        FileUtils.moveFile(screenshot, file);
+            if (!dir.exists()) {
+                Files.createDirectories(dir.toPath());
+            }
 
-        // Get the screenshot list from the store and put the value
-        Map<String, List<String>> screenShots = StoreManager.getStore(StoreType.LOCAL_THREAD)
-                .getValueFromStore("screenshots");
+            Method method = extensionContext.getTestMethod().get();
+            DateTimeFormatter fileNameFormatter = DateTimeFormatter.ofPattern("HHmmss");
+            File file = new File(dir, String.format("%s_%s_%s_%s.png",
+                    method.getDeclaringClass().getName(),
+                    method.getName(),
+                    driverName,
+                    fileNameFormatter.format(now)));
 
+            FileUtils.deleteQuietly(file);
+            FileUtils.moveFile(screenshot, file);
 
-        List<String> paths = Objects.isNull(screenShots.get(extensionContext.getDisplayName())) ?
-                new ArrayList<>() :
-                screenShots.get(extensionContext.getDisplayName());
+            // Get the screenshot list from the store and put the value
+            Map<String, List<String>> screenShots = StoreManager.getStore(StoreType.LOCAL_THREAD)
+                    .getValueFromStore("screenshots");
 
-        paths.add(file.getName());
-        screenShots.put(extensionContext.getDisplayName(), paths);
+            List<String> paths = Objects.isNull(screenShots.get(extensionContext.getDisplayName())) ?
+                    new ArrayList<>() :
+                    screenShots.get(extensionContext.getDisplayName());
+
+            paths.add(file.getName());
+            screenShots.put(extensionContext.getDisplayName(), paths);
+        }
+
         throw throwable;
     }
-
 }
+

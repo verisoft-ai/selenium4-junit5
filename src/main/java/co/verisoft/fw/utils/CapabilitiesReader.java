@@ -59,7 +59,7 @@ public class CapabilitiesReader {
             log.debug("Capabilities loaded from json file.");
             return new DesiredCapabilities(caps);
         } catch (Exception e) {
-            log.error("Failed to load capabilities.", e);
+            log.warn("Failed to load capabilities.");
             return null;
         }
 

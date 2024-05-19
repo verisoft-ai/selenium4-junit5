@@ -6,6 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.Nullable;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.WrapsElement;
+import org.openqa.selenium.interactions.Locatable;
 
 import java.io.File;
 import java.io.IOException;
@@ -75,7 +77,7 @@ public class ObjectReporsitoryFactory {
     private static Object createWebElementProxy(WebDriver driver, String elementObjectId, String pageName) {
         return Proxy.newProxyInstance(
                 WebElement.class.getClassLoader(),
-                new Class[]{WebElement.class},
+                new Class[]{WebElement.class, WrapsElement.class, Locatable.class},
                 new DynamicWebElement(driver, repository, elementObjectId, pageName));
     }
 

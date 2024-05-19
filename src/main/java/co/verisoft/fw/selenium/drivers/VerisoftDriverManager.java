@@ -17,46 +17,95 @@ package co.verisoft.fw.selenium.drivers;
  */
 
 
+import co.verisoft.fw.store.StoreManager;
+import co.verisoft.fw.store.StoreType;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.Nullable;
 import org.openqa.selenium.WebDriver;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
 /**
  * A global, thread safe, singleton class. It handles augmentation of WebDriver objects of different types
+ *
  * @author David Yehezkel
  * @since 1.9.6
  */
 @ToString
 @Slf4j
-public final class VerisoftDriverManager{
 
-	private static Map<Integer, WebDriver> driverMap = new HashMap<Integer, WebDriver>();
-	
-	private VerisoftDriverManager() {}
-	
-	/**
-	 * Register driver with current thread id to hashMap
-	 * @param driver WebDriver object to be added to map
-	 */
-	public static  void addDriverToMap(WebDriver driver) {
-		Integer threadID = (int) Thread.currentThread().getId();
-		log.debug("Register driver " + driver.toString() + " by Thread ID " + threadID);
-		driverMap.put(threadID, driver);
-	}
+public final class VerisoftDriverManager {
 
-	/**
-	 * Returns driver with the current thread id
-	 * @return T - template of WebDriver. i.e, if you know that the stored WebDriver object is VeriSoftDriver,
-	 * just do VerisoftDriver driver = VerisoftDriverMananer.getDriver();. No casting needed
-	 */
-	public static @Nullable <T extends WebDriver> T getDriver() {
-		Integer threadID = (int) Thread.currentThread().getId();
-		log.debug("Get driver by Thread ID (Key)" + threadID);
-		return (T)driverMap.get(threadID);
-	}
+    private static Map<Integer, Map<String,WebDriver>> driverMap = new HashMap<>();
+
+    private VerisoftDriverManager() {
+    }
+
+    /**
+     * Register driver with the current thread id to the map
+     *
+     * @param driver   WebDriver object to be added to the map
+     */
+    public static void addDriverToMap(WebDriver driver) {
+        String driverName= StoreManager.getStore(StoreType.LOCAL_THREAD).getValueFromStore("current driver name");
+
+        Integer threadID = (int) Thread.currentThread().getId();
+        log.debug("Register driver " + driver.toString() + " with name " + driverName + " by Thread ID " + threadID);
+        driverMap.computeIfAbsent(threadID, k -> new HashMap<>()).put(driverName, driver);
+    }
+
+    /**
+     * Returns the list of drivers associated with the current thread id
+     *
+     * @return Map of driver names to WebDriver objects associated with the current thread id
+     */
+    public static @Nullable Map<String, WebDriver> getDrivers() {
+        Integer threadID = (int) Thread.currentThread().getId();
+        log.debug("Get drivers by Thread ID (Key)" + threadID);
+        return driverMap.get(threadID);
+    }
+
+    /**
+     * Returns driver with the current thread id by the name
+     *
+     * @param driverName Name of the driver to retrieve
+     * @return T - template of WebDriver. i.e, if you know that the stored WebDriver object is VeriSoftDriver,
+     * just do VerisoftDriver driver = VerisoftDriverManager.getDriver();. No casting needed
+     */
+    public static @Nullable <T extends WebDriver> T getDriver(String driverName) {
+        Integer threadID = (int) Thread.currentThread().getId();
+        log.debug("Get driver with name " + driverName + " by Thread ID (Key)" + threadID);
+        Map<String, WebDriver> drivers = driverMap.get(threadID);
+        if (drivers != null) {
+            return (T) drivers.get(driverName);
+        }
+        return null;
+    }
+    /**
+     * Returns driver with the current thread id, if you have more than 1 driver an error will be thrown
+     *
+     * @return T - template of WebDriver. i.e, if you know that the stored WebDriver object is VeriSoftDriver,
+     * just do VerisoftDriver driver = VerisoftDriverMananer.getDriver();. No casting needed
+     */
+    public static @Nullable <T extends WebDriver> T getDriver() {
+        Integer threadID = (int) Thread.currentThread().getId();
+        log.debug("Getting driver by Thread ID (Key): {}", threadID);
+
+        Map<String, WebDriver> drivers = driverMap.get(threadID);
+        if (drivers == null || drivers.isEmpty()) {
+            return null;
+        }
+
+        if (drivers.size() > 1) {
+            throw new IllegalStateException("More than one driver without a name found.");
+        }
+
+        return (T) drivers.values().iterator().next();
+    }
+
 }
