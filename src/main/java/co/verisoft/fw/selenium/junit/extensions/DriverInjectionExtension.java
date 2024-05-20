@@ -83,7 +83,7 @@ public class DriverInjectionExtension implements ParameterResolver, AfterEachCal
         try {
             applicationContext = SpringExtension.getApplicationContext(extensionContext);
         }
-        catch (ParameterResolutionException e)
+        catch (Exception e)
         {
             applicationContext=null;
         }
