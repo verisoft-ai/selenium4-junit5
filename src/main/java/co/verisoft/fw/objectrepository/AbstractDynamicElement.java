@@ -60,7 +60,7 @@ public abstract class AbstractDynamicElement implements InvocationHandler {
         return locators;
     }
 
-    static By resolveLocator(Locator locator) {
+    public static By resolveLocator(Locator locator) {
         switch (locator.getType()) {
             case "id":
                 return By.id(locator.getValue());
