@@ -15,8 +15,11 @@ import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Proxy;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Slf4j
 public class ObjectReporsitoryFactory {
@@ -34,12 +37,20 @@ public class ObjectReporsitoryFactory {
             return new ObjectRepository();
         }
     }
-
+    private static Field[] getAllFields(Object page) {
+        List<Field> fields = new ArrayList<>();
+        Class<?> currentClass = page.getClass();
+        while (currentClass != null) {
+            fields.addAll(Stream.of(currentClass.getDeclaredFields()).collect(Collectors.toList()));
+            currentClass = currentClass.getSuperclass();
+        }
+        return fields.toArray(new Field[0]);
+    }
     public static void initObjects(WebDriver driver, Object page, String objectRepositoryFilePath) {
         repository = retrieveObjectRepository(objectRepositoryFilePath);
         @Nullable String pageName = getPageName(page);
 
-        Field[] allFields = page.getClass().getDeclaredFields();
+        Field[] allFields = getAllFields(page);
         for (Field field : allFields) {
             field.setAccessible(true);
 
