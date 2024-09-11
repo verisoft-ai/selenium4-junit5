@@ -84,7 +84,7 @@ public class ScreenShotExtension implements TestExecutionExceptionHandler {
                     new ArrayList<>() :
                     screenShots.get(extensionContext.getDisplayName());
 
-            paths.add(file.getName());
+            paths.add(file.getPath());
             screenShots.put(extensionContext.getDisplayName(), paths);
         }
 
