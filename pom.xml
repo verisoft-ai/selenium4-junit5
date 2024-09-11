@@ -41,7 +41,7 @@
         <maven.compiler.version>3.10.1</maven.compiler.version>
         <lombok.version>1.18.32</lombok.version>
         <spring.version>6.1.6</spring.version>
-        <verisoft.test.api.version>2.0.1-SNAPSHOT</verisoft.test.api.version>
+        <verisoft.test.api.version>2.0.1</verisoft.test.api.version>
 
 
         <!-- Maven plugins versions-->
