@@ -41,7 +41,7 @@ public class SoftAssertsScreenShot extends SoftAsserts {
             if (!dir.exists()) {
                 Files.createDirectories(dir.toPath());
             }
-            DateTimeFormatter fileNameFormatter = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss");
+            DateTimeFormatter fileNameFormatter = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss_SSS");
             String fileName = String.format("%s_%s.png",
                     "softAssert_screenshots",
                     fileNameFormatter.format(now));
