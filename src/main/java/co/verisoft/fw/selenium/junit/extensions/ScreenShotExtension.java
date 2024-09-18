@@ -5,6 +5,7 @@ import co.verisoft.fw.store.StoreManager;
 import co.verisoft.fw.store.StoreType;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
+import org.junit.jupiter.api.extension.BeforeTestExecutionCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
 import org.openqa.selenium.OutputType;
@@ -26,7 +27,24 @@ import java.util.*;
  * @since 0.0.4 (Apr 2022)
  * @author <a href="mailto:nir@verisoft.co">Nir Gallner</a> @ <a href="http://www.verisoft.co">www.VeriSoft.co</a>
  */
-public class ScreenShotExtension implements TestExecutionExceptionHandler {
+public class ScreenShotExtension implements TestExecutionExceptionHandler, BeforeTestExecutionCallback {
+
+    Map<String, List<String>> screenShots;
+
+    /**
+     * Initializes the screenshot storage by creating a new HashMap
+     * and storing it in the local thread store, allowing for screenshot
+     * capture during test execution.
+     *
+     * @param context
+     */
+    @Override
+    public void beforeTestExecution(ExtensionContext context)
+    {
+        this.screenShots= new HashMap<>();
+        StoreManager.getStore(StoreType.LOCAL_THREAD).putValueInStore("screenshots", screenShots);
+    }
+
     /**
      * If test has failed, take a screenshot and put it in the store
      *
@@ -72,9 +90,6 @@ public class ScreenShotExtension implements TestExecutionExceptionHandler {
 
             FileUtils.deleteQuietly(file);
             FileUtils.moveFile(screenshot, file);
-
-            Map<String, List<String>> screenShots = new HashMap<>();
-            StoreManager.getStore(StoreType.LOCAL_THREAD).putValueInStore("screenshots", screenShots);
 
             List<String>  paths = screenShots.getOrDefault(extensionContext.getDisplayName(), new ArrayList<>());
 
