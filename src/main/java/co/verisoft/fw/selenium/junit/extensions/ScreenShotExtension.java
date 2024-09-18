@@ -16,10 +16,7 @@ import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @Slf4j
 /**
@@ -76,13 +73,10 @@ public class ScreenShotExtension implements TestExecutionExceptionHandler {
             FileUtils.deleteQuietly(file);
             FileUtils.moveFile(screenshot, file);
 
-            // Get the screenshot list from the store and put the value
-            Map<String, List<String>> screenShots = StoreManager.getStore(StoreType.LOCAL_THREAD)
-                    .getValueFromStore("screenshots");
+            Map<String, List<String>> screenShots = new HashMap<>();
+            StoreManager.getStore(StoreType.LOCAL_THREAD).putValueInStore("screenshots", screenShots);
 
-            List<String> paths = Objects.isNull(screenShots.get(extensionContext.getDisplayName())) ?
-                    new ArrayList<>() :
-                    screenShots.get(extensionContext.getDisplayName());
+            List<String>  paths = screenShots.getOrDefault(extensionContext.getDisplayName(), new ArrayList<>());
 
             paths.add(file.getPath());
             screenShots.put(extensionContext.getDisplayName(), paths);
