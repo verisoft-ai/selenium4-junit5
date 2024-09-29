@@ -5,6 +5,7 @@ import co.verisoft.fw.store.StoreManager;
 import co.verisoft.fw.store.StoreType;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
+import org.junit.jupiter.api.extension.BeforeTestExecutionCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
 import org.openqa.selenium.OutputType;
@@ -16,10 +17,7 @@ import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @Slf4j
 /**
@@ -29,7 +27,24 @@ import java.util.Objects;
  * @since 0.0.4 (Apr 2022)
  * @author <a href="mailto:nir@verisoft.co">Nir Gallner</a> @ <a href="http://www.verisoft.co">www.VeriSoft.co</a>
  */
-public class ScreenShotExtension implements TestExecutionExceptionHandler {
+public class ScreenShotExtension implements TestExecutionExceptionHandler, BeforeTestExecutionCallback {
+
+    Map<String, List<String>> screenShots;
+
+    /**
+     * Initializes the screenshot storage by creating a new HashMap
+     * and storing it in the local thread store, allowing for screenshot
+     * capture during test execution.
+     *
+     * @param context
+     */
+    @Override
+    public void beforeTestExecution(ExtensionContext context)
+    {
+        this.screenShots= new HashMap<>();
+        StoreManager.getStore(StoreType.LOCAL_THREAD).putValueInStore("screenshots", screenShots);
+    }
+
     /**
      * If test has failed, take a screenshot and put it in the store
      *
@@ -76,13 +91,7 @@ public class ScreenShotExtension implements TestExecutionExceptionHandler {
             FileUtils.deleteQuietly(file);
             FileUtils.moveFile(screenshot, file);
 
-            // Get the screenshot list from the store and put the value
-            Map<String, List<String>> screenShots = StoreManager.getStore(StoreType.LOCAL_THREAD)
-                    .getValueFromStore("screenshots");
-
-            List<String> paths = Objects.isNull(screenShots.get(extensionContext.getDisplayName())) ?
-                    new ArrayList<>() :
-                    screenShots.get(extensionContext.getDisplayName());
+            List<String>  paths = screenShots.getOrDefault(extensionContext.getDisplayName(), new ArrayList<>());
 
             paths.add(file.getPath());
             screenShots.put(extensionContext.getDisplayName(), paths);
