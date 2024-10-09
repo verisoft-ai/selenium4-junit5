@@ -2,6 +2,7 @@ package co.verisoft.fw.asserts;
 
 import co.verisoft.fw.report.observer.Report;
 import co.verisoft.fw.selenium.drivers.VerisoftDriver;
+import lombok.Setter;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
@@ -19,6 +20,7 @@ import java.time.format.DateTimeFormatter;
 public class SoftAssertsScreenShot extends SoftAsserts {
 
     static String SCREENSHOT_FOLDER = "target/screenshots/";
+    @Setter
     private VerisoftDriver driver;
 
 
